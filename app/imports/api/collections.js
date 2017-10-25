@@ -2,7 +2,7 @@ import { Mongo } from "meteor/mongo";
 
 var showdown = require("showdown");
 var rmd = require("showdown-rechords");
-var DOMParser = require("xmldom").DOMParser;
+var DOMParser = require("dom-parser");
 var slug = require("slug");
 var xss = require("xss");
 var options = {
@@ -58,6 +58,7 @@ Songs.helpers({
     // only member that exist in the mongo db are published
     // to the outside.
     this.html = xss(converter.makeHtml(this.text), options);
+    console.debug(this.html);
     this.title = "";
     this.author = "";
     // Not sure if this works
@@ -81,7 +82,7 @@ Songs.helpers({
 
     let h2 = dom.getElementsByTagName("h2");
     if (h2.length > 0) {
-      this.author = h2[0].textContent;
+      this.author = h1[0].textContent;
       this.author_ = slug(this.author);
     }
 
@@ -91,17 +92,19 @@ Songs.helpers({
 });
 
 class RmdHelpers {
+  // May be this domparser is a handier implementation
+  // https://www.npmjs.com/package/dom-parser
+
   static collectTags(dom) {
     let tags = [];
-    let uls = dom.getElementsByTagName("ul");
+    let uls = dom.getElementsByClassName("tags");
     for (i = 0; i < uls.length; i++) {
       let ul = uls[i];
-      if (ul.getAttribute("class") != "tags") continue;
 
       let lis = ul.getElementsByTagName("li");
       for (j = 0; j < lis.length; j++) {
         let li = lis[j];
-        tags.push(li.textContent);
+        tags.push(this.collectAllTextNodes(li));
       }
     }
     return tags;
@@ -109,15 +112,34 @@ class RmdHelpers {
   static collectChords(dom) {
     let chords = [];
 
-    let uls = dom.getElementsByTagName("span");
+    let uls = dom.getElementsByClassName("chord");
     for (i = 0; i < uls.length; i++) {
       let chord_dom = uls[i];
-      if (chord_dom.getAttribute("class") == "chord") {
-        chords.push(chord_dom.textContent);
-      }
+      chords.push(chord_dom.textContent);
     }
     console.log(chords);
     // console.log(ChrodLib.guessKey(this.chords));
     return chords;
+  }
+
+  /**
+   * 
+   * @param {} element 
+   */
+  static collectAllTextNodes(element) {
+    if (!(element instanceof Object)) {
+      return element;
+    } else if ("data" in element) {
+      return element.data;
+    } else if ("childNodes" in element) {
+      let text = "";
+      for (child in element.childNodes) {
+        // aaaarg, still confused of "of" and "in"
+        text += this.collectAllTextNodes(child);
+      }
+      return text;
+    } else {
+      return "";
+    }
   }
 }

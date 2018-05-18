@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { withRouter } from "react-router-dom";
+import { withRouter  } from "react-router-dom";
+// import { RouteProps } from "@types/react-router";
 import TranposeSetter from "./TransposeSetter.jsx";
 import ChrodLib from "../api/libchrod.js";
 import { RmdHelpers } from "../api/collections.js";
@@ -8,11 +9,20 @@ import Collapsed from './Collapsed.jsx';
 
 var Parser = require("html-react-parser");
 
-class Viewer extends Component {
-  constructor() {
-    super();
+interface ViewerProps {
+  song: PropTypes.object.isRequired
+  // Work around (somewhere there should be 
+  // an existing interface to inherit from
+  match: any
+  history: any
+}
+
+export default class Viewer extends Component<ViewerProps, {}> {
+  constructor(props: ViewerProps) {
+    super(props);
     this.state = { relTranspose: 0 };
   }
+  state: {relTranspose : number}
 
   handleContextMenu = event => {
     let m = this.props.match.params;
@@ -103,9 +113,5 @@ class Viewer extends Component {
     );
   }
 }
-// this probably would belong inside the class
-Viewer.propTypes = {
-  song: PropTypes.object.isRequired
-};
 
-export default withRouter(Viewer); // injects history, location, match
+// export default withRouter(Viewer); // injects history, location, match

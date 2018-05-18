@@ -6,10 +6,10 @@ import { CSSTransitionGroup } from 'react-transition-group'
 
 import Songs from '../api/collections.js';
 
-import List from './List.jsx';
-import Viewer from './Viewer.jsx';
-import Editor from './Editor.jsx';
-import Collapsed from './Collapsed.jsx';
+import List from './List';
+import Viewer from './Viewer';
+import Editor from './Editor';
+import Collapsed from './Collapsed';
 
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import DocumentTitle from 'react-document-title';

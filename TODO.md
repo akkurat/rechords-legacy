@@ -3,8 +3,8 @@ Bis erster Hock
 
 [x] CRUD -> server-funktionsaufruf @matthias
 [x] Parser richtig meche 
-[ ] Spalten links/rechts
-[ ] Transponieren temporär
+[x] Spalten links/rechts
+[x] Transponieren temporär
 
 
 Später

@@ -1,10 +1,14 @@
-import React, { Component } from "react";
+import { Component } from "react";
+// AAARG, don't get while importing 
+// React from 'react' is not enough. Anyways, it works now more or less
+// however, the state and history are not well typed yet
+import * as React from 'react';
 import PropTypes from "prop-types";
 import { withRouter  } from "react-router-dom";
 // import { RouteProps } from "@types/react-router";
 import TranposeSetter from "./TransposeSetter.jsx";
-import ChrodLib from "../api/libchrod.js";
-import { RmdHelpers, Song } from "../api/collections.js";
+import ChrodLib from "../api/libchrod";
+import { RmdHelpers, Song } from "../api/collections";
 import Collapsed from './Collapsed.jsx';
 // import { Parser } from "html-react-parser";
 
@@ -14,6 +18,8 @@ interface ViewerProps {
   song: Song
   // Work around (somewhere there should be 
   // an existing interface to inherit from
+  // or merge it with
+  // TODO: add links from matti
   match: any
   history: any
 }
@@ -67,6 +73,9 @@ export default class Viewer extends Component<ViewerProps, ViewerState> {
 
     // Idee: obige replace-funktion könnte vom TransposeSetter geholt werden. Dadurch könnte der relTranspose-Zustand völlig in 
     // den TransposeSetter wandern. 
+    // True that -> put on refactoring
+    // Problem: the info of all chords is needed (for guessing the key)
+    // Or just give the key to the Component 
 
     /*
     if (this.state.relTranspose != 0) {

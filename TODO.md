@@ -13,9 +13,18 @@ Später
 [ ] Tonart schreiben / erkennen
 [ ] Beim Parsen offset kennen
 [ ] Transponieren dauerhaft
-[ ] TypeScript
+[x] TypeScript
 [ ] vim.js
 [ ] Schriften, mehrere Spalten
-[ ] Versionen
-[ ] Tags, evtl Felder
+[x] Versionen
+[x] Tags, evtl Felder
 [ ] Index mit Tagübersicht / Interpreten / Alphabetisch
+
+General Refactoring Tasks 
+=====
+
+[ ] Convert existing jsx files to tsx
+    [ ] Import without extension
+		[ ] Create more interfaces and classes
+[ ] TransposeSetter -> return replace function
+[ ] 

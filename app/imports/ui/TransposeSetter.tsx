@@ -1,9 +1,11 @@
+import { Function } from 'meteor/babel-compiler/node_modules/@babel/types/lib';
+import { Function } from '@babel/types/lib';
 import React, { Component } from "react";
 import ChrodLib from "../api/libchrod.js";
 import PropTypes from "prop-types";
 import Slider from "rc-slider";
-import "rc-slider/assets/index.css";
-import "rc-tooltip/assets/bootstrap.css";
+import 'rc-slider/assets/index.css';
+import 'rc-tooltip/assets/bootstrap.css';
 const createSliderWithTooltip = Slider.createSliderWithTooltip;
 
 // Javascript style "static" import
@@ -29,11 +31,20 @@ var intervalls = new Map([
   [16, "Gr. Dezime"],
   [17, "Kl. Undezime"]
 ]);
-export default class TranposeSetter extends Component {
+interface TransposeSetterState {
+  relTranspose?:number;
+}
+interface TransposeSetterProps {
+  initialTranspose: number
+  key: string
+  doShit: Function
+
+}
+export default class TranposeSetter extends Component<TransposeSetterProps, TransposeSetterState> {
   constructor(props) {
     super(props);
-    let initialTranspose = this.props.intialTranspose
-      ? this.props.intialTranspose
+    let initialTranspose = this.props.initialTranspose
+      ? this.props.initialTranspose
       : 0;
     this.state = { relTranspose: initialTranspose };
   }
@@ -46,14 +57,14 @@ export default class TranposeSetter extends Component {
     this.setState({
       [name]: value
     });
-    this.props.doshit(Number.parseInt(value));
+    this.props.doShit(Number.parseInt(value));
   };
 
   handleSlider = value => {
     this.setState({
       relTranspose: value
     });
-    this.props.doshit(Number.parseInt(value));
+    this.props.doShit(Number.parseInt(value));
   };
 
   static equivalentShift(pitch) {
@@ -80,8 +91,8 @@ export default class TranposeSetter extends Component {
       3: "+3",
       7: "+7"
     };
-    if ( this.props.keym) {
-      let key = this.props.keym;
+    if ( this.props.key) {
+      let key = this.props.key;
       let keys = {};
       let libChrod = new ChrodLib();
       for (var i=-7; i<=7; i++) {
@@ -126,8 +137,10 @@ export default class TranposeSetter extends Component {
 }
 
 // ToDO: convert to tsx
+/*
 TranposeSetter.propTypes = {
   doshit: PropTypes.func,
   initialTranspose: PropTypes.number,
   key: PropTypes.string
 };
+*/

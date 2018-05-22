@@ -261,7 +261,7 @@ export default class ChrodLib {
      * @param {Array<String>} chordsList 
      * @returns { {scale: string, key: string}}
      */
-  static guessKey(chordsList) {
+  static guessKey(chordsList): MetaKey {
     // just test every key (i mean its only 11)
     // and for every one make a penalty for every
     // "Tonart Fremde Chord"
@@ -302,7 +302,7 @@ export default class ChrodLib {
    * 
    * @param {} keyss List of Scales and 
    */
-  static selectBest(keyss) {
+  static selectBest(keyss) : MetaKey{
     let best_val = -1000;
     let best: { scale: string; key: string };
 
@@ -320,6 +320,7 @@ export default class ChrodLib {
     }
     return best;
   }
+
   /**
    * 
    * @param {Array<String>} chordsList 
@@ -471,4 +472,11 @@ export default class ChrodLib {
   }
 }
 
-export { Key, Chord, Scale };
+  class MetaKey {
+  constructor(public scale: string,
+  public key: string ) {
+
+  }
+
+  }
+export { Key, MetaKey, Chord, Scale };

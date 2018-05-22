@@ -1,7 +1,6 @@
-import { Function } from 'meteor/babel-compiler/node_modules/@babel/types/lib';
-import { Function } from '@babel/types/lib';
-import React, { Component } from "react";
-import ChrodLib from "../api/libchrod.js";
+import { Component } from "react";
+import * as React from "react";
+import ChrodLib, { MetaKey } from "../api/libchrod.js";
 import PropTypes from "prop-types";
 import Slider from "rc-slider";
 import 'rc-slider/assets/index.css';
@@ -35,17 +34,21 @@ interface TransposeSetterState {
   relTranspose?:number;
 }
 interface TransposeSetterProps {
+  // doShit: {(pitch: number) : void}
   initialTranspose: number
-  key: string
-  doShit: Function
+  key: MetaKey
+  /** 
+   * Function, but how?
+  */
 
 }
 export default class TranposeSetter extends Component<TransposeSetterProps, TransposeSetterState> {
-  constructor(props) {
+  constructor(props: TransposeSetterProps) {
     super(props);
     let initialTranspose = this.props.initialTranspose
       ? this.props.initialTranspose
       : 0;
+      // this.props.key = new MetaKey("","");
     this.state = { relTranspose: initialTranspose };
   }
 
@@ -83,9 +86,9 @@ export default class TranposeSetter extends Component<TransposeSetterProps, Tran
   // Inherited from React.Component
   render() {
     // TODO: make object and calculate resulting key
-    let marks = {
-      "-7": -7,
-      '-3': -3,
+    let marks : {[id:number]:string}= {
+      "-7": '-7',
+      '-3': '-3',
       // TODO: key here
       0: 'Original',
       3: "+3",

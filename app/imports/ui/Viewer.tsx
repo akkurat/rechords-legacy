@@ -41,7 +41,7 @@ export default class Viewer extends Component<ViewerProps, ViewerState> {
     event.preventDefault();
   };
 
-  handleTransposeSetter = pitch => {
+  handleTransposeSetter = (pitch: number) => {
     this.setState({ relTranspose: pitch });
   };
 
@@ -77,28 +77,6 @@ export default class Viewer extends Component<ViewerProps, ViewerState> {
     // Problem: the info of all chords is needed (for guessing the key)
     // Or just give the key to the Component 
 
-    /*
-    if (this.state.relTranspose != 0) {
-      chordtable = (
-        <table className="chordtable">
-          <tbody>
-            <tr>
-              <td>Orig:</td>
-              {chords.map((c, i) => <td key={i}>{c}</td>)}
-            </tr>
-            <tr>
-              <td>Tran:</td>
-              {chrodlib
-                .transpose(chords, this.state.relTranspose)
-                .map((c, i) => <td key={i}>{c}</td>)}
-            </tr>
-          </tbody>
-        </table>
-      );
-    } else {
-      chordtable = "";
-    }
-    */
 
 
     return (
@@ -109,10 +87,10 @@ export default class Viewer extends Component<ViewerProps, ViewerState> {
           onContextMenu={this.handleContextMenu}
         >
           <section>
-            <TranposeSetter
-              doshit={this.handleTransposeSetter}
-              intialTranspose={this.state.relTranspose}
-              keym={key}
+            <TranposeSetter 
+            // doShit={this.handleTransposeSetter}
+              initialTranspose={this.state.relTranspose}
+              key={key}
             />
           </section>
           <section ref="html">

@@ -1,7 +1,14 @@
-import React, { Component } from 'react';
+import  { Component } from 'react';
+import * as React from "react";
 import PropTypes from 'prop-types';
 
-export default class Source extends Component {
+interface SourceProps {
+  md: string;
+  updateHandler: Function;
+  readOnly: boolean;
+}
+
+export default class Source extends Component<SourceProps, {}> {
 
   constructor(props) {
     super(props);
@@ -43,9 +50,3 @@ export default class Source extends Component {
   }
 }
 
-
-Source.propTypes = {
-  md: PropTypes.string.isRequired,
-  updateHandler: PropTypes.func,
-  readOnly: PropTypes.bool
-};

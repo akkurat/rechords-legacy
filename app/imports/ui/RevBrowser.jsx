@@ -1,6 +1,6 @@
-import Songs, {Revisions} from '../api/collections.js';
+import Songs, {Revisions} from '../api/collections';
 import React, { Component } from 'react';
-import Source from './Source.jsx';
+import Source from './Source';
 import Collapsed from './Collapsed.jsx';
 import PropTypes from 'prop-types';
 import moment from 'moment';

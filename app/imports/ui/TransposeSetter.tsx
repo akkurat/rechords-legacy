@@ -1,6 +1,6 @@
 import { Component } from "react";
 import * as React from "react";
-import ChrodLib, { MetaKey } from "../api/libchrod.js";
+import ChrodLib, { MetaKey } from "../api/libchrod";
 import PropTypes from "prop-types";
 import Slider from "rc-slider";
 import 'rc-slider/assets/index.css';
@@ -35,8 +35,10 @@ interface TransposeSetterState {
 }
 interface TransposeSetterProps {
   // doShit: {(pitch: number) : void}
-  initialTranspose: number
-  key: MetaKey
+  initialTranspose: number;
+  // key is reserved by React
+  keym: MetaKey;
+  doShit: Function;
   /** 
    * Function, but how?
   */

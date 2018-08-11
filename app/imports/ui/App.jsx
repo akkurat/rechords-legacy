@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { withTracker } from 'meteor/react-meteor-data';
 import { CSSTransitionGroup } from 'react-transition-group'
 
-import Songs from '../api/collections.js';
+import Songs from '../api/collections';
 
 import List from './List';
 import Viewer from './Viewer';

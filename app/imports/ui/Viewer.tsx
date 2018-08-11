@@ -6,7 +6,7 @@ import * as React from 'react';
 import PropTypes from "prop-types";
 import { withRouter  } from "react-router-dom";
 // import { RouteProps } from "@types/react-router";
-import TranposeSetter from "./TransposeSetter.jsx";
+import TranposeSetter from "./TransposeSetter";
 import ChrodLib from "../api/libchrod";
 import { RmdHelpers, Song } from "../api/collections";
 import Collapsed from './Collapsed.jsx';
@@ -20,6 +20,7 @@ interface ViewerProps {
   // an existing interface to inherit from
   // or merge it with
   // TODO: add links from matti
+  // : merge with a withrouterprops
   match: any
   history: any
 }
@@ -28,7 +29,8 @@ interface ViewerState {
   relTranspose?: number
 }
 
-export default class Viewer extends Component<ViewerProps, ViewerState> {
+const Viewer = withRouter<{}>(
+  class Viewer_ extends Component<ViewerProps, ViewerState> {
   constructor(props: ViewerProps) {
     super(props);
     this.state = { relTranspose: 0 };
@@ -50,7 +52,7 @@ export default class Viewer extends Component<ViewerProps, ViewerState> {
     let chrodlib = new ChrodLib();
     let rmd_html = this.props.song.getHtml();
 
-    let key = ChrodLib.guessKey(chords);
+    let keym = ChrodLib.guessKey(chords);
 
     // TODO: if key undef, write something there
 
@@ -62,7 +64,7 @@ export default class Viewer extends Component<ViewerProps, ViewerState> {
         if (domNode.name && domNode.name == 'i') {
           let chord = domNode.attribs['data-chord'];
           if (chord) {
-            let chord_transposed_data = chrodlib.transpose(chord, key, dT);
+            let chord_transposed_data = chrodlib.transpose(chord, keym, dT);
             domNode.attribs["data-chord"]= chord_transposed_data;
           }
           // return <span className="chord">{c}</span>
@@ -88,9 +90,9 @@ export default class Viewer extends Component<ViewerProps, ViewerState> {
         >
           <section>
             <TranposeSetter 
-            // doShit={this.handleTransposeSetter}
+              doShit={this.handleTransposeSetter}
               initialTranspose={this.state.relTranspose}
-              key={key}
+              keym={keym}
             />
           </section>
           <section ref="html">
@@ -104,6 +106,6 @@ export default class Viewer extends Component<ViewerProps, ViewerState> {
       </div>
     );
   }
-}
+});
 
-// export default withRouter(Viewer); // injects history, location, match
+export default Viewer;

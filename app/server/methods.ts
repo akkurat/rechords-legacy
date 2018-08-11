@@ -1,5 +1,5 @@
-import Songs, {Song} from '../imports/api/collections.js';
-import { Revisions } from '../imports/api/collections.js';
+import Songs, {Song} from '../imports/api/collections';
+import { Revisions } from '../imports/api/collections';
 import { check } from 'meteor/check'
 var slug = require('slug')
 

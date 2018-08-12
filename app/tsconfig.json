@@ -9,6 +9,10 @@
 		"jsx": "react",
 		"preserveConstEnums": true,
 		"sourceMap": true,
+		"allowJs": false,
+		"moduleResolution": "node",
+		"module": "commonjs",
+		"alwaysStrict": true,
 							    
 		"plugins": [
 			{
@@ -17,6 +21,7 @@
 		],
 
 		"typeRoots": [
+			"./type_hacks",
 			"./node_modules/@types",
 			"./node_modules"
 		],

@@ -56,7 +56,7 @@ class ListGroup extends Component<ListGroupProps,{}> {
     }
 }
 interface ListGroupProps  {
-    songs: array<Song>
+    songs: Array<Song>
     label: string
 }
 

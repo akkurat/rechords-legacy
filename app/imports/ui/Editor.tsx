@@ -6,6 +6,7 @@ import Collapsed from './Collapsed';
 import Source from './Source';
 import Preview from './Preview';
 import moment from 'moment';
+import RevBrowser from './RevBrowser';
 
 interface EditorState {
   md: string,

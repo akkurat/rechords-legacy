@@ -1,15 +1,14 @@
-import React, { Component } from 'react';
+import  { Component } from 'react';
+import * as React from 'react';
 import PropTypes from 'prop-types';
 
 import { withTracker } from 'meteor/react-meteor-data';
-import { CSSTransitionGroup } from 'react-transition-group'
 
 import Songs from '../api/collections';
 
 import List from './List';
 import Viewer from './Viewer';
 import Editor from './Editor';
-import Collapsed from './Collapsed';
 
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import DocumentTitle from 'react-document-title';
@@ -19,6 +18,8 @@ const empty_song = {
     text: "Titel\nInterpret\n========\n\n#Schlagwort\n\nText ohne vorangehenden Titel mit Doppelpunkt ist einfach Kommentar.\n\n1:\nDas ist die [A]erste Strophe\nHat zum Teil auch [em]Akkorde\n\nref:\nTra la lalala\nla la lala la la\n\n2:\nUnd noch eine weil's so schön ist",
     author: "Unknown"
 };
+
+
 
 const nA404 = (
     <div className="container">
@@ -44,7 +45,7 @@ const logo = (
 
 
 // App component - represents the whole app
-class App extends Component {
+class App extends Component<AppProps, {}> {
 
     constructor(props) {
         super(props);
@@ -152,9 +153,9 @@ const NoMatch = ({ location }) => (
     </div>
 )
 
-App.propTypes = {
-    dataLoading: PropTypes.bool.isRequired,
-    songs: PropTypes.array.isRequired,
+interface AppProps {
+    dataLoading: boolean;
+    songs: any[];
 };
 
 export default withTracker(props => {

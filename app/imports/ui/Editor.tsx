@@ -1,14 +1,18 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import  { Component } from 'react';
+import * as React from 'react';
 import Songs, { Revisions } from '../api/collections';
 import { withRouter } from 'react-router-dom';
-import Collapsed from './Collapsed.jsx';
+import Collapsed from './Collapsed';
 import Source from './Source';
 import RevBrowser from './RevBrowser.jsx';
 import Preview from './Preview.tsx';
 import moment from 'moment';
 
-class Editor extends Component {
+interface EditorState {
+  md: string,
+  versionTab: boolean,
+}
+class Editor extends Component<EditorProps, EditorState> {
 
   constructor(props) {
     super();
@@ -108,8 +112,11 @@ class Editor extends Component {
   }
 }
 
-Editor.propTypes = {
-  song: PropTypes.object.isRequired,
+interface EditorProps {
+  song: any,
+  // Workaround for now...
+  history: any,
+  match: any
 };
 
 export default withRouter(Editor);  // injects history, location, match

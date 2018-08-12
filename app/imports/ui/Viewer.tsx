@@ -9,7 +9,7 @@ import { withRouter  } from "react-router-dom";
 import TranposeSetter from "./TransposeSetter";
 import ChrodLib from "../api/libchrod";
 import { RmdHelpers, Song } from "../api/collections";
-import Collapsed from './Collapsed.jsx';
+import Collapsed from './Collapsed';
 // import { Parser } from "html-react-parser";
 
 var Parser = require("html-react-parser");

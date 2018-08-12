@@ -6,6 +6,7 @@
 			"dom.iterable",
 			"dom"
 		],
+		"jsx": "react",
 		"preserveConstEnums": true,
 		"sourceMap": true,
 							    

@@ -96,8 +96,8 @@ export default class TranposeSetter extends Component<TransposeSetterProps, Tran
       3: "+3",
       7: "+7"
     };
-    if ( this.props.key) {
-      let key = this.props.key;
+    if ( this.props.keym) {
+      let key = this.props.keym;
       let keys = {};
       let libChrod = new ChrodLib();
       for (var i=-7; i<=7; i++) {

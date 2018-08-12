@@ -4,8 +4,7 @@ import Songs, { Revisions } from '../api/collections';
 import { withRouter } from 'react-router-dom';
 import Collapsed from './Collapsed';
 import Source from './Source';
-import RevBrowser from './RevBrowser.jsx';
-import Preview from './Preview.tsx';
+import Preview from './Preview';
 import moment from 'moment';
 
 interface EditorState {
@@ -15,7 +14,7 @@ interface EditorState {
 class Editor extends Component<EditorProps, EditorState> {
 
   constructor(props) {
-    super();
+    super(props);
     this.state = {
       md: props.song.text,
       versionTab: false

@@ -6,6 +6,7 @@ interface SourceProps {
   md: string;
   updateHandler: Function;
   readOnly: boolean;
+  className: string;
 }
 
 export default class Source extends Component<SourceProps, {}> {

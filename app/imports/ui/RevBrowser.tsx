@@ -1,16 +1,20 @@
-import Songs, {Revisions} from '../api/collections';
-import React, { Component } from 'react';
-// import * as React from 'react';
+import Songs, {Revisions, Song, Revision} from '../api/collections';
+import { Component } from 'react';
+import * as React from 'react';
 import Source from './Source';
-import Collapsed from './Collapsed.tsx';
+import Collapsed from './Collapsed';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import "moment/locale/de";
 
-export default class RevBrowser extends Component {
+interface RevBrowserState {
+  revision: Revision;
+
+}
+export default class RevBrowser extends Component<RevBrowserProps,RevBrowserState> {
 
   constructor(props) {
-    super();
+    super(props);
     this.state = {
       revision: props.song.getRevision(0)
     }
@@ -48,16 +52,18 @@ export default class RevBrowser extends Component {
   }
 }
 
-RevBrowser.propTypes = {
-  song: PropTypes.object.isRequired
+interface RevBrowserProps {
+  song: Song;
 };
 
-class RevLink extends Component {
-  constructor(props) {
-    super(props);
-  }
+interface RevLinkProps {
+  rev: Revision;
+  idx: number;
+  callback: Function;
+  active: boolean;
+}
 
-  render() {
+const RevLink: React.SFC<RevLinkProps> = props => {
     let r = this.props.rev;
     return (
       <li value={this.props.idx} 
@@ -66,6 +72,5 @@ class RevLink extends Component {
         >
           {moment(r.timestamp).fromNow()}
       </li>
-    );
-  }
+    )
 }

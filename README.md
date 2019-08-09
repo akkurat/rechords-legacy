@@ -4,6 +4,14 @@ Implementation of markdown dialect extended by anotation for chords using https:
  
 ## app
 Meteor Based app for editing the songs more or less interactively. 
-[x] Plain Text Markdown Editing support
-[ ] MarkdownRechords syntax Highlighting when editing
-[x] Transposing of Chords
+
+  [x] Plain Text Markdown Editing support
+
+  [ ] MarkdownRechords syntax Highlighting when editing
+
+  [x] Transposing of Chords
+
+
+## run 
+    rechords> cd app
+    app> meteor run

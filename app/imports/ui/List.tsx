@@ -1,13 +1,20 @@
 import * as React from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, withRouter } from 'react-router-dom';
+import { RouteComponentProps } from 'react-router-dom';
 import MetaContent from './MetaContent';
 import {Song} from '../api/collections';
+import { History } from 'history'
 
 
-interface ListItemProps {
+interface ListItemProps extends RouteComponentProps {
     song: Song;
+    key: string;
+    // injected by withRouter
+    history: History;
 }
-class ListItem extends React.Component<ListItemProps, {}> {
+
+const ListItem = withRouter<{}>( 
+    class ListItem extends React.Component<ListItemProps, {}> {
     constructor(props) {
         super(props);
     }
@@ -16,19 +23,27 @@ class ListItem extends React.Component<ListItemProps, {}> {
     render() {
         return (
             <li><NavLink to={`/view/${this.props.song.author_}/${this.props.song.title_}`}
-                activeClassName="selected">
+                activeClassName="selected"
+                onContextMenu={this.handleContextMenu}>
                 <span className="title">{this.props.song.title}</span>
                 <span className="author">{this.props.song.author}</span>
                 </NavLink></li>
         );
     }
-}
+
+    handleContextMenu = event => {
+        let m = this.props.song;
+        this.props.history.push("/edit/" + m.author_ + "/" + m.title_);
+        event.preventDefault();
+      };
+
+})
 
 
 
 interface ListGroupProps {
   songs: Array<Song>;
-  label: String;
+  label: string;
 }
 class ListGroup extends React.Component<ListGroupProps, {}> {
     constructor(props) {

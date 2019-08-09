@@ -1,3 +1,5 @@
+@import './variables.less';
+
 // Resets
 ul {
   padding-left: 0;
@@ -25,12 +27,6 @@ textarea {
   display: block;
   width: 100%;
 }
-
-// Globals
-@accent: rgb(221, 68, 7);
-//@accent: rgb(0, 141, 235);
-
-@secondary: hsv(hsvhue(@accent), 0.15, 0.6);
 
 // Layout
 html {
@@ -157,7 +153,43 @@ body {
 }
 
 
+// It should be also possible to override this manually
+#chordSheetContent {
+  @media only screen and (min-width: 1500px) {
+    column-count: 4;
+  }
+  @media only screen and (min-width: 1200px) {
+    column-count: 3;
+  }
+  @media only screen and (min-width: 900px) {
+    column-count: 2;
+  }
+
+  column-gap: 100px;
+
+  p {
+    position: relative;
+    break-inside: avoid;
+    break-before: avoid;
+  }
+
+  span.line {
+    break-inside: avoid;
+    break-before: avoid;
+  }
+  #head, h1, h2, ul.tags {
+    column-span: all;
+  }
+
+  h3 {
+    break-after: avoid;
+    break-before: always;
+    position: relative;
+  }
+}
+
 #chordsheet {
+
   .chordsheet;
 
   padding-top: 2em;
@@ -166,6 +198,7 @@ body {
 
   color: hsv(hsvhue(@accent), 0.3, 0.7);
 
+
   h2, h3, h4 {
     color: black;
   }
@@ -173,7 +206,7 @@ body {
   h1, h2 {
     margin-bottom: 1rem;
     font-size: 2.4em;
-    display: inline-block;
+    display: block;
   }
 
   h1 {

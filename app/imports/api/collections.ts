@@ -54,6 +54,8 @@ export class Song {
   author_:string;
 
   constructor (doc) {
+    // Todo: this shouldn't be necessary in typescript
+    // Rather Song extends Doc?
     _.extend(this, doc);
   }
 
@@ -82,7 +84,7 @@ export class Song {
     return Parser(this.html);
   }
 
-  parse(md) {
+  parse(md: string) {
     this.text = md;
 
     // Create HTML
@@ -125,7 +127,7 @@ export class Song {
     this.chords = RmdHelpers.collectChords(dom);
   }
 
-  getRevisions() {
+  getRevisions(): Mongo.Cursor<Revision> {
     return Revisions.find({
       of: this._id
     }, { 
@@ -133,7 +135,7 @@ export class Song {
     });
   }
 
-  getRevision(steps: number) {
+  getRevision(steps: number): Revision{
     return this.getRevisions().fetch()[steps]
   }
 }

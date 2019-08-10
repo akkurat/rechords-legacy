@@ -12,6 +12,7 @@ import Collapsed from './Collapsed.jsx';
 
 import { BrowserRouter, Route, Switch} from 'react-router-dom';
 import DocumentTitle from 'react-document-title';
+import { Overview } from './Overview';
 
 const empty_song = {
     title: "Neues Lied",
@@ -125,6 +126,18 @@ class App extends Component {
                         )
                     }} />
 
+                    <Route path="/list"  render={() => {
+                        return (
+                            <>
+                            <div className="container">
+                                <DocumentTitle title="Hölibu" />
+                                <List songs={this.props.songs}/>
+                                <Overview songs={this.props.songs} />
+                                </div>
+                            </>
+                        )
+                    }} />
+
                     <Route path="/:filter" render={(match) => {
                         return (
                             <>
@@ -135,6 +148,7 @@ class App extends Component {
                         )
                     }} />
 
+                    {/* Unnecessary, everything goes to filter */}
                     <Route component={NoMatch} />
                 </Switch>
             </BrowserRouter>

@@ -12,10 +12,12 @@ var Parser = require("html-react-parser");
 class Viewer extends Component {
 
   key = undefined 
+  containerRef = undefined
 
   constructor() {
     super();
     this.state = { relTranspose: 0 };
+    this.containerRef=React.createRef();
   }
 
   componentDidUpdate(prevProps) {
@@ -42,15 +44,15 @@ class Viewer extends Component {
     let vdom = this.createVdom();
 
     let options = []
-    for (let i = 0; i < 6; i++) {
-      options.push(<option value={i}>{i}</option>)
+    for (let i = 1; i < 6; i++) {
+      options.push(<option key={i} value={i}>{i}</option>)
     }
 
     return (
       <div className="container">
         <div id="inlineSettings">
         <select id="overrideNumColumns" onChange={this.handleColDropdown}>
-          <option value="Auto">Auto</option>
+          <option value="auto">Auto</option>
           {options}
         </select>
           {this.containsLyrics(vdom) && 
@@ -68,7 +70,7 @@ class Viewer extends Component {
           id="chordsheet"
           onContextMenu={this.handleContextMenu}
         >
-          <section ref="html" id="chordSheetContent">
+          <section ref={this.containerRef} id="chordSheetContent">
             {vdom}
           </section>
         </div>
@@ -80,8 +82,15 @@ class Viewer extends Component {
     );
   }
 
-  handleColDropdown( ev ) {
-    console.log(ev)
+  handleColDropdown = ( ev ) => {
+    let cols = ev.target.value
+    let element = this.containerRef.current
+    if(cols == 'auto') {
+      element.style['column-count'] = '';
+    } else {
+      element.style['column-count'] = ev.target.value; 
+    }
+
   }
   
   containsLyrics() {
@@ -123,5 +132,10 @@ class Viewer extends Component {
 Viewer.propTypes = {
   song: PropTypes.object.isRequired
 };
+
+Viewer.stateTypes = {
+  columns: PropTypes.number
+}
+
 
 export default withRouter(Viewer); // injects history, location, match

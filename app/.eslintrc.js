@@ -4,7 +4,10 @@ module.exports = {
         "es6": true,
         "node": true
     },
-    "extends": "eslint:recommended",
+    "extends": [
+        "eslint:recommended",
+        "plugin:react/recommended"
+    ],
     "globals": {
         "Atomics": "readonly",
         "SharedArrayBuffer": "readonly"
@@ -20,5 +23,14 @@ module.exports = {
         "react"
     ],
     "rules": {
+    },
+    "settings": {
+        "react": {
+          "createClass": "createReactClass", // Regex for Component Factory to use,
+                                             // default to "createReactClass"
+          "pragma": "React",  // Pragma to use, default to "React"
+          "version": "detect",
+        }
     }
+
 };

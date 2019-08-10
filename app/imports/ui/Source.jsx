@@ -7,7 +7,7 @@ export default class Source extends Component {
     super(props);
   }
 
-  callUpdateHandler = () => {
+  callUpdateHandler() {
     if ('updateHandler' in this.props) {
       this.props.updateHandler(this.refs.source.value);
     }
@@ -47,5 +47,7 @@ export default class Source extends Component {
 Source.propTypes = {
   md: PropTypes.string.isRequired,
   updateHandler: PropTypes.func,
-  readOnly: PropTypes.bool
+  readOnly: PropTypes.bool,
+  children: PropTypes.element.isRequired,
+  className: PropTypes.string
 };

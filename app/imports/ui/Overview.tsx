@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Song } from '../api/collections';
+import { LinkSong, LinkTag } from './List';
 
 export class Overview extends React.Component<{ songs: Song[] }, {}> {
     render() {
@@ -19,8 +20,8 @@ export class Overview extends React.Component<{ songs: Song[] }, {}> {
                 <tbody>
                     {this.props.songs.map((s: Song) =>
                         <tr key={s._id}>
-                            <td>{s.title}</td>
-                            <td>{s.author}</td>
+                            <td><LinkSong author={s.author_} title={s.title_}>{s.title_}</LinkSong></td>
+                            <td><LinkSong author={s.author_}>{s.author_}</LinkSong></td>
                             <td>{this.concatTags(s.tags)}</td>
                             <td></td>
                         </tr>
@@ -34,7 +35,7 @@ export class Overview extends React.Component<{ songs: Song[] }, {}> {
     concatTags(tags: string[]) {
         return <ul className="tags">
         {tags.map(t =>
-            <li className="tag">{t}</li>
+            <li className="tag"><LinkTag tag={t} >{t}</LinkTag></li>
         )
         }
         </ul>

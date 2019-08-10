@@ -29,16 +29,20 @@
     "slug": "^0.9.1",
     "source-map-support": "^0.5.6",
     "xmldom": "^0.1.27",
-    "xss": "^0.3.8"
+    "xss": "^0.3.8",
+    "history": "latest" 
   },
   "devDependencies": {
     "@types/core-js": "^0.9.46",
     "@types/node": "^9.6.18",
     "@types/react": "^16.3.14",
+    "@types/react-router-dom": "^4.3.4",
     "@types/requirejs": "^2.1.31",
     "eslint": "^6.1.0",
     "eslint-plugin-react": "^7.14.3",
     "meteor-typings": "^1.4.1",
+    "tslint": "^5.18.0",
+    "tslint-react": "^4.0.0",
     "typescript": "^2.8.3",
     "typescript-plugin-add-type": "^1.0.2"
   }

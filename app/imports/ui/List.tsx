@@ -1,10 +1,8 @@
 import * as React from 'react';
-import { NavLink, withRouter } from 'react-router-dom';
-import { RouteComponentProps } from 'react-router-dom';
+import { NavLink, withRouter, RouteComponentProps } from 'react-router-dom';
 import MetaContent from './MetaContent';
 import {Song} from '../api/collections';
 import { History } from 'history'
-
 
 interface ListItemProps extends RouteComponentProps {
     song: Song;
@@ -14,25 +12,26 @@ interface ListItemProps extends RouteComponentProps {
 }
 
 const ListItem = withRouter<{}>( 
-    class ListItem extends React.Component<ListItemProps, {}> {
+    class ListItem_ extends React.Component<ListItemProps, {}> {
     constructor(props) {
         super(props);
     }
 
-
     render() {
+        const a = this.props.song.author_
+        const t = this.props.song.title_
         return (
-            <li><NavLink to={`/view/${this.props.song.author_}/${this.props.song.title_}`}
-                activeClassName="selected"
-                onContextMenu={this.handleContextMenu}>
+            <li>
+                <LinkSong author={a} title={t} activeClassName="selected"
+                          onContextMenu={this.handleContextMenu}>
                 <span className="title">{this.props.song.title}</span>
                 <span className="author">{this.props.song.author}</span>
-                </NavLink></li>
+                </LinkSong></li>
         );
     }
 
     handleContextMenu = event => {
-        let m = this.props.song;
+        const m = this.props.song;
         this.props.history.push("/edit/" + m.author_ + "/" + m.title_);
         event.preventDefault();
       };
@@ -42,7 +41,7 @@ const ListItem = withRouter<{}>(
 
 
 interface ListGroupProps {
-  songs: Array<Song>;
+  songs: Song[];
   label: string;
 }
 class ListGroup extends React.Component<ListGroupProps, {}> {
@@ -55,7 +54,7 @@ class ListGroup extends React.Component<ListGroupProps, {}> {
             <li key={this.props.label}>
                 <h2 className="huge">{this.props.label}</h2>
                 <ul>
-                    {this.props.songs.map((song) => 
+                    {this.props.songs.map(song => 
                         <ListItem song={song} key={song._id} />
                     )}
                 </ul>
@@ -64,10 +63,9 @@ class ListGroup extends React.Component<ListGroupProps, {}> {
     }
 }
 
-
 interface ListProps {
-  songs: Array<Song>;
-  filter: String;
+  songs: Song[];
+  filter: string;
 }
 interface ListState {
     filter: string;
@@ -83,8 +81,8 @@ export default class List extends React.Component<ListProps, ListState> {
     }
 
 
-    keyHandler = (e) => {
-        if (e.key == 'Escape') {
+    keyHandler = e => {
+        if (e.key === 'Escape') {
             this.setState({
                 filter: '',
             });
@@ -122,8 +120,8 @@ export default class List extends React.Component<ListProps, ListState> {
         });
     }
 
-    onTagClick = (event : React.MouseEvent) => {
-        let tag = '#' + event.currentTarget.childNodes[0].textContent.toLowerCase();
+    onTagClick = (event: React.MouseEvent) => {
+        const tag = '#' + event.currentTarget.childNodes[0].textContent.toLowerCase();
 
         this.setState( (state, props) => {
             let newFilter;
@@ -222,4 +220,33 @@ export default class List extends React.Component<ListProps, ListState> {
             </aside>
         )
     }
+}
+
+export const LinkTag: React.FunctionComponent<{tag: string}> = props => {
+        const tag = props.tag
+        return ( <a href={'/%23' + tag}>
+            {props.children}
+        </a> // %23 is #
+        )
+}
+
+export interface SongLinkProps {
+    author: string
+    title?: string
+    activeClassName?: string
+    onContextMenu?: React.MouseEventHandler<HTMLAnchorElement>
+}
+
+export const LinkSong: React.FunctionComponent<SongLinkProps> = props => {
+    let href: History.LocationDescriptor<any>
+    if (props.title) {
+        href = `/view/${props.author}/${props.title}`
+    } else {
+        href = `/view/${props.author}/`
+    }
+    return (
+        <NavLink {...props} to={href}>
+            {props.children}
+        </NavLink>
+    )
 }

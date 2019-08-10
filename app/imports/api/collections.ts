@@ -50,7 +50,9 @@ export class Song {
   chords?: Array<string>;
   html?: string;
 
+  /** no spaces, only asci */
   title_: string;
+  /** no spaces, only asci */
   author_:string;
 
   constructor (doc) {

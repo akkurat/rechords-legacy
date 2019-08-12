@@ -1,0 +1,21 @@
+@import "../../client/variables.less";
+.songTable {
+  a {
+    color: black;
+
+    // &:active {
+    //     color: @accent;
+    // }
+
+    &:hover {
+      color: @accent;
+    }
+  }
+
+  .tag a {
+    color: lighten(@secondary, 30%);
+    &:hover {
+      color: darken(@secondary, 30%);
+    }
+  }
+}

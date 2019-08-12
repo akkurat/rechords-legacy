@@ -7,7 +7,11 @@ import Collapsed from './Collapsed.jsx';
 import ReactDOM from 'react-dom';
 
 import './Viewer.less'
+
+
+
 var Parser = require("html-react-parser");
+// type Parser = (html: string, options?: ParserOptions) => ReactNode[]
 
 class Viewer extends Component {
 
@@ -74,9 +78,11 @@ class Viewer extends Component {
             {vdom}
           </section>
         </div>
-        <Collapsed className="source" onClick={this.handleContextMenu}>
-          <h1>bearbeiten</h1>
-          <p>Schneller:&nbsp;Rechtsklick!</p>
+        <Collapsed>id="editSource" className="source" onClick={this.handleContextMenu}>
+          <div className="source">
+            <h1>bearbeiten</h1>
+            <p>Schneller:&nbsp;Rechtsklick!</p>
+          </div>
         </Collapsed>
       </div>
     );
@@ -110,7 +116,7 @@ class Viewer extends Component {
     // TODO: if key undef, write something there
     let dT = this.state.relTranspose;
 
-    return Parser(rmd_html, {
+    let out = Parser(rmd_html, {
       replace: function (domNode) {
         if (domNode.name && domNode.name == 'i' && 'data-chord' in domNode.attribs) {
           let chord = domNode.attribs['data-chord'];
@@ -126,6 +132,12 @@ class Viewer extends Component {
         }
       }
     });
+    this.wrapH1H2Ul(out)
+    return out
+  }
+  wrapH1H2Ul(out) {
+    
+
   }
 }
 

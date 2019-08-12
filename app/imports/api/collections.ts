@@ -38,7 +38,25 @@ showdown.setOption("smoothLivePreview", true);
 showdown.setOption("simplifiedAutoLink", true);
 showdown.setOption("openLinksInNewWindow", true);
 
-export class Song {
+
+export class ISongReference {
+  _id?: string;
+
+  title?: string;
+  author: string;
+
+  tags?: Array<string>;
+
+  /** no spaces, only asci */
+  title_?: string;
+  /** no spaces, only asci */
+  author_:string;
+
+  // TODO: Mixin for generating the link
+
+}
+
+export class Song implements ISongReference {
   _id?: string;
 
   text: string;

@@ -49,6 +49,21 @@ class App extends Component {
         super(props);
     }
 
+    getSong(params) {
+        return Songs.findOne({
+            author_: params.author,
+            title_: params.title
+        });
+
+    }
+
+    getSongs(params) {
+        return Songs.find({
+            author_: params.author
+        });
+
+    }
+
     render() {
         if (this.props.dataLoading) {
             return (
@@ -60,31 +75,24 @@ class App extends Component {
             )
         }
 
-        let list = (<List songs={this.props.songs}/>);
+        const list = (<List songs={this.props.songs}/>);
 
-        const getSong = (params) => {
-            return Songs.findOne({
-                author_: params.author,
-                title_: params.title
-            });
-
-        }
 
         return (
             <BrowserRouter>
                 <Switch>
 
-                    <Route exact path='/' render={(props) => (
+                    <Route exact path='/' render={() => (
                             <div className="container">
                                 <DocumentTitle title="Hölibu" />
-                                <List songs={this.props.songs}/>
+                                {list}
                                 {logo}
                             </div>
                     )} />
 
 
                     <Route path='/view/:author/:title' render={(match) => {
-                        let song = getSong(match.match.params);
+                        let song = this.getSong(match.match.params);
 
                         if (song === undefined) {
                             return nA404; 
@@ -93,14 +101,31 @@ class App extends Component {
                         return (
                             <div className="container">
                                 <DocumentTitle title={"Hölibu | " + song.author + ": " + song.title}/>
-                                <List songs={this.props.songs}/>
+                                {list}
                                 <Viewer song={song} />
                             </div>
                         )
                     }} />
 
+                    <Route path='/view/:author/' render={(match) => {
+                        const songs = this.getSongs(match.match.params);
+
+                        if (songs === undefined) {
+                            return nA404; 
+                        }
+
+                        return (
+                            <div className="container">
+                                <DocumentTitle title={"Hölibu | All Lieder von " + match.author }/>
+                                {list}
+                                <Overview songs={songs} />
+                                
+                            </div>
+                        )
+                    }} />
+
                     <Route path='/edit/:author/:title' render={(match) => {
-                        let song = getSong(match.match.params);
+                        let song = this.getSong(match.match.params);
 
                         if (song === undefined) {
                             return na404;
@@ -125,12 +150,12 @@ class App extends Component {
                         )
                     }} />
 
-                    <Route path="/list"  render={() => {
+                    <Route path="/view"  render={() => {
                         return (
                             <>
                             <div className="container">
                                 <DocumentTitle title="Hölibu" />
-                                <List songs={this.props.songs}/>
+                                {list}
                                 <Overview songs={this.props.songs} />
                                 </div>
                             </>
@@ -138,10 +163,11 @@ class App extends Component {
                     }} />
 
                     <Route path="/:filter" render={(match) => {
+                        const filter = match.match.params.filter
                         return (
                             <>
                                 <DocumentTitle title="Hölibu" />
-                                <List songs={this.props.songs} filter={match.match.params.filter} />
+                                <List songs={this.props.songs} filter={filter} />
                                 {logo}
                             </>
                         )

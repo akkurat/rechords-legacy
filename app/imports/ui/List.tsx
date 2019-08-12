@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { NavLink, withRouter, RouteComponentProps } from 'react-router-dom';
 import MetaContent from './MetaContent';
-import {Song} from '../api/collections';
+import { Song, ISongReference } from '../api/collections';
 import { History } from 'history'
 
 interface ListItemProps extends RouteComponentProps {
@@ -15,14 +15,15 @@ const ListItem = withRouter<{}>(
     class ListItem_ extends React.Component<ListItemProps, {}> {
     constructor(props) {
         super(props);
+        // Trying out this approach instead of arrowfunction (for improving my javascript understanding)
+        this.handleContextMenu = this.handleContextMenu.bind(this)
     }
 
     render() {
-        const a = this.props.song.author_
-        const t = this.props.song.title_
+        const song = this.props.song
         return (
             <li>
-                <LinkSong author={a} title={t} activeClassName="selected"
+                <LinkSong songRef={song} activeClassName="selected"
                           onContextMenu={this.handleContextMenu}>
                 <span className="title">{this.props.song.title}</span>
                 <span className="author">{this.props.song.author}</span>
@@ -30,7 +31,7 @@ const ListItem = withRouter<{}>(
         );
     }
 
-    handleContextMenu = event => {
+    private handleContextMenu(event) {
         const m = this.props.song;
         this.props.history.push("/edit/" + m.author_ + "/" + m.title_);
         event.preventDefault();
@@ -231,22 +232,34 @@ export const LinkTag: React.FunctionComponent<{tag: string}> = props => {
 }
 
 export interface SongLinkProps {
-    author: string
-    title?: string
+    songRef: ISongReference
     activeClassName?: string
     onContextMenu?: React.MouseEventHandler<HTMLAnchorElement>
 }
 
 export const LinkSong: React.FunctionComponent<SongLinkProps> = props => {
     let href: History.LocationDescriptor<any>
-    if (props.title) {
-        href = `/view/${props.author}/${props.title}`
+    const songRef = props.songRef
+    if (songRef.title) {
+        href = `/view/${songRef.author_}/${songRef.title_}`
     } else {
-        href = `/view/${props.author}/`
+        href = `/view/${songRef.author_}/`
     }
+
+    function joinedInfo() {
+        let out = ''
+        if (props.songRef.title) {
+            out += props.songRef.title + ' - '
+        }
+        out += props.songRef.author
+        return out
+    }
+
+    const innerValue = props.children || joinedInfo()
+
     return (
         <NavLink {...props} to={href}>
-            {props.children}
+            {innerValue}
         </NavLink>
     )
 }

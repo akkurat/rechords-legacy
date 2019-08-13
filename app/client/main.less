@@ -155,15 +155,23 @@ body {
 
 // It should be also possible to override this manually
 #chordSheetContent {
-  @media only screen and (min-width: @width-xl) {
-    column-count: 4;
-    
+  @media only screen and (min-width: @width-s) {
+
+  }
+
+  @media only screen and (min-width: @width-m) {
+    column-count: 1;
   }
   @media only screen and (min-width: @width-l) {
-    column-count: 3;
-  }
-  @media only screen and (min-width: @width-m) {
     column-count: 2;
+    .span-wrapper {
+      column-count: 2;
+      column-gap: inherit;
+
+    }
+  }
+  @media only screen and (min-width: @width-xl) {
+    column-count: 3;
   }
 
   column-gap: 100px;
@@ -179,7 +187,7 @@ body {
     break-inside: avoid;
     break-before: avoid;
   }
-  #head, h1, h2, ul.tags {
+  #head, .span-wrapper {
     column-span: all;
   }
 
@@ -371,9 +379,10 @@ body {
 } // .chordsheet
 
 
-@media only screen and (max-width: @width-m) {
-  aside#list {
-    display: none
+aside#list {
+  @media only screen and (max-width: @width-s) {
+    display: none;
+    width: 100%;
   }
 }
 
@@ -830,4 +839,61 @@ hr {
   overflow: auto;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: thin;
+}
+
+// Responsive
+.show-s, .show-m, .show-l, .show-xl {
+  display: none;
+}
+.hide-s, .hide-m, .hide-l, .hide-xl {
+  display: initial;
+}
+
+
+@media only screen and (max-width: @width-s) {
+  .show-s { display: initial}
+}
+
+@media only screen and (max-width: @width-m) {
+  .show-m {display: initial}
+}
+
+@media only screen and (max-width: @width-l) {
+  .show-l {display: initial}
+}
+
+@media only screen and (min-width: @width-xl) {
+  .show-xl {display: initial}
+}
+
+@media only screen and (max-width: @width-s) {
+  .hide-s { display: none}
+}
+
+@media only screen and (max-width: @width-m) {
+  .hide-m {display: none}
+}
+
+@media only screen and (max-width: @width-l) {
+  .hide-l {display: none}
+}
+
+@media only screen and (max-width: @width-xl) {
+  .hide-xl {display: none}
+}
+// Header 
+
+#mobileheader {
+  position: absolute;
+  background-color: @secondary;
+  top: 0px;
+  height: 40px;
+  width: 100%;
+  z-index: 100;
+}
+
+.collapsed-open {
+  height: 100%;
+  display: block !important;
+  
 }

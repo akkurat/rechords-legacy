@@ -6,7 +6,7 @@ import { withTracker } from 'meteor/react-meteor-data';
 import Songs, {Song} from '../api/collections.js';
 
 import List from './List.tsx';
-import Viewer from './Viewer.jsx';
+import Viewer from './Viewer.tsx';
 import Editor from './Editor.jsx';
 
 import { BrowserRouter, Route, Switch} from 'react-router-dom';
@@ -42,6 +42,7 @@ const logo = (
 )
 
 
+
 // App component - represents the whole app
 class App extends Component {
 
@@ -49,12 +50,27 @@ class App extends Component {
         super(props);
     }
 
+    handleMobileMenu = ev => {
+        ev.preventDefault()
+        const menu = document.getElementById('list')
+        if (menu.classList.contains('collapsed-open')) {
+            menu.classList.remove('collapsed-open')
+        } else {
+            menu.classList.add('collapsed-open')
+        }
+    }
+
+    mobileHeader = () => (
+        <header className="show-s" id="mobileheader">
+            <a href="#" onClick={this.handleMobileMenu} className="icn-menu">Menu</a>
+        </header>
+    )
+
     getSong(params) {
         return Songs.findOne({
             author_: params.author,
             title_: params.title
         });
-
     }
 
     getSongs(params) {
@@ -79,6 +95,8 @@ class App extends Component {
 
 
         return (
+            <>
+            <this.mobileHeader />
             <BrowserRouter>
                 <Switch>
 
@@ -177,6 +195,7 @@ class App extends Component {
                     <Route component={NoMatch} />
                 </Switch>
             </BrowserRouter>
+            </>
         );
     }
 }

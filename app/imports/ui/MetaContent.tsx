@@ -1,6 +1,6 @@
 import { Song } from '../api/collections.js';
 import * as React from 'react';
-var Parser = require("html-react-parser");
+const Parser = require("html-react-parser");
 
 
 interface Props {

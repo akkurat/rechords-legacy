@@ -190,7 +190,7 @@ export default class List extends React.Component<ListProps, ListState> {
         }
 
         return (
-            <aside id="list">
+            <aside id="list" className="hide-s">
                 <div className="filter">
                     <input type="text" 
                         placeholder="Filtern…" 

@@ -1,8 +1,8 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom'
-import { withRouter } from "react-router-dom";
-import TranposeSetter from "./TransposeSetter.jsx";
-import ChrodLib from "../api/libchrod.js";
+import { withRouter } from 'react-router-dom';
+import TranposeSetter from './TransposeSetter.jsx';
+import ChrodLib from '../api/libchrod.js';
 import Collapsed from './Collapsed.jsx';
 
 import './Viewer.less'

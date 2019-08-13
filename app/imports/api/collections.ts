@@ -2,12 +2,12 @@ import { Mongo } from "meteor/mongo";
 import { _ } from "meteor/underscore";
 
 var DATACHORD = 'data-chord';
-var showdown = require("showdown");
+import * as showdown from 'showdown'
 var rmd = require("showdown-rechords");
-var DOMParser = require("xmldom").DOMParser;
-var Parser = require("html-react-parser");
-var slug = require("slug");
-var xss = require("xss");
+import { DOMParser } from 'xmldom';
+import Parser from 'react-html-parser';
+import * as slug from 'slug'
+import * as xss from 'xss'
 
 var options = {
   whiteList: {
@@ -51,8 +51,6 @@ export class ISongReference {
   title_?: string;
   /** no spaces, only asci */
   author_:string;
-
-  // TODO: Mixin for generating the link
 
 }
 

@@ -11,7 +11,6 @@
     "@babel/runtime": "^7.2.0",
     "@types/meteor": "^1.4.15",
     "history": "latest",
-    "html-react-parser": "^0.4.6",
     "hyphenation.en-us": "^0.2.1",
     "hypher": "^0.2.5",
     "indexof": "0.0.1",
@@ -30,7 +29,8 @@
     "slug": "^0.9.1",
     "source-map-support": "^0.5.6",
     "xmldom": "^0.1.27",
-    "xss": "^0.3.8"
+    "xss": "^0.3.8",
+    "htmlparser2": "^4.0.0"
   },
   "devDependencies": {
     "@types/core-js": "^0.9.46",
@@ -40,6 +40,9 @@
     "@types/react-html-parser": "^2.0.1",
     "@types/react-router-dom": "^4.3.4",
     "@types/requirejs": "^2.1.31",
+    "@types/showdown": "^1.9.3",
+    "@types/slug": "^0.9.1",
+    "@types/xmldom": "^0.1.29",
     "eslint": "^6.1.0",
     "eslint-plugin-react": "^7.14.3",
     "meteor-typings": "^1.4.1",

@@ -1,29 +1,29 @@
 import { Song } from '../api/collections.js';
 import * as React from 'react';
-const Parser = require("html-react-parser");
+// TODO:
+import Parser, { Transform } from 'react-html-parser'
 
-
-interface Props {
+interface IMetaContentProps {
   title: string;
   className?: string;
-  songs: Array<Song>;
-  replace: Function;
+  songs: Song[];
+  replace: Transform
 }
 
-export default class MetaContent extends React.Component<Props, {}> {
+export default class MetaContent extends React.Component<IMetaContentProps, {}> {
     content: object;
 
     constructor(props) {
         super(props);
 
-        let matches : Array<Song> = this.props.songs.filter((song : Song) => {
+        let matches : Song[] = this.props.songs.filter((song: Song) => {
             return song.author == 'Meta' && song.title == this.props.title;
         })
         if (matches.length == 0) {
             this.content = <span>No match for {this.props.title}!</span>;
         } else {
             let html = matches[0].getHtml();
-            this.content = new Parser(html, {replace: this.props.replace});
+            this.content = Parser(html, {transform: this.props.replace});
         }
     }
 

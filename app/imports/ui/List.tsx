@@ -11,39 +11,39 @@ interface ListItemProps extends RouteComponentProps {
     history: History;
 }
 
-const ListItem = withRouter<{}>( 
+const ListItem = withRouter<{}>(
     class ListItem_ extends React.Component<ListItemProps, {}> {
-    constructor(props) {
-        super(props);
-        // Trying out this approach instead of arrowfunction (for improving my javascript understanding)
-        this.handleContextMenu = this.handleContextMenu.bind(this)
-    }
+        constructor(props) {
+            super(props);
+            // Trying out this approach instead of arrowfunction (for improving my javascript understanding)
+            this.handleContextMenu = this.handleContextMenu.bind(this)
+        }
 
-    render() {
-        const song = this.props.song
-        return (
-            <li>
-                <LinkSong songRef={song} activeClassName="selected"
-                          onContextMenu={this.handleContextMenu}>
-                <span className="title">{this.props.song.title}</span>
-                <span className="author">{this.props.song.author}</span>
-                </LinkSong></li>
-        );
-    }
+        render() {
+            const song = this.props.song
+            return (
+                <li>
+                    <LinkSong songRef={song} activeClassName="selected"
+                        onContextMenu={this.handleContextMenu}>
+                        <span className="title">{this.props.song.title}</span>
+                        <span className="author">{this.props.song.author}</span>
+                    </LinkSong></li>
+            );
+        }
 
-    private handleContextMenu(event) {
-        const m = this.props.song;
-        this.props.history.push("/edit/" + m.author_ + "/" + m.title_);
-        event.preventDefault();
-      };
+        private handleContextMenu(event) {
+            const m = this.props.song;
+            this.props.history.push("/edit/" + m.author_ + "/" + m.title_);
+            event.preventDefault();
+        };
 
-})
+    })
 
 
 
 interface ListGroupProps {
-  songs: Song[];
-  label: string;
+    songs: Song[];
+    label: string;
 }
 class ListGroup extends React.Component<ListGroupProps, {}> {
     constructor(props) {
@@ -55,7 +55,7 @@ class ListGroup extends React.Component<ListGroupProps, {}> {
             <li key={this.props.label}>
                 <h2 className="huge">{this.props.label}</h2>
                 <ul>
-                    {this.props.songs.map(song => 
+                    {this.props.songs.map(song =>
                         <ListItem song={song} key={song._id} />
                     )}
                 </ul>
@@ -65,8 +65,8 @@ class ListGroup extends React.Component<ListGroupProps, {}> {
 }
 
 interface ListProps {
-  songs: Song[];
-  filter: string;
+    songs: Song[];
+    filter: string;
 }
 interface ListState {
     filter: string;
@@ -102,12 +102,12 @@ export default class List extends React.Component<ListProps, ListState> {
         document.removeEventListener("keydown", this.keyHandler);
     }
 
-    onChange = (event : React.ChangeEvent<HTMLInputElement>) => {
+    onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         this.setState({
-          filter: event.currentTarget.value
+            filter: event.currentTarget.value
         });
         event.preventDefault();
-      };
+    };
 
     onFocus = () => {
         this.setState({
@@ -124,7 +124,7 @@ export default class List extends React.Component<ListProps, ListState> {
     onTagClick = (event: React.MouseEvent) => {
         const tag = '#' + event.currentTarget.childNodes[0].textContent.toLowerCase();
 
-        this.setState( (state, props) => {
+        this.setState((state, props) => {
             let newFilter;
             if (state.filter.includes(tag)) {
                 newFilter = state.filter.replace(tag, '');
@@ -182,8 +182,8 @@ export default class List extends React.Component<ListProps, ListState> {
 
         const process = (node) => {
             if (node.name == 'li') {
-                let b = node.children.length > 1 ? <b>…</b> : null;
-                return <li onMouseDown={this.onTagClick.bind(this)}>{node.children[0].data}{b}</li>
+                const b = node.children.length > 1 ? <b>…</b> : null;
+                return <li onMouseDown={this.onTagClick}>{node.children[0].data}{b}</li>
             }
 
             return node;
@@ -192,27 +192,27 @@ export default class List extends React.Component<ListProps, ListState> {
         return (
             <aside id="list" className="hide-s">
                 <div className="filter">
-                    <input type="text" 
-                        placeholder="Filtern…" 
-                        value={this.state.filter} 
+                    <input type="text"
+                        placeholder="Filtern…"
+                        value={this.state.filter}
                         ref="filter"
                         onKeyDown={this.onKeyDown}
                         onChange={this.onChange}
                         onFocus={this.onFocus}
                         onBlur={this.onBlur}
-                        />
-                    <span className={'reset ' + filled} onClick={(e)=>{this.setState({filter: ''})}}>&times;</span>
+                    />
+                    <span className={'reset ' + filled} onClick={(e) => { this.setState({ filter: '' }) }}>&times;</span>
                 </div>
 
-                <MetaContent 
+                <MetaContent
                     replace={process}
-                    className={'filterMenu ' + active} 
-                    title="Schlagwortverzeichnis" 
+                    className={'filterMenu ' + active}
+                    title="Schlagwortverzeichnis"
                     songs={this.props.songs}
-                    />
+                />
                 <ul>
-                    {groups.map((group) => 
-                        <ListGroup label={group} songs={tree[group]} key={group}/>
+                    {groups.map((group) =>
+                        <ListGroup label={group} songs={tree[group]} key={group} />
                     )}
                     <li>
                         <h2><NavLink to="/new">+ Neues Lied</NavLink></h2>
@@ -223,12 +223,12 @@ export default class List extends React.Component<ListProps, ListState> {
     }
 }
 
-export const LinkTag: React.FunctionComponent<{tag: string}> = props => {
-        const tag = props.tag
-        return ( <a href={'/%23' + tag}>
-            {props.children}
-        </a> // %23 is #
-        )
+export const LinkTag: React.FunctionComponent<{ tag: string }> = props => {
+    const tag = props.tag
+    return (<a href={'/%23' + tag}>
+        {props.children}
+    </a> // %23 is #
+    )
 }
 
 export interface SongLinkProps {

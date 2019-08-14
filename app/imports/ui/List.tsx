@@ -158,9 +158,8 @@ export default class List extends React.Component<ListProps, ListState> {
 
             // Hack to hide all songs containing an 'archiv'-tag
             if (!this.state.filter.includes('#privat')) {
-                for (let tag of song.getTags()) {
-                    if (tag.startsWith('privat')) return;
-                }
+                const tags = song.getTags()
+                if ( tags.get('privat')) { return }
             }
 
 

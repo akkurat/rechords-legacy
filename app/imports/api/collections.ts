@@ -8,6 +8,8 @@ import { DOMParser } from 'xmldom';
 import Parser from 'react-html-parser';
 import * as slug from 'slug'
 import * as xss from 'xss'
+import { string } from "prop-types";
+import { getIterator } from "core-js";
 
 var options = {
   whiteList: {
@@ -39,13 +41,16 @@ showdown.setOption("simplifiedAutoLink", true);
 showdown.setOption("openLinksInNewWindow", true);
 
 
-export class ISongReference {
+export interface ISongReference {
   _id?: string;
 
   title?: string;
   author: string;
 
-  tags?: Array<string>;
+  getTags(): any
+
+  
+  tags?: any
 
   /** no spaces, only asci */
   title_?: string;
@@ -62,7 +67,8 @@ export class Song implements ISongReference {
   title: string;
   author: string;
 
-  tags?: Array<string>;
+  tags?: Array<[string,string]>
+
   chords?: Array<string>;
   html?: string;
 
@@ -72,9 +78,10 @@ export class Song implements ISongReference {
   author_:string;
 
   constructor (doc) {
-    // Todo: this shouldn't be necessary in typescript
-    // Rather Song extends Doc?
     _.extend(this, doc);
+
+
+
   }
 
   getHtml() {
@@ -95,7 +102,17 @@ export class Song implements ISongReference {
     if (!("tags" in this)) {
       this.parse(this.text);
     }
-    return this.tags;
+    if(this.tags) { 
+      // Backward compatibility
+      return new Map<string, string>(this.tags.map(e => {
+        if( typeof e === 'string') {
+          return [e,e]
+        }
+        return e;
+      })) 
+    } else {
+      return new Map<string, string>() 
+    }
   }
 
   getVirtualDom() {
@@ -112,7 +129,7 @@ export class Song implements ISongReference {
     this.title = "";
     this.author = "";
 
-    this.tags = [];
+    this.tags_ = []
     this.chords = [];
 
     // URL-compatible strings
@@ -141,7 +158,8 @@ export class Song implements ISongReference {
       this.author_ = slug(this.author);
     }
 
-    this.tags = RmdHelpers.collectTags(dom);
+    let tags = RmdHelpers.collectTags(dom);
+    this.tags = [...tags.entries()]
     this.chords = RmdHelpers.collectChords(dom);
   }
 
@@ -177,17 +195,24 @@ let Songs = new Mongo.Collection<Song>('songs', {
 
 
 export class RmdHelpers {
-  static collectTags(dom) {
-    let tags = [];
+  static collectTags(dom): Map<string, string> {
+    let tags = new Map();
     let uls = dom.getElementsByTagName("ul");
-    for (let i = 0; i < uls.length; i++) {
-      let ul = uls[i];
+    for (let ul of uls) {
       if (ul.getAttribute("class") != "tags") continue;
 
       let lis = ul.getElementsByTagName("li");
-      for (let j = 0; j < lis.length; j++) {
-        let li = lis[j];
-        tags.push(li.textContent);
+      // IMPROVE: this could be solved more elegant in when parsing
+      for (let li of lis) {
+        const ch = li.childNodes
+        if(ch.length > 0) {
+          const key = ch[0].textContent
+          if(ch.length > 1) {
+            tags.set(key, ch[1].textContent)
+          } else {
+            tags.set(key, key)
+          }
+        }
       }
     }
     return tags;

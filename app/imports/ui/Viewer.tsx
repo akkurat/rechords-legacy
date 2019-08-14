@@ -63,7 +63,7 @@ class Viewer extends React.Component<IViewerProps, IViewerState> {
 
     const options = []
     for (let i = 1; i < 6; i++) {
-      options.push(<option key={i} value={i}>{i}</option>)
+      options.push(<option key={i+'column'} value={i}>{i}</option>)
     }
 
     return (
@@ -86,8 +86,7 @@ class Viewer extends React.Component<IViewerProps, IViewerState> {
         <div
           className="content chordsheet"
           id="chordsheet"
-          onContextMenu={this.handleContextMenu}
-        >
+          onContextMenu={this.handleContextMenu} >
           <section ref={this.containerRef} id="chordSheetContent">
             {vdom}
           </section>
@@ -120,19 +119,20 @@ class Viewer extends React.Component<IViewerProps, IViewerState> {
 
   createVdom() {
     const chrodlib = new ChrodLib();
-    const chords = this.props.song.getChords();
-    const rmd_html = this.props.song.getHtml();
+    const song = this.props.song
+    const chords = song.getChords()
+    const rmd_html = song.getHtml()
+    const tags = song.getTags()
 
-    this.key = ChrodLib.guessKey(chords);
-    const key = this.key;
-
+    let key = tags.get('key')
+    this.key = ChrodLib.guessKey(chords, key);
 
     // TODO: if key undef, write something there
     const dT = this.state.relTranspose;
     const trans = (domNode: DomElement, idx: number) => {
       if (domNode.name && domNode.name == 'i' && 'data-chord' in domNode.attribs) {
         const chord = domNode.attribs['data-chord'];
-        const t = chrodlib.transpose(chord, key, dT);
+        const t = chrodlib.transpose(chord, this.key, dT);
         let chord_;
         if (t == null) {
           chord_ = <span className="before">{chord}</span>;
@@ -143,15 +143,15 @@ class Viewer extends React.Component<IViewerProps, IViewerState> {
         return <i>{chord_}{domNode.children[0].data}</i>;
       }
     }
-    const out: React.ReactElement<any>[] = ReactHtmlParser(rmd_html, { transform: trans });
+    const out: Array<React.ReactElement<any>> = ReactHtmlParser(rmd_html, { transform: trans });
     return this.wrapH1H2Ul(out)
   }
-  wrapH1H2Ul(inp: React.ReactElement<any>[]): React.ReactElement<any>[] {
+  wrapH1H2Ul(inp: Array<React.ReactElement<any>>): Array<React.ReactElement<any>> {
 
     const miniState = { outElements: [], wrappees: [] }
     const wrappable = ['h1', 'h2', 'ul']
     for (const element of inp) {
-      if (wrappable.indexOf(element.type as string) >= 0){
+      if (wrappable.indexOf(element.type as string) >= 0) {
           miniState.wrappees.push(element)
       } else {
         this.wrap(miniState)

@@ -13,9 +13,8 @@ Bb, Eb, F
 */
 class Key {
   /**
-   * 
-   * @param {String} name 
-   * @param {Number} idx 
+   * @param {String} name
+   * @param {Number} idx
    */
   idx: number;
   beOrNot: ToBorSharp;
@@ -33,19 +32,19 @@ class Key {
     // todo: neutral, flat or sharp?
   }
   static parseName(name: string) {
-    let idx = forwardMap.get(name.toUpperCase());
-    return new Key(name, idx); 
+    const idx = forwardMap.get(name.toUpperCase());
+    return new Key(name, idx);
   }
 }
 
 
-/* Since the number of notes is limited
+/** Since the number of notes is limited
 and will not be extended, it is legit
 to hardcode the notes and makes things
 easier in this class.
 */
-
-var B = new Key("B", 11),
+// tslint:disable-next-line:one-variable-per-declaration
+const B = new Key("B", 11),
   H = new Key("H", 11),
   Bes = new Key("Bb", 10),
   Ais = new Key("A#", 10),
@@ -63,7 +62,7 @@ var B = new Key("B", 11),
   Des = new Key("Db", 1),
   Cis = new Key("C#", 1),
   C = new Key("C", 0);
-var keys: Array<Key> = [
+const keys: Key[] = [
   C,
   Cis,
   Des,
@@ -89,12 +88,12 @@ keys.forEach(k => forwardMap.set(k.name, k.idx));
 
 const bMap: Map<number, string> = new Map();
 keys
-  .filter(k => k.beOrNot != ToBorSharp.Sharp)
+  .filter(k => k.beOrNot !== ToBorSharp.Sharp)
   .forEach(k => bMap.set(k.idx, k.name));
 
-const shMap: Map<number,string> = new Map();
+const shMap: Map<number, string> = new Map();
 keys
-  .filter(k => k.beOrNot != ToBorSharp.Flat)
+  .filter(k => k.beOrNot !== ToBorSharp.Flat)
   .forEach(k => shMap.set(k.idx, k.name));
 
 // TODO: move to another file
@@ -102,7 +101,7 @@ class Scale {
   /**
      * 
      * @param {string} name 
-     * @param {Array<number>} pitches 
+     * @param {Array<number>} pitches
      */
   public bmap: Map<number, ToBorSharp>;
   constructor(
@@ -126,7 +125,7 @@ class Scale {
       .some(p_shift => p_shift == pitch);
   }
 }
-var Scales:{major: Scale, harmonic: Scale} = {
+const Scales: { major: Scale, harmonic: Scale } = {
   // Arg, the harmonic depends on which cord is being played
   major: new Scale(
     "major",
@@ -175,8 +174,8 @@ var Scales:{major: Scale, harmonic: Scale} = {
 
 class Chord {
   idx: number;
-  constructor(public key: Key, public keys: Array<Number>, public str: string,
-     public suff: string = '', public optional: boolean = false) {
+  constructor(public key: Key, public keys: Number[], public str: string,
+    public suff: string = '', public optional: boolean = false) {
     this.idx = key.idx;
   }
 
@@ -208,26 +207,26 @@ class Chord {
   }
 
   /**
-     * 
-     * @param {string} chordString 
-     * @returns {Chord} 
-     */
-  static parseChordString(chordString) : Chord {
+   *
+   * @param {string} chordString
+   * @returns {Chord}
+   */
+  static parseChordString(chordString: string): Chord {
 
-  let checkOptional:Array<string> = chordString.match(/(^\(?)([^)]*)(\)?)/);
-  let content = checkOptional[2];
-  let optional:boolean = false;
-  if (checkOptional[1] && checkOptional[3]) {
-    optional = true;
-  }
+    let checkOptional: Array<string> = chordString.match(/(^\(?)([^)]*)(\)?)/);
+    let content = checkOptional[2];
+    let optional: boolean = false;
+    if (checkOptional[1] && checkOptional[3]) {
+      optional = true;
+    }
 
     let parsedChordString = content.match(/()([a-h](#|b)?)(-|\+|m?(?!aj))(.*)/i);
 
     if (parsedChordString == null) return;
 
     let keystr = parsedChordString[2].charAt(0).toUpperCase();
-    if ( parsedChordString[2].length > 1 ){
-      keystr+=parsedChordString[2].charAt(1);
+    if (parsedChordString[2].length > 1) {
+      keystr += parsedChordString[2].charAt(1);
     }
 
     let keydx = forwardMap.get(keystr);
@@ -252,50 +251,43 @@ class Chord {
 }
 
 export default class ChrodLib {
-  // tonart, moll, dur
-
-  //
 
   /**
-     * 
-     * @param {Array<String>} chordsList 
-     * @returns { {scale: string, key: string}}
-     */
-  static guessKey(chordsList) {
-    // just test every key (i mean its only 11)
-    // and for every one make a penalty for every
-    // "Tonart Fremde Chord"
-
-    // Guessing would be easier using also
-    // the minor/major information.
-    // However, it should work already like that
-    // Pitches are relative to c=0
-
-    // Haha, this comment is completely not understandable by me myself after 2 days...
-    let keyss = ChrodLib.covarianceWithScales(chordsList);
+   *
+   * @param {Array<String>} chordsList
+   * @returns { {scale: string, key: string}}
+   */
+  static guessKey(chordsList: string[], override?: string) {
+    if( override ) {
+      const scaleRef = this.parseTag(override.toUpperCase())
+      if (scaleRef) {
+        return scaleRef
+      }
+    }
+    const keyss = ChrodLib.covarianceWithScales(chordsList);
     return ChrodLib.selectBest(keyss);
   }
 
-  static parseTags(tags: Array<string>) : {key: string, scale: string} {
-    for (let tag of tags) {
-      let res = tag.match(/([A-H]b?)-(\w+)/i)
+  static parseTag(tag: string): IScaleReference {
+    let res = tag.match(/([A-H](#|b)?)-(\w*)/i)
 
-      var fuzzy_scales = new Map([
-        ["minor", Scales.harmonic],
-        ["dur", Scales.major],
-        ["major", Scales.major],
-        ["moll", Scales.harmonic]
-      ]);
+    var fuzzy_scales = new Map([
+      ["moll", Scales.harmonic],
+      ["m", Scales.harmonic],
+      ["minor", Scales.harmonic],
+      ["", Scales.major],
+      ["dur", Scales.major],
+      ["major", Scales.major],
+    ]);
 
-      if (res) {
-        let scale_str = res[2];
-        let scale = fuzzy_scales.get(scale_str.toLowerCase());
-        let key = Key.parseName(res[1]);
-        return {key: key.name, scale: scale.name};
-      }
-      return undefined;
-
+    if (res) {
+      const scaleStr = res[3];
+      const scale = fuzzy_scales.get(scaleStr.toLowerCase());
+      const key = Key.parseName(res[1]);
+      return { key: key.name, scale: scale.name };
     }
+    return undefined;
+
   }
 
   /**
@@ -304,7 +296,7 @@ export default class ChrodLib {
    */
   static selectBest(keyss) {
     let best_val = -1000;
-    let best: { scale: string; key: string };
+    let best: IScaleReference;
 
     for (let scalename of Object.getOwnPropertyNames(keyss)) {
       let scale = keyss[scalename];
@@ -313,7 +305,7 @@ export default class ChrodLib {
         //console.debug(val);
         if (val > best_val) {
           best_val = val;
-          best = { scale: scalename, key: key };
+          best = { scale: scalename, key };
           //console.debug("setting best", best);
         }
       }
@@ -370,7 +362,7 @@ export default class ChrodLib {
      * @param {number} shift
      */
 
-  transpose(chord: string, meta: {scale: string; key: string}, shift: number) {
+  transpose(chord: string, meta: { scale: string; key: string }, shift: number) {
     let current_pitch = forwardMap.get(meta.key);
     let current_scale = Scales[meta.scale];
 
@@ -404,21 +396,21 @@ export default class ChrodLib {
     //return <span className="before {clazz}">{base}{ch.str}<sup>{suff}</sup></span>;
   }
 
-  private shift_suff(suff: string, shift:number, pitchmap: Map<number, string>) : string {
-     let match = suff.match(/[A-H](b|#)?/)
-     if (match == null) {
-       return suff;
-     } else {
-       let orig:string = match[0];
-       let orig_idx = forwardMap.get(orig);
-       let idx = (orig_idx+48+shift)%12;
-       let result = pitchmap.get(idx);
+  private shift_suff(suff: string, shift: number, pitchmap: Map<number, string>): string {
+    let match = suff.match(/[A-H](b|#)?/)
+    if (match == null) {
+      return suff;
+    } else {
+      let orig: string = match[0];
+      let orig_idx = forwardMap.get(orig);
+      let idx = (orig_idx + 48 + shift) % 12;
+      let result = pitchmap.get(idx);
 
-       return suff.replace(orig, result);
-       
+      return suff.replace(orig, result);
 
 
-     }
+
+    }
 
   }
 
@@ -464,24 +456,22 @@ export default class ChrodLib {
      * 
      * @param {String} chord 
      */
-  shift(scale: {key: string, scale: string}, shift: number) :
-  {key: string, scale: string}
-  {
+  shift(scale: IScaleReference, shift: number): IScaleReference {
     let keyobj = Key.parseName(scale.key);
     let scaleobj: Scale = Scales[scale.scale];
 
     // TODO: one function for the modulo shit
-    const tr_idx = (keyobj.idx+shift+48)%12;
+    const tr_idx = (keyobj.idx + shift + 48) % 12;
     let bornot = scaleobj.bmap.get(tr_idx);
-    let  key: string;
+    let key: string;
     if (bornot == ToBorSharp.Sharp) {
       key = shMap.get(tr_idx);
     } else {
       key = bMap.get(tr_idx);
     }
-    return {key: key, scale: scale.scale};
+    return { key: key, scale: scale.scale };
 
   }
 }
-
-export { Key, Chord, Scale };
+interface IScaleReference { scale: string; key: string }
+export { Key, Chord, Scale, IScaleReference };

@@ -246,6 +246,7 @@ export default class Preview extends React.Component<P, {}> {
       if ('data-chord' in node.attribs) {
         chord = (
           <span className="before"
+            key={'chord'+index}
             contentEditable={true}
             suppressContentEditableWarning={true}
             onBlur={this.handleChordBlur}
@@ -275,7 +276,7 @@ export default class Preview extends React.Component<P, {}> {
             if (nextNotEmpty) {
               word += ' ';
             }
-            return <i key={idx} className={classes}>{idx == 0 ? chord : undefined}{word}</i>
+            return <i key={'lyrics'+idx} className={classes}>{idx == 0 ? chord : undefined}{word}</i>
           }
           )}
         </React.Fragment>

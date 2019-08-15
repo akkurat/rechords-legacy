@@ -1,0 +1,59 @@
+@import '../../client/variables.less';
+
+#transposer {
+  height: 400px;
+  float : right;
+
+  .rc-slider {
+    width: 50px;
+  }
+
+  .rc-slider-mark {
+    top: -18px;
+  }
+
+  .rc-slider-track {
+    background-color: @accent;
+  }
+
+  .rc-slider-handle,
+  .rc-slider-dot-active {
+    border-color: @accent;
+  }
+
+  .rc-slider-mark-text {
+    width     : 100%;
+    text-align: left;
+    color     : @secondary;
+
+    i {
+      opacity: 1;
+    }
+
+    &-active {
+      color: @accent;
+
+      i {
+        opacity: 0;
+        transition: opacity 1s;
+      }
+    }
+  }
+
+  .rc-slider-handle {
+
+      // Spielerei mit Musiknote als handle, witzig aber nicht hilfreich
+      // &::before {
+      //   content: url('/svgs/music-solid.svg');
+      //   color: @accent;
+      //   width: 30px;
+      //   height: 30px;
+      // }
+      overflow: visible;
+      width : 20px;
+      height: 20px;
+      text-align: center;
+      vertical-align: middle;
+      font-size: 10px;
+  }
+}

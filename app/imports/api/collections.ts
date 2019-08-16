@@ -55,7 +55,7 @@ export interface ISongReference {
   /** no spaces, only asci */
   title_?: string;
   /** no spaces, only asci */
-  author_:string;
+  author_: string;
 
 }
 
@@ -67,7 +67,7 @@ export class Song implements ISongReference {
   title: string;
   author: string;
 
-  tags?: Array<[string,string]>
+  tags?: Array<[string, string]>
 
   chords?: Array<string>;
   html?: string;
@@ -129,7 +129,7 @@ export class Song implements ISongReference {
     this.title = "";
     this.author = "";
 
-    this.tags_ = []
+    this.tags = []
     this.chords = [];
 
     // URL-compatible strings

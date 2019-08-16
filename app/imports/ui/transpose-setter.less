@@ -49,11 +49,23 @@
       //   width: 30px;
       //   height: 30px;
       // }
-      overflow: visible;
+      overflow: hidden;
       width : 20px;
       height: 20px;
       text-align: center;
       vertical-align: middle;
       font-size: 10px;
+      transition: bottom .2s;
+      // animation: changeLetter 2s linear infinite alternate;
+      *.fadeIn {
+        animation-name: fadeIn;
+        animation-duration: 1s;
+        animation-timing-function: ease-in-out;
+        animation-fill-mode: forwards;
+      }
+  }
+  @keyframes fadeIn {
+    0% {opacity: 0; margin-left: 20px}
+    100% {opacity: 1;}
   }
 }

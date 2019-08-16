@@ -74,7 +74,7 @@ export class Overview extends React.Component<{ songs: Song[] }, { sortorder: IS
                         <tr key={s._id}>
                             <td><LinkSong songRef={s}>{s.title}</LinkSong></td>
                             <td><LinkSong songRef={artistRef} /></td>
-                            <td>{this.concatTags(s.tags)}</td>
+                            <td>{this.concatTags(s.getTags())}</td>
                             <td></td>
                         </tr>
                         )}
@@ -90,14 +90,16 @@ export class Overview extends React.Component<{ songs: Song[] }, { sortorder: IS
         }
     }
 
-    private concatTags(tags: string[]) {
-        return <ul className="tags">
-            {tags.map(t =>
-                <li className="tag"><LinkTag tag={t} >{t}</LinkTag></li>
-            )
-            }
+    private concatTags(tags: Map<string, string>) {
+        let out: React.ReactNode[] = []
+        for (let t of tags.entries()) {
+            out.push(<li className="tag"><LinkTag tag={t[0]} >{t[0]}{t[1]}</LinkTag></li>)
+        }
+        return (
+        <ul className="tags">
+            {out}
         </ul>
-
+        )
     }
 
     private getOrderedSongs(): Song[] {

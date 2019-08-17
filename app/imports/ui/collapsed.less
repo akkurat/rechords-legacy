@@ -1,0 +1,331 @@
+@import '../../client/variables.import.less';
+
+aside {
+  color      : white;
+  @width     : 220px;
+  flex-grow  : 0;
+  flex-shrink: 0;
+  box-sizing : border-box;
+  width      : @width;
+
+  .scroll;
+
+  padding-top   : 1em;
+  padding-left  : 0.5em;
+  padding-right : 0;
+  padding-bottom: 2em;
+
+  h1,
+  h2,
+  h3 {
+    font-size  : 2em;
+    font-weight: 600;
+  }
+
+  &>h1 {
+    margin-top: 0;
+  }
+
+  p {
+    opacity: 0.7;
+  }
+
+
+  &.collapsed {
+    @pad        : 30px;
+    overflow    : visible;
+    width       : @pad;
+    cursor      : pointer;
+    transition  : width 0.3s;
+    z-index     : 100;
+    box-sizing  : border-box;
+    padding-left: @pad;
+
+    // Mitigates the rendering bug of the contained .label
+    position: relative;
+
+    div {
+      .source;
+      position        : absolute;
+      left            : -3px;
+      transition      : all 0.2s ease-in-out;
+      display         : block;
+      width           : 240px;
+      border-radius: 20px;
+      padding: 10px;
+    }
+
+    &:hover {
+
+      // width: @width;
+      div {
+        left : -200px;
+        
+
+        // width: @width;
+      }
+    }
+
+  }
+
+  &#list {
+
+
+    .list;
+
+    &:not(.collapsed) {
+      padding-top : 0;
+      padding-left: 0;
+    }
+
+    li {
+      color: black;
+    }
+
+    .filter {
+      position: absolute;
+      display : flex;
+      width   : @width;
+
+      background-color: @secondary;
+
+      .reset {
+        flex       : 0 0 1.5em;
+        font-size  : 1.4em;
+        margin-left: -1.5em;
+        cursor     : pointer;
+        color      : @accent;
+        margin-top : 1rem;
+
+        display: none;
+
+        &.filled {
+          display: block;
+        }
+      }
+
+      input {
+        color       : @accent;
+        margin-top  : 1rem;
+        padding-left: 0.5em;
+        height      : 2em;
+
+        display: block;
+        flex   : 1 1 auto;
+
+        .noFocusBorder;
+
+        transition: color, background-color 0.5s;
+
+        background-color: mix(white, @secondary, 80%);
+
+        &::placeholder {
+          color: transparent;
+        }
+
+        &[value=""] {
+          background-color: @secondary;
+
+          &::placeholder {
+            color: fade(white, 50%);
+          }
+        }
+
+        &:focus {
+          background-color: mix(white, @secondary, 80%);
+
+          &::placeholder {
+            color: @accent;
+          }
+        }
+      }
+    }
+
+    .filterMenu {
+      position: absolute;
+      z-index : 1;
+      left    : @width;
+      top     : 0;
+
+      @bgMenu         : mix(white, @secondary, 70%);
+      background-color: @bgMenu;
+
+      display       : flex;
+      flex-direction: row;
+
+      padding-top   : 0.5em;
+      padding-left  : 2em;
+      padding-bottom: 3em;
+
+      h1,
+      h2 {
+        display: none;
+      }
+
+      h4 {
+        color           : black;
+        display         : block;
+        width           : 0;
+        transform-origin: top right;
+        font-weight     : 600;
+        transform       : rotate(-14deg);
+      }
+
+      ul {
+        margin-top: 3em;
+        flex      : 0 0 7em;
+      }
+
+      li {
+        color: white;
+
+        margin-bottom   : 0.5em;
+        transform-origin: center;
+        transform       : rotate(-14deg);
+        cursor          : pointer;
+
+        &:hover {
+          background-color: black;
+        }
+
+        b {
+          width: 1em;
+        }
+      }
+
+      &.hidden {
+        opacity   : 0;
+        visibility: hidden;
+      }
+
+      opacity: 1;
+      transition: opacity,
+      0.5s;
+    }
+
+    // Die eigentliche Liste
+    >ul {
+      margin-top  : 3em;
+      padding-left: 0.5em;
+    }
+
+  }
+
+  &#revs {
+
+    ol {
+      list-style-type: lower-greek;
+
+      li {
+        font-size: 0.8em;
+        padding  : 0.3em;
+
+        &:hover {
+          background-color: hsva(0, 0, 0, 0.3)
+        }
+
+        &.active {
+          background-color: hsva(0, 0, 0, 0.5)
+        }
+
+      }
+    }
+
+  }
+
+
+  a {
+    color      : inherit;
+    font-weight: inherit;
+  }
+
+  ul {
+    list-style-type: none;
+    margin         : 0;
+  }
+
+  li {
+    display: block;
+
+    white-space: nowrap;
+    overflow   : hidden;
+
+    margin-left : -0.5em;
+    padding-left: 0.5em;
+
+    a,
+    button {
+      display: flex;
+
+      padding       : 0.1em;
+      padding-bottom: 0.2em;
+      .noFocusBorder;
+
+      margin-left  : -0.5em;
+      padding-left : 0.5em;
+      margin-right : -0.5em;
+      padding-right: 1.0em;
+
+      span {
+        display      : inline-block;
+        box-sizing   : border-box;
+        min-width    : 0;
+        text-overflow: ellipsis;
+        overflow     : hidden;
+      }
+
+      .title {
+        flex: 0 0 initial;
+      }
+
+      .author {
+        display           : none;
+        flex              : 1 0 0;
+        color             : white;
+        //background-color: fade(white, 50%);
+        background-color  : hsv(hsvhue(@accent), 0.15, 0.6);
+        text-align        : right;
+        direction         : rtl;
+        overflow          : hidden;
+      }
+
+      &:hover {
+        .title {
+          flex: 1 0 0;
+        }
+
+        .author {
+          display: inline-block;
+          flex   : 0 0 auto;
+        }
+      }
+
+      &.selected {
+        background-color: hsv(hsvhue(@accent), 0.8, 0.8);
+
+        .author {
+          background-color: hsv(hsvhue(@accent), 0.8, 0.8);
+        }
+      }
+
+    }
+  }
+
+  h2 {
+    font-size    : 1em;
+    margin-bottom: 0;
+    color        : white;
+
+    &.huge {
+      margin-top: 0;
+      font-size : 2em;
+    }
+  }
+
+}
+
+.collapsed-open {
+  height : 100%;
+  display: block !important;
+
+}

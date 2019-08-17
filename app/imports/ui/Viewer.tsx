@@ -3,7 +3,7 @@ import * as ReactDOM from 'react-dom'
 import { withRouter } from 'react-router-dom';
 import TranposeSetter from './TransposeSetter.jsx';
 import ChrodLib from '../api/libchrod.js';
-import Collapsed from './Collapsed.jsx';
+import Collapsed from './Collapsed.tsx';
 
 import './Viewer.less'
 import { Song } from '../api/collections.js';

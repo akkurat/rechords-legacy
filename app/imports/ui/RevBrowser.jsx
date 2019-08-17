@@ -1,7 +1,7 @@
 import Songs, {Revisions} from '../api/collections.js';
 import React, { Component } from 'react';
 import Source from './Source.tsx';
-import Collapsed from './Collapsed.jsx';
+import Collapsed from './Collapsed.tsx';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import "moment/locale/de";

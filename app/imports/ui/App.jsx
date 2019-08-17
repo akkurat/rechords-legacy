@@ -12,6 +12,7 @@ import Editor from './Editor.jsx';
 import { BrowserRouter, Route, Switch, withRouter} from 'react-router-dom';
 import DocumentTitle from 'react-document-title';
 import { Overview } from './Overview';
+// import './collapsed.less'
 
 const empty_song = {
     title: "Neues Lied",

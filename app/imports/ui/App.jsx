@@ -9,7 +9,7 @@ import List from './List.tsx';
 import Viewer from './Viewer.tsx';
 import Editor from './Editor.jsx';
 
-import { BrowserRouter, Route, Switch} from 'react-router-dom';
+import { BrowserRouter, Route, Switch, withRouter} from 'react-router-dom';
 import DocumentTitle from 'react-document-title';
 import { Overview } from './Overview';
 
@@ -48,23 +48,25 @@ class App extends Component {
 
     constructor(props) {
         super(props);
+        console.log(props)
     }
 
-    handleMobileMenu = ev => {
-        ev.preventDefault()
+    handleMobileMenu = (action) => {
         const menu = document.getElementById('list')
-        if (menu.classList.contains('collapsed-open')) {
+        if (action === 'close' || menu.classList.contains('collapsed-open')) {
             menu.classList.remove('collapsed-open')
-        } else {
+        } else if (action === 'open'|| !menu.classList.contains('collapsed-open') ){
             menu.classList.add('collapsed-open')
         }
     }
 
-    mobileHeader = () => (
+    mobileHeader = withRouter((props) => { 
+        props.history.listen( (location, action) => this.handleMobileMenu('close'))
+        return (
         <header className="show-s" id="mobileheader">
-            <a href="#" onClick={this.handleMobileMenu} className="icn-menu">Menu</a>
+            <a href="#" onClick={ev => {ev.preventDefault();this.handleMobileMenu()}} className="icn-menu">Menu</a>
         </header>
-    )
+    )})
 
     getSong(params) {
         return Songs.findOne({
@@ -95,9 +97,9 @@ class App extends Component {
 
 
         return (
+            <BrowserRouter>
             <>
             <this.mobileHeader />
-            <BrowserRouter>
                 <Switch>
 
                     <Route exact path='/' render={() => (
@@ -194,8 +196,8 @@ class App extends Component {
                     {/* Unnecessary, everything goes to filter */}
                     <Route component={NoMatch} />
                 </Switch>
+                </>
             </BrowserRouter>
-            </>
         );
     }
 }

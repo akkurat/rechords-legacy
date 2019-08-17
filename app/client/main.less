@@ -9,14 +9,17 @@ a {
   text-decoration: none;
 }
 
-button, input, select, textarea {
-  font: inherit;
-  border-style: none;
-  color: inherit;
+button,
+input,
+select,
+textarea {
+  font            : inherit;
+  border-style    : none;
+  color           : inherit;
   background-color: inherit;
-  text-align: inherit;
-  margin: 0;
-  padding: 0;
+  text-align      : inherit;
+  margin          : 0;
+  padding         : 0;
 }
 
 button {
@@ -25,7 +28,7 @@ button {
 
 textarea {
   display: block;
-  width: 100%;
+  width  : 100%;
 }
 
 // Layout
@@ -34,58 +37,59 @@ html {
 }
 
 body {
-  margin: 0;
+  margin : 0;
   padding: 0;
-  height: 100%;
+  height : 100%;
 
   .select(none);
 }
 
 #body {
   display: flex;
-  width: 100%;
-  height: 100%;
+  width  : 100%;
+  height : 100%;
 
-  font-family: 'Roboto', Helvetica, Arial, sans-serif;
-  font-size: 18px;
+  font-family     : 'Roboto', Helvetica, Arial, sans-serif;
+  font-size       : 18px;
   background-color: grey;
 }
 
 .chordtable {
   // padding: 20px;
   text-align: center;
+
   td {
-    padding-top: 5px;
+    padding-top   : 5px;
     padding-bottom: 5px;
-    padding-left: 15px;
-    padding-right: 15px;
+    padding-left  : 15px;
+    padding-right : 15px;
   }
 }
 
 #route {
   display: flex;
-  width: 100%;
+  width  : 100%;
 }
 
 #dirty {
-  display: block;
-  position: absolute;
-  font-size: 1em;
-  width: 1em;
-  height: 1em;
-  border-radius: 1em;
+  display         : block;
+  position        : absolute;
+  font-size       : 1em;
+  width           : 1em;
+  height          : 1em;
+  border-radius   : 1em;
   background-color: @accent;
-  left: 5.9rem;
-  top: 3.7rem;
+  left            : 5.9rem;
+  top             : 3.7rem;
 }
 
 
 // Content role mixins
 
 .list {
-  color: white;
+  color           : white;
   background-color: @secondary;
-  scrollbar-color: fade(white, 50%) transparent;
+  scrollbar-color : fade(white, 50%) transparent;
 }
 
 .chordsheet {
@@ -93,60 +97,61 @@ body {
     color: @accent;
   }
 
-  color: black;  // for aside only, is overridden in #chordsheet
+  color           : black; // for aside only, is overridden in #chordsheet
   background-color: white;
-  scrollbar-color: fade(black, 15%) transparent;
+  scrollbar-color : fade(black, 15%) transparent;
 }
 
+// Todo: rename to source-color for example
 .source {
   background-color: hsv(hsvhue(@accent), 0.7, 0.8);
-  scrollbar-color: fade(black, 15%) transparent;
+  scrollbar-color : fade(black, 15%) transparent;
 }
 
 .revision {
-  color: hsv(hsvhue(@accent), 0.4, 0.8);
+  color           : hsv(hsvhue(@accent), 0.4, 0.8);
   background-color: hsv(hsvhue(@accent), 0.7, 0.4);
 }
 
 .revisions {
-  color: hsv(hsvhue(@accent), 0.3, 0.7);
+  color           : hsv(hsvhue(@accent), 0.3, 0.7);
   background-color: hsv(hsvhue(@accent), 0.5, 0.2);
 }
 
 
 // Special content
 #logo * {
-  font-size: 15em;
-  margin: 0;
+  font-size  : 15em;
+  margin     : 0;
   line-height: 0.8em;
 }
 
 
 .tags {
   li {
-    display: inline-block;
-    font-size: 0.75em;
-    line-height: 1.7em;
-    font-weight: 600;
-    text-transform: uppercase;
+    display         : inline-block;
+    font-size       : 0.75em;
+    line-height     : 1.7em;
+    font-weight     : 600;
+    text-transform  : uppercase;
     background-color: hsv(hsvhue(@accent), 0.2, 0.6);
-    color: white;
-    border-radius: 0.4em;
-    padding: 0 0.5em;
-    margin-right: 0.5em;
+    color           : white;
+    border-radius   : 0.4em;
+    padding         : 0 0.5em;
+    margin-right    : 0.5em;
 
-    &::before{
+    &::before {
       content: none;
     }
 
     b {
-      display: inline-block;
-      font-weight: inherit;
-      padding: 0 0.5em;
-      margin: 0 -0.5em;
-      margin-left: 0.3em;
-      background-color: @accent;
-      border-top-right-radius: inherit;
+      display                   : inline-block;
+      font-weight               : inherit;
+      padding                   : 0 0.5em;
+      margin                    : 0 -0.5em;
+      margin-left               : 0.3em;
+      background-color          : @accent;
+      border-top-right-radius   : inherit;
       border-bottom-right-radius: inherit;
     }
   }
@@ -155,30 +160,31 @@ body {
 
 // It should be also possible to override this manually
 #chordSheetContent {
-  @media only screen and (min-width: @width-s) {
-
-  }
+  @media only screen and (min-width: @width-s) {}
 
   @media only screen and (min-width: @width-m) {
     column-count: 1;
   }
+
   @media only screen and (min-width: @width-l) {
     column-count: 2;
+
     .span-wrapper {
       column-count: 2;
-      column-gap: inherit;
+      column-gap  : inherit;
 
     }
   }
+
   @media only screen and (min-width: @width-xl) {
     column-count: 3;
   }
 
   column-gap: 100px;
-  min-width: 350px;
+  min-width : 350px;
 
   p {
-    position: relative;
+    position    : relative;
     break-inside: avoid;
     break-before: avoid;
   }
@@ -187,14 +193,16 @@ body {
     break-inside: avoid;
     break-before: avoid;
   }
-  #head, .span-wrapper {
+
+  #head,
+  .span-wrapper {
     column-span: all;
   }
 
   h3 {
-    break-after: avoid;
+    break-after : avoid;
     break-before: always;
-    position: relative;
+    position    : relative;
   }
 }
 
@@ -202,38 +210,41 @@ body {
 
   .chordsheet;
 
-  padding-top: 2em;
+  padding-top   : 2em;
   padding-bottom: 10em;
-  padding-left: 6em;
+  padding-left  : 6em;
 
   color: hsv(hsvhue(@accent), 0.3, 0.7);
 
 
-  h2, h3, h4 {
+  h2,
+  h3,
+  h4 {
     color: black;
   }
 
-  h1, h2 {
+  h1,
+  h2 {
     margin-bottom: 1rem;
-    font-size: 2.4em;
-    display: block;
+    font-size    : 2.4em;
+    display      : block;
   }
 
   h1 {
     margin-right: 0.5em;
-    margin-left: -0.1em;
+    margin-left : -0.1em;
   }
 
   h3 {
     font-size: 1em;
-    margin: 0;
+    margin   : 0;
 
-    height: 3em;
-    line-height: 2em;
+    height       : 3em;
+    line-height  : 2em;
     margin-bottom: -4em;
 
-    text-align: right;
-    width: 5em;
+    text-align : right;
+    width      : 5em;
     margin-left: -6em;
   }
 
@@ -243,40 +254,40 @@ body {
   }
 
   h4 {
-    margin-top: 2em;
+    margin-top   : 2em;
     margin-bottom: -0.5em;
   }
 
   a {
     color: @accent;
 
-    &:hover{
+    &:hover {
       text-decoration: underline;
     }
   }
 
   .ref {
-    color: black;
-    font-weight: bold;
-    padding-left: 8px;
-    margin-left: -12px;
-    border-left: 4px solid @accent;
-    margin-top: 2em;
+    color        : black;
+    font-weight  : bold;
+    padding-left : 8px;
+    margin-left  : -12px;
+    border-left  : 4px solid @accent;
+    margin-top   : 2em;
     margin-bottom: 2em;
   }
 
   code {
-    display: inline-block;
-    font-family: 'Input Mono', Courier New, Courier, monospace;
-    font-size: 0.8em;
-    font-weight: 300;
-    color: black;
-    padding: 0 0.5em;
+    display      : inline-block;
+    font-family  : 'Input Mono', Courier New, Courier, monospace;
+    font-size    : 0.8em;
+    font-weight  : 300;
+    color        : black;
+    padding      : 0 0.5em;
     border-radius: 0.4em;
     .source;
   }
 
-  &.interactive i{
+  &.interactive i {
     cursor: pointer;
 
     &:not(.hasChord):hover {
@@ -286,54 +297,55 @@ body {
   }
 
   .line {
-    display: flex;
+    display       : flex;
     flex-direction: row;
-    align-items: flex-end;  
-    min-height: 1em;
+    align-items   : flex-end;
+    min-height    : 1em;
   }
 
   .line i {
-    font-style: normal;
+    font-style : normal;
     font-weight: 400;
-    color: black;
+    color      : black;
 
-    flex-direction:column;
-    display:flex;
-    white-space:pre-wrap;
+    flex-direction: column;
+    display       : flex;
+    white-space   : pre-wrap;
 
 
     /* currently not in use: Both Viewer and Preview have preprocessors.
-    &::before {
+    &                      ::before {
       content: attr(data-chord);
       .before();
     }
     */
 
-    .before {  // aka. Chords.
+    .before {
+      // aka. Chords.
 
-      color: @accent;
+      color      : @accent;
       font-weight: 600;
-      font-style: normal;
+      font-style : normal;
 
       .select(none);
       .noFocusBorder;
 
-      margin-top: 0;
-      margin-right: 0.5em;
+      margin-top   : 0;
+      margin-right : 0.5em;
       margin-bottom: -0.3em;
 
 
       sup {
         vertical-align: 0.4em;
-        font-size: 0.7em;
+        font-size     : 0.7em;
         letter-spacing: 0.02em;
-        padding-left: 0.1em;
-        font-weight: 700;
+        padding-left  : 0.1em;
+        font-weight   : 700;
       }
 
       &:focus {
         background-color: hsv(hsvhue(@accent), 0.1, 0.95);
-        min-width: 1.5em;
+        min-width       : 1.5em;
 
         &:empty:before {
           content: "\feff"; // Patches height rendering of empty contenteditables
@@ -342,20 +354,28 @@ body {
 
       &.optional {
         color: hsv(hsvhue(@accent), 0.3, 0.7);
-        &:before { 
-          content: '('; 
+
+        &:before {
+          content: '(';
         }
-        &:after { 
-          content: ')'; 
+
+        &:after {
+          content: ')';
         }
-        &:after, &:before{
-          font-weight: 200;
+
+        &:after,
+        &:before {
+          font-weight   : 200;
           vertical-align: 0.05em;
         }
       }
- 
-    } // before aka. chords
-  } // i
+
+    }
+
+    // before aka. chords
+  }
+
+  // i
 
   &.interactive .line i .before {
     // Re-allow chord text selection when editing.
@@ -363,96 +383,106 @@ body {
   }
 
   li {
-    line-height: 1.6em;
+    line-height    : 1.6em;
     list-style-type: none;
 
     &::before {
-      content: '–';
-      display: inline-block;
+      content : '–';
+      display : inline-block;
       position: relative;
-      width: 0;
-      left: -1.2em;
+      width   : 0;
+      left    : -1.2em;
 
     }
   }
 
-} // .chordsheet
+}
+
+// .chordsheet
 
 
 aside#list {
   @media only screen and (max-width: @width-s) {
     display: none;
-    width: 100%;
+    width  : 100%;
   }
 }
 
-#editSource {
-  * {
-    position: absolute;
-    right:0;
-    top:0;
-    width: 300px;
-  }
-}
+// #editSource {
+//   * {
+//     position: absolute;
+//     right   :0;
+//     top     :0;
+//     width   : 300px;
+//   }
+// }
 
 aside {
-  color: white;
-  @width: 220px;
-  flex-grow: 0;
+  color      : white;
+  @width     : 220px;
+  flex-grow  : 0;
   flex-shrink: 0;
-  box-sizing: border-box;
-  width: @width;
+  box-sizing : border-box;
+  width      : @width;
 
   .scroll;
 
-  padding-top: 1em;
-  padding-left: 0.5em;
-  padding-right: 0;
+  padding-top   : 1em;
+  padding-left  : 0.5em;
+  padding-right : 0;
   padding-bottom: 2em;
 
-  h1, h2, h3 {
-    font-size: 2em;
+  h1,
+  h2,
+  h3 {
+    font-size  : 2em;
     font-weight: 600;
   }
 
-  & > h1 {
+  &>h1 {
     margin-top: 0;
   }
 
-  p { 
+  p {
     opacity: 0.7;
   }
 
 
   &.collapsed {
-    @pad: 30px;
-    overflow: visible;
-    width: @pad;
-    cursor: pointer;
-    transition: width 0.3s;
-    z-index: 100;
-    box-sizing: border-box;
+    @pad        : 30px;
+    overflow    : visible;
+    width       : @pad;
+    cursor      : pointer;
+    transition  : width 0.3s;
+    z-index     : 100;
+    box-sizing  : border-box;
     padding-left: @pad;
 
     // Mitigates the rendering bug of the contained .label
     position: relative;
-    
+
+    div {
+      .source;
+      position        : absolute;
+      left            : -3px;
+      transition      : all 0.2s ease-in-out;
+      display         : block;
+      width           : 240px;
+      border-radius: 20px;
+      padding: 10px;
+    }
+
     &:hover {
+
       // width: @width;
       div {
-        position: fixed;
-        right: 20px;
+        left : -200px;
+        
 
-        display: block;
-        background: @accent;
         // width: @width;
       }
     }
 
-    // Avoid linebreaks during slide-in/--out
-    * {
-      //width: 245px;
-    }
   }
 
   &#list {
@@ -461,7 +491,7 @@ aside {
     .list;
 
     &:not(.collapsed) {
-      padding-top: 0;
+      padding-top : 0;
       padding-left: 0;
     }
 
@@ -471,18 +501,18 @@ aside {
 
     .filter {
       position: absolute;
-      display: flex;
-      width: @width;
+      display : flex;
+      width   : @width;
 
       background-color: @secondary;
 
       .reset {
-        flex: 0 0 1.5em;
-        font-size: 1.4em;
+        flex       : 0 0 1.5em;
+        font-size  : 1.4em;
         margin-left: -1.5em;
-        cursor: pointer;
-        color: @accent;
-        margin-top: 1rem;
+        cursor     : pointer;
+        color      : @accent;
+        margin-top : 1rem;
 
         display: none;
 
@@ -492,25 +522,27 @@ aside {
       }
 
       input {
-        color: @accent;
-        margin-top: 1rem;
+        color       : @accent;
+        margin-top  : 1rem;
         padding-left: 0.5em;
-        height: 2em;
+        height      : 2em;
 
         display: block;
-        flex: 1 1 auto;
+        flex   : 1 1 auto;
 
         .noFocusBorder;
 
         transition: color, background-color 0.5s;
 
         background-color: mix(white, @secondary, 80%);
+
         &::placeholder {
           color: transparent;
         }
 
         &[value=""] {
           background-color: @secondary;
+
           &::placeholder {
             color: fade(white, 50%);
           }
@@ -518,6 +550,7 @@ aside {
 
         &:focus {
           background-color: mix(white, @secondary, 80%);
+
           &::placeholder {
             color: @accent;
           }
@@ -527,45 +560,46 @@ aside {
 
     .filterMenu {
       position: absolute;
-      z-index: 1;
-      left: @width;
-      top: 0;
+      z-index : 1;
+      left    : @width;
+      top     : 0;
 
-      @bgMenu: mix(white, @secondary, 70%);
+      @bgMenu         : mix(white, @secondary, 70%);
       background-color: @bgMenu;
 
-      display: flex;
+      display       : flex;
       flex-direction: row;
 
-      padding-top: 0.5em;
-      padding-left: 2em;
+      padding-top   : 0.5em;
+      padding-left  : 2em;
       padding-bottom: 3em;
 
-      h1, h2{
+      h1,
+      h2 {
         display: none;
       }
 
       h4 {
-        color: black;
-        display: block;
-        width: 0;
+        color           : black;
+        display         : block;
+        width           : 0;
         transform-origin: top right;
-        font-weight: 600;
-        transform: rotate(-14deg);
+        font-weight     : 600;
+        transform       : rotate(-14deg);
       }
 
       ul {
         margin-top: 3em;
-        flex: 0 0 7em;
+        flex      : 0 0 7em;
       }
 
       li {
         color: white;
 
-        margin-bottom: 0.5em;
+        margin-bottom   : 0.5em;
         transform-origin: center;
-        transform: rotate(-14deg);
-        cursor: pointer;
+        transform       : rotate(-14deg);
+        cursor          : pointer;
 
         &:hover {
           background-color: black;
@@ -576,18 +610,19 @@ aside {
         }
       }
 
-      &.hidden{
-        opacity: 0;
+      &.hidden {
+        opacity   : 0;
         visibility: hidden;
       }
 
       opacity: 1;
-      transition: opacity, 0.5s;
+      transition: opacity,
+      0.5s;
     }
 
     // Die eigentliche Liste
-    > ul {
-      margin-top: 3em;
+    >ul {
+      margin-top  : 3em;
       padding-left: 0.5em;
     }
 
@@ -600,14 +635,14 @@ aside {
 
       li {
         font-size: 0.8em;
-        padding: 0.3em;
+        padding  : 0.3em;
 
         &:hover {
-          background-color: hsva(0,0,0,0.3)
+          background-color: hsva(0, 0, 0, 0.3)
         }
 
         &.active {
-          background-color: hsva(0,0,0,0.5)
+          background-color: hsva(0, 0, 0, 0.5)
         }
 
       }
@@ -617,42 +652,43 @@ aside {
 
 
   a {
-    color: inherit;
+    color      : inherit;
     font-weight: inherit;
   }
 
   ul {
     list-style-type: none;
-    margin: 0;
+    margin         : 0;
   }
 
   li {
     display: block;
 
     white-space: nowrap;
-    overflow: hidden;
+    overflow   : hidden;
 
-    margin-left: -0.5em;
+    margin-left : -0.5em;
     padding-left: 0.5em;
 
-    a, button {
+    a,
+    button {
       display: flex;
 
-      padding: 0.1em;
+      padding       : 0.1em;
       padding-bottom: 0.2em;
       .noFocusBorder;
 
-      margin-left: -0.5em;
-      padding-left: 0.5em;
-      margin-right: -0.5em;
+      margin-left  : -0.5em;
+      padding-left : 0.5em;
+      margin-right : -0.5em;
       padding-right: 1.0em;
 
       span {
-        display: inline-block;
-        box-sizing: border-box;
-        min-width: 0;
+        display      : inline-block;
+        box-sizing   : border-box;
+        min-width    : 0;
         text-overflow: ellipsis;
-        overflow: hidden;
+        overflow     : hidden;
       }
 
       .title {
@@ -660,28 +696,30 @@ aside {
       }
 
       .author {
-        display: none;
-        flex: 1 0 0;
-        color: white;
+        display           : none;
+        flex              : 1 0 0;
+        color             : white;
         //background-color: fade(white, 50%);
-        background-color: hsv(hsvhue(@accent), 0.15, 0.6);
-        text-align: right;
-        direction: rtl;
-        overflow: hidden;
+        background-color  : hsv(hsvhue(@accent), 0.15, 0.6);
+        text-align        : right;
+        direction         : rtl;
+        overflow          : hidden;
       }
 
       &:hover {
         .title {
           flex: 1 0 0;
         }
+
         .author {
           display: inline-block;
-          flex: 0 0 auto;
+          flex   : 0 0 auto;
         }
       }
 
       &.selected {
         background-color: hsv(hsvhue(@accent), 0.8, 0.8);
+
         .author {
           background-color: hsv(hsvhue(@accent), 0.8, 0.8);
         }
@@ -691,13 +729,13 @@ aside {
   }
 
   h2 {
-    font-size: 1em;
+    font-size    : 1em;
     margin-bottom: 0;
-    color: white;
+    color        : white;
 
     &.huge {
       margin-top: 0;
-      font-size: 2em;
+      font-size : 2em;
     }
   }
 
@@ -709,14 +747,14 @@ aside {
 
   .scroll;
 
-  width: 100%;
+  width  : 100%;
   padding: 1em 2em 1em 2em;
 
   h1:first-child,
   h2:first-child {
     margin-top: 0;
 
-    &+h2{
+    &+h2 {
       margin-top: 0;
     }
   }
@@ -725,9 +763,9 @@ aside {
 textarea {
   font-family: 'Input Mono', Courier New, Courier, monospace;
   font-weight: 300;
-  font-size: 0.9em;
-  width: inherit;
-  cursor: text;
+  font-size  : 0.9em;
+  width      : inherit;
+  cursor     : text;
 
   .noFocusBorder;
 }
@@ -738,137 +776,174 @@ textarea {
   }
 
   &::selection {
-    color: hsv(hsvhue(@accent), 0.4, 0.8);
+    color           : hsv(hsvhue(@accent), 0.4, 0.8);
     background-color: hsva(hsvhue(@accent), 0.3, 0.3, 1.0);
   }
 
   &::-moz-selection {
-    color: hsv(hsvhue(@accent), 0.8, 0.3);
+    color           : hsv(hsvhue(@accent), 0.8, 0.3);
     background-color: hsv(hsvhue(@accent), 0.5, 0.9);
   }
 }
 
 hr {
-  border-style: solid;
+  border-style : solid;
   margin-bottom: 1em;
 }
 
 .label {
-  font-weight: bold;
-  font-size: 1.2em;
-  text-transform: uppercase;
+  font-weight     : bold;
+  font-size       : 1.2em;
+  text-transform  : uppercase;
   background-color: inherit;
 
-  display: block;
-  padding: 0.2em;
+  display : block;
+  padding : 0.2em;
   position: fixed;
-  bottom: 1em;
+  bottom  : 1em;
 }
 
 // CSS-wise transparent container to satisfy react.
 .container {
-  display: inherit;
-  width: inherit;
+  display   : inherit;
+  width     : inherit;
   min-height: inherit;
-  padding: 0;
-  margin: 0;
+  padding   : 0;
+  margin    : 0;
 }
 
 // Editor.jsx
 // TODO: attach at jsx level?
 #editor {
   display: flex;
-  width: 100%;
+  width  : 100%;
 }
 
 
 @media print {
-  aside, #transposer, .tags { display: none; }
+
+  aside,
+  #transposer,
+  .tags {
+    display: none;
+  }
 
   #body {
     font-size: 12pt;
-    width: 210mm;
+    width    : 210mm;
   }
 
   #chordsheet {
     columns: 2;
   }
 
-  #head, h1, h2 {
+  #head,
+  h1,
+  h2 {
     column-span: all;
   }
 }
 
-.select(@mode: none;) {
-  -webkit-touch-callout: @mode; /* iOS Safari */
-    -webkit-user-select: @mode; /* Safari */
-     -khtml-user-select: @mode; /* Konqueror HTML */
-       -moz-user-select: @mode; /* Firefox */
-        -ms-user-select: @mode; /* Internet Explorer/Edge */
-            user-select: @mode; /* Non-prefixed version, currently
+.select(@mode: none; ) {
+  -webkit-touch-callout: @mode;
+  /* iOS Safari */
+  -webkit-user-select: @mode;
+  /* Safari */
+  -khtml-user-select: @mode;
+  /* Konqueror HTML */
+  -moz-user-select: @mode;
+  /* Firefox */
+  -ms-user-select: @mode;
+  /* Internet Explorer/Edge */
+  user-select: @mode;
+  /* Non-prefixed version, currently
                                   supported by Chrome and Opera */
 }
 
 .scroll {
-  overflow: auto;
+  overflow                  : auto;
   -webkit-overflow-scrolling: touch;
-  scrollbar-width: thin;
+  scrollbar-width           : thin;
 }
 
 // Responsive
-.show-s, .show-m, .show-l, .show-xl {
+.show-s,
+.show-m,
+.show-l,
+.show-xl {
   display: none;
 }
-.hide-s, .hide-m, .hide-l, .hide-xl {
+
+.hide-s,
+.hide-m,
+.hide-l,
+.hide-xl {
   display: initial;
 }
 
 // Show up to x
 @media only screen and (max-width: @width-s) {
-  .show-s { display: initial}
+  .show-s {
+    display: initial
+  }
 }
 
 @media only screen and (max-width: @width-m) {
-  .show-m {display: initial}
+  .show-m {
+    display: initial
+  }
 }
 
 @media only screen and (max-width: @width-l) {
-  .show-l {display: initial}
+  .show-l {
+    display: initial
+  }
 }
 
 @media only screen and (min-width: @width-xl) {
-  .show-xl {display: initial}
+  .show-xl {
+    display: initial
+  }
 }
 
 // Hide below x
 @media only screen and (max-width: @width-s) {
-  .hide-s { display: none}
+  .hide-s {
+    display: none
+  }
 }
 
 @media only screen and (max-width: @width-m) {
-  .hide-m {display: none}
+  .hide-m {
+    display: none
+  }
 }
 
 @media only screen and (max-width: @width-l) {
-  .hide-l {display: none}
+  .hide-l {
+    display: none
+  }
 }
 
 @media only screen and (max-width: @width-xl) {
-  .hide-xl {display: none}
+  .hide-xl {
+    display: none
+  }
 }
+
 // Header 
 
 #mobileheader {
-  position: absolute;
+  position        : absolute;
   background-color: @secondary;
-  top: 0px;
-  height: 40px;
-  width: 100%;
-  z-index: 100;
+  top             : 0px;
+  height          : 40px;
+  width           : 100%;
+  z-index         : 100;
 }
 
 .collapsed-open {
-  height: 100%;
+  height : 100%;
   display: block !important;
-  
+
 }

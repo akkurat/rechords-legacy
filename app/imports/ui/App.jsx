@@ -86,7 +86,7 @@ class App extends Component {
     render() {
         if (this.props.dataLoading) {
             return (
-                <div className="container">
+                <div className="body-container">
                     <DocumentTitle title="Hölibu" />
                     <aside id="list" />
                     {logo}
@@ -95,17 +95,17 @@ class App extends Component {
         }
 
         const list = (<List songs={this.props.songs}/>);
+        const header = <this.mobileHeader />
 
 
         return (
             <BrowserRouter>
-            <>
-            <this.mobileHeader />
                 <Switch>
 
                     <Route exact path='/' render={() => (
-                            <div className="container">
+                            <div className="body-container">
                                 <DocumentTitle title="Hölibu" />
+                                {header}
                                 {list}
                                 {logo}
                             </div>
@@ -120,8 +120,9 @@ class App extends Component {
                         }
 
                         return (
-                            <div className="container">
+                            <div className="body-container">
                                 <DocumentTitle title={"Hölibu | " + song.author + ": " + song.title}/>
+                                {header}
                                 {list}
                                 <Viewer song={song} />
                             </div>
@@ -136,8 +137,9 @@ class App extends Component {
                         }
 
                         return (
-                            <div className="container">
+                            <div className="body-container">
                                 <DocumentTitle title={"Hölibu | All Lieder von " + match.author }/>
+                                {header}
                                 {list}
                                 <Overview songs={songs} />
                                 
@@ -155,6 +157,7 @@ class App extends Component {
                         return (
                             <>
                                 <DocumentTitle title={"Hölibu | " + song.author + ": " + song.title + " (bearbeiten)"}/>
+                                {header}
                                 <Editor song={song} />
                             </>
                         )
@@ -166,6 +169,7 @@ class App extends Component {
                         return (
                             <>
                                 <DocumentTitle title="Hölibu | Neues Lied" />
+                                {header}
                                 <Editor song={song} />
                             </>
                         )
@@ -174,8 +178,9 @@ class App extends Component {
                     <Route path="/view"  render={() => {
                         return (
                             <>
-                            <div className="container">
+                            <div className="body-container">
                                 <DocumentTitle title="Hölibu" />
+                                {header}
                                 {list}
                                 <Overview songs={this.props.songs} />
                                 </div>
@@ -188,6 +193,7 @@ class App extends Component {
                         return (
                             <>
                                 <DocumentTitle title="Hölibu" />
+                                {header}
                                 <List songs={this.props.songs} filter={filter} />
                                 {logo}
                             </>
@@ -197,7 +203,6 @@ class App extends Component {
                     {/* Unnecessary, everything goes to filter */}
                     <Route component={NoMatch} />
                 </Switch>
-                </>
             </BrowserRouter>
         );
     }

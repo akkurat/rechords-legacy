@@ -3,7 +3,7 @@ import * as ReactDOM from 'react-dom'
 import { withRouter } from 'react-router-dom';
 import TranposeSetter from './TransposeSetter.jsx';
 import ChrodLib from '../api/libchrod.js';
-import Collapsed from './Collapsed.tsx';
+import Collapsed from './Collapsed';
 
 import './Viewer.less'
 import { Song } from '../api/collections.js';
@@ -67,7 +67,7 @@ class Viewer extends React.Component<IViewerProps, IViewerState> {
     }
 
     return (
-      <div className="container">
+      <>
         <div id="inlineSettings">
           <select id="overrideNumColumns" onChange={this.handleColDropdown}>
             <option value="auto">Auto</option>
@@ -91,13 +91,13 @@ class Viewer extends React.Component<IViewerProps, IViewerState> {
             {vdom}
           </section>
         </div>
-        <Collapsed id="editSource" className="source hide-s" onClick={this.handleContextMenu}>
+        <Collapsed id="editSource" className="source" onClick={this.handleContextMenu}>
           <div className="source">
             <h1>bearbeiten</h1>
             <p>Schneller:&nbsp;Rechtsklick!</p>
           </div>
         </Collapsed>
-      </div>
+      </>
     );
   }
 

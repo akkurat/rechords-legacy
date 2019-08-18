@@ -47,13 +47,20 @@ body {
 }
 
 #body {
-  display: flex;
-  width  : 100%;
-  height : 100%;
+  flex-direction: row;
+  display       : flex;
+  width         : 100%;
+  height        : 100%;
 
   font-family     : 'Roboto', Helvetica, Arial, sans-serif;
   font-size       : 18px;
   background-color: grey;
+  overflow: hidden;
+
+  @media only screen and (max-width: @width-s) {
+    flex-direction: column;
+
+  }
 }
 
 .chordtable {
@@ -422,11 +429,15 @@ aside#list {
 
 .content {
   box-sizing: border-box;
-  min-height: 100vh;
+  // min-height: 100vh;
 
   .scroll;
 
   width  : 100%;
+  @media only screen and (max-width: @width-s) {
+    height: auto;
+    
+  }
   padding: 1em 2em 1em 2em;
 
   h1:first-child,
@@ -484,11 +495,22 @@ hr {
 
 // CSS-wise transparent container to satisfy react.
 .container {
-  display   : inherit;
-  width     : inherit;
-  min-height: inherit;
-  padding   : 0;
-  margin    : 0;
+  display       : inherit;
+  flex-direction: inherit;
+  width         : inherit;
+  min-height    : inherit;
+  padding       : 0;
+  margin        : 0;
+  height        : auto;
+}
+.body-container {
+  display       : inherit;
+  flex-direction: inherit;
+  width         : inherit;
+  min-height    : inherit;
+  padding       : 0;
+  margin        : 0;
+  height        : 100%;
 }
 
 // Editor.jsx

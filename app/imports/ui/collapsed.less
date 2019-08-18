@@ -30,42 +30,71 @@ aside {
     opacity: 0.7;
   }
 
+  @media only screen and (min-width: @width-s) {
 
-  &.collapsed {
-    @pad        : 30px;
-    overflow    : visible;
-    width       : @pad;
-    cursor      : pointer;
-    transition  : width 0.3s;
-    z-index     : 100;
-    box-sizing  : border-box;
-    padding-left: @pad;
+    &.collapsed {
+      @pad        : 30px;
+      overflow    : visible;
+      width       : @pad;
+      cursor      : pointer;
+      transition  : width 0.3s;
+      z-index     : 100;
+      box-sizing  : border-box;
+      padding-left: @pad;
 
-    // Mitigates the rendering bug of the contained .label
-    position: relative;
+      // Mitigates the rendering bug of the contained .label
+      position: relative;
 
-    div {
-      .source;
-      position        : absolute;
-      left            : -3px;
-      transition      : all 0.2s ease-in-out;
-      display         : block;
-      width           : 240px;
-      border-radius: 20px;
-      padding: 10px;
-    }
-
-    &:hover {
-
-      // width: @width;
       div {
-        left : -200px;
-        
+        .source;
+        position     : absolute;
+        left         : -3px;
+        transition   : all 0.2s ease-in-out;
+        display      : block;
+        width        : 240px;
+        border-radius: 20px;
+        padding      : 10px;
+      }
+
+      &:hover {
 
         // width: @width;
-      }
-    }
+        div {
+          left: -200px;
 
+
+          // width: @width;
+        }
+      }
+
+    }
+  }
+  
+  @media only screen and (max-width: @width-s) {
+    &.collapsed {
+      @pad        : 30px;
+      overflow    : visible;
+      height       : @pad;
+      cursor      : pointer;
+      box-sizing  : border-box;
+      width: 100%;
+
+      // Mitigates the rendering bug of the contained .label
+
+      div {
+        * {
+          display: inline;
+        }
+        .source;
+        display      : contents;
+        flex-direction: column;
+        height        : 100%;
+        padding      : 5px;
+      }
+
+
+
+    }
   }
 
   &#list {

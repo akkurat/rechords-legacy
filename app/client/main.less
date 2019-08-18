@@ -513,13 +513,7 @@ hr {
   height        : 100%;
 }
 
-// Editor.jsx
-// TODO: attach at jsx level?
-#editor {
-  display: flex;
-  width  : 100%;
-}
-
+@import '../imports/ui/editor.import.less';
 
 @media print {
 
@@ -572,7 +566,7 @@ hr {
 .show-m,
 .show-l,
 .show-xl {
-  display: none;
+  display:  none;
 }
 
 .hide-s,
@@ -633,12 +627,4 @@ hr {
 }
 
 // Header 
-
-#mobileheader {
-  position        : absolute;
-  background-color: @secondary;
-  top             : 0px;
-  height          : 40px;
-  width           : 100%;
-  z-index         : 100;
-}
+@import 'mobileheader.import.less';

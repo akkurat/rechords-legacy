@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Songs, { Revisions } from '../api/collections.js';
-import { withRouter, Prompt } from 'react-router-dom';
+import { withRouter, Prompt, NavLink } from 'react-router-dom';
 import Collapsed from './Collapsed.tsx';
 import Source from './Source.tsx';
 import RevBrowser from './RevBrowser.jsx';
 import Preview from './Preview.tsx';
+import { MobileHeader, MobileMenuButton } from './MobileMenu';
 
 
 class Editor extends Component {
@@ -49,11 +50,18 @@ class Editor extends Component {
     event.preventDefault();
   }
 
-  update = (md_) => {
+  update = (md_, pos) => {
     this.setState({
       md: md_,
       dirty: md_ != this.mdServer
     });
+    if (pos) {
+      const matches = (md_.substring(0, pos).match(/\n=*\s*/g) || '');
+      const lineNumber = matches.length 
+      this.setState({
+        lastLineEdit: lineNumber
+      })
+    }
   }
 
   toggleRevTab = () => {
@@ -77,7 +85,7 @@ class Editor extends Component {
     if (this.state.versionTab == false) {
 
       let versions = n == 0 ? undefined : (
-        <Collapsed id="revs" className="revision" onClick={this.toggleRevTab}>
+        <Collapsed id="revs" className="revision hide-s" onClick={this.toggleRevTab}>
           <h1>Verlauf</h1>
           <p>Es existieren {n} vorherige Versionen. Klicke, um diese zu durchstöbern!</p>
         </Collapsed>
@@ -85,8 +93,20 @@ class Editor extends Component {
 
       let dirtyLabel = this.state.dirty ? <span id="dirty" title="Ungesicherte Änderungen"></span> : undefined;
 
+    let viewlink, revisions, s=this.props.song;
+    if (s) { viewlink = <div className="mobileheader--edit"> <NavLink to={`/view/${s.author_}/${s.title_}`} >Back</NavLink> </div> }
+    if (s) { revisions = <div className="mobileheader--transpose"> <a href="#">Revisions</a> </div> }
+
       // Bearbeiten mit Echtzeit-Vorschau
       return (
+      <>
+        <div className="show-s">
+            <MobileHeader>
+              {viewlink}
+              {revisions}
+              <MobileMenuButton />
+            </MobileHeader>
+        </div>
         <div id="editor" onContextMenu={this.handleContextMenu}>
 
           <Collapsed id="list" onClick={this.handleContextMenu}>
@@ -95,12 +115,13 @@ class Editor extends Component {
           </Collapsed>
 
           {dirtyLabel}
-          <Preview md={this.state.md} song={this.props.song} updateHandler={this.update}/>
+          <Preview md={this.state.md} song={this.props.song} updateHandler={this.update} lastLineEdit={this.state.lastLineEdit}/>
           <Source md={this.state.md} updateHandler={this.update} className="source" />
 
           {versions}
           {prompt}
         </div>
+        </>
       );
 
     } else {

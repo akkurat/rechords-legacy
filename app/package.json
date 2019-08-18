@@ -11,6 +11,7 @@
     "@babel/runtime": "^7.2.0",
     "@types/meteor": "^1.4.15",
     "history": "latest",
+    "htmlparser2": "^4.0.0",
     "hyphenation.en-us": "^0.2.1",
     "hypher": "^0.2.5",
     "indexof": "0.0.1",
@@ -29,8 +30,7 @@
     "slug": "^0.9.1",
     "source-map-support": "^0.5.6",
     "xmldom": "^0.1.27",
-    "xss": "^0.3.8",
-    "htmlparser2": "^4.0.0"
+    "xss": "^0.3.8"
   },
   "devDependencies": {
     "@types/core-js": "^0.9.46",

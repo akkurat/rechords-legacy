@@ -11,9 +11,13 @@ export default class Source extends React.Component<ISourceProps, {}> {
 
   callUpdateHandler: ChangeEventHandler<HTMLTextAreaElement> = (ev: ChangeEvent<HTMLTextAreaElement>) => {
     if ('updateHandler' in this.props) {
+      const pos = ev.target.selectionStart
       const value = ev.target.value
-      this.props.updateHandler(value);
+      this.props.updateHandler(value, pos);
     }
+  }
+  handleText = ev => {
+    console.log(ev)
   }
 
   render() {
@@ -28,6 +32,7 @@ export default class Source extends React.Component<ISourceProps, {}> {
     nRows = Math.max(50, nRows);
 
     const style = {
+      // TODO: if still necessary, add media query
         minHeight: nRows + 'em',
     }
 
@@ -36,9 +41,10 @@ export default class Source extends React.Component<ISourceProps, {}> {
           {this.props.children}
         <textarea
           className="container"
+          onInputCapture={this.handleText}
           onChange={this.callUpdateHandler}
           value={this.props.md}
-          style={style}
+          // style={style}
           readOnly={this.props.readOnly}
         />
       </div>
@@ -48,7 +54,7 @@ export default class Source extends React.Component<ISourceProps, {}> {
 
 interface ISourceProps {
   md: string
-  updateHandler: (value: string) => void
+  updateHandler: (value: string, pos?: number) => void
   readOnly: boolean
   children: Element
   className: string

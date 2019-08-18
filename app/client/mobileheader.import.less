@@ -1,0 +1,37 @@
+@import './variables.import.less';
+
+#mobileheader {
+  display: none
+}
+@media only screen and (max-width: @width-s) {
+#mobileheader {
+  // position        : absolute;
+  background-color: @secondary;
+  top             : 0px;
+  height          : 40px;
+  width           : 100%;
+  z-index         : 100;
+  display: grid;
+  // grid-template-columns: 
+  grid-template-areas: "transpose menu  edit";
+
+
+
+  .mobileheader--menu {
+    grid-area: menu;
+    background-color: @secondary;
+
+  }
+
+  .mobileheader--transpose {
+    grid-area: transpose;
+    background-color: @accent;
+  }
+
+  .mobileheader--edit {
+    grid-area: edit;
+    background-color: @accent;
+  }
+
+}
+}

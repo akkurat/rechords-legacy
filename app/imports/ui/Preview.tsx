@@ -1,5 +1,6 @@
 import Songs, { Song } from '../api/collections.js';
 import * as React from 'react';
+import MutationObserver from 'react-mutation-observer';
 
 import Hypher = require('hypher')
 import english = require('hyphenation.en-us')
@@ -18,16 +19,19 @@ interface P {
   md: string;
   song: Song;
   updateHandler?: Function;
+  lastLineEdit?: number;
 }
 
 export default class Preview extends React.Component<P, {}> {
+  private vrefs?: any[];
 
   constructor(props: P) {
     super(props);
   }
 
+  
   componentDidUpdate() {
-    let html: HTMLElement = this.refs.html as HTMLElement;
+    const html: HTMLElement = this.refs.html as HTMLElement;
 
     function traverse(node: HTMLElement): void {
       for (const child of node.children) {
@@ -45,9 +49,30 @@ export default class Preview extends React.Component<P, {}> {
       }
 
     }
-
     traverse(html);
 
+
+    if (this.props.lastLineEdit >= 0) {
+      const findNthLine = (nodes: HTMLCollection): HTMLElement[] => {
+        const lines = []
+        for (const node of nodes) {
+          if (['P', 'UL'].indexOf(node.tagName) >= 0) {
+            lines.push(...node.children)
+          }
+          else {
+            lines.push(node)
+          }
+        }
+        return lines
+      }
+      const lines = findNthLine(html.children)
+      const element = lines[this.props.lastLineEdit]
+      if (element) {
+        // element.scrollIntoView({block: "end", inline: "nearest", behavior: "smooth" });
+        element.scrollIntoView({block: "start", inline: "center"});
+        console.log(element.innerText)
+      }
+    }
   }
 
   public handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -295,10 +320,10 @@ export default class Preview extends React.Component<P, {}> {
 
   render() {
     this.props.song.parse(this.props.md);
-
     let vdom = Parser(this.props.song.getHtml(), {
       transform: this.transformFunction
     })
+    this.vrefs = vdom;
     return (
       <section
         className="content interactive"

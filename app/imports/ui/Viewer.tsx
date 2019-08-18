@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom'
-import { withRouter } from 'react-router-dom';
+import { withRouter, NavLink } from 'react-router-dom';
 import TranposeSetter from './TransposeSetter.jsx';
 import ChrodLib from '../api/libchrod.js';
 import Collapsed from './Collapsed';
@@ -11,6 +11,7 @@ import { History } from 'history';
 
 import ReactHtmlParser from 'react-html-parser'
 import { DomElement } from 'htmlparser2'
+import { MobileHeader, MobileMenuButton } from './MobileMenu';
 
 // import { findDOMNode } from 'react-dom';
 
@@ -65,9 +66,17 @@ class Viewer extends React.Component<IViewerProps, IViewerState> {
     for (let i = 1; i < 6; i++) {
       options.push(<option key={i+'column'} value={i}>{i}</option>)
     }
+    let edit, transpose, s=this.props.song;
+    if (s) { edit = <div className="mobileheader--edit"> <NavLink to={`/edit/${s.author_}/${s.title_}`} >Edit</NavLink> </div> }
+    if (s) { transpose = <div className="mobileheader--transpose"> <a href="#">Transpose</a> </div> }
 
     return (
       <>
+        <MobileHeader>
+          {edit}
+          {transpose}
+          <MobileMenuButton />
+        </MobileHeader>
         <div id="inlineSettings">
           <select id="overrideNumColumns" onChange={this.handleColDropdown}>
             <option value="auto">Auto</option>
@@ -91,7 +100,7 @@ class Viewer extends React.Component<IViewerProps, IViewerState> {
             {vdom}
           </section>
         </div>
-        <Collapsed id="editSource" className="source" onClick={this.handleContextMenu}>
+        <Collapsed id="editSource" className="source hide-s" onClick={this.handleContextMenu}>
           <div className="source">
             <h1>bearbeiten</h1>
             <p>Schneller:&nbsp;Rechtsklick!</p>

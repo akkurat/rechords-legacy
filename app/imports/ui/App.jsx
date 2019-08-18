@@ -9,7 +9,7 @@ import List from './List.tsx';
 import Viewer from './Viewer.tsx';
 import Editor from './Editor.jsx';
 
-import { BrowserRouter, Route, Switch, withRouter} from 'react-router-dom';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import DocumentTitle from 'react-document-title';
 import { Overview } from './Overview';
 // import './collapsed.less'
@@ -42,6 +42,11 @@ const logo = (
     </div>
 )
 
+const NoMatch = ({ location }) => (
+    <div>
+        <h3>No match for <code>{location.pathname}</code></h3>
+    </div>
+)
 
 
 // App component - represents the whole app
@@ -52,22 +57,7 @@ class App extends Component {
         console.log(props)
     }
 
-    handleMobileMenu = (action) => {
-        const menu = document.getElementById('list')
-        if (action === 'close' || menu.classList.contains('collapsed-open')) {
-            menu.classList.remove('collapsed-open')
-        } else if (action === 'open'|| !menu.classList.contains('collapsed-open') ){
-            menu.classList.add('collapsed-open')
-        }
-    }
 
-    mobileHeader = withRouter((props) => { 
-        props.history.listen( (location, action) => this.handleMobileMenu('close'))
-        return (
-        <header className="show-s" id="mobileheader">
-            <a href="#" onClick={ev => {ev.preventDefault();this.handleMobileMenu()}} className="icn-menu">Menu</a>
-        </header>
-    )})
 
     getSong(params) {
         return Songs.findOne({
@@ -95,8 +85,6 @@ class App extends Component {
         }
 
         const list = (<List songs={this.props.songs}/>);
-        const header = <this.mobileHeader />
-
 
         return (
             <BrowserRouter>
@@ -105,7 +93,6 @@ class App extends Component {
                     <Route exact path='/' render={() => (
                             <div className="body-container">
                                 <DocumentTitle title="Hölibu" />
-                                {header}
                                 {list}
                                 {logo}
                             </div>
@@ -122,7 +109,6 @@ class App extends Component {
                         return (
                             <div className="body-container">
                                 <DocumentTitle title={"Hölibu | " + song.author + ": " + song.title}/>
-                                {header}
                                 {list}
                                 <Viewer song={song} />
                             </div>
@@ -139,7 +125,6 @@ class App extends Component {
                         return (
                             <div className="body-container">
                                 <DocumentTitle title={"Hölibu | All Lieder von " + match.author }/>
-                                {header}
                                 {list}
                                 <Overview songs={songs} />
                                 
@@ -151,13 +136,12 @@ class App extends Component {
                         let song = this.getSong(match.match.params);
 
                         if (song === undefined) {
-                            return na404;
+                            return nA404;
                         }
 
                         return (
                             <>
                                 <DocumentTitle title={"Hölibu | " + song.author + ": " + song.title + " (bearbeiten)"}/>
-                                {header}
                                 <Editor song={song} />
                             </>
                         )
@@ -169,7 +153,6 @@ class App extends Component {
                         return (
                             <>
                                 <DocumentTitle title="Hölibu | Neues Lied" />
-                                {header}
                                 <Editor song={song} />
                             </>
                         )
@@ -180,7 +163,6 @@ class App extends Component {
                             <>
                             <div className="body-container">
                                 <DocumentTitle title="Hölibu" />
-                                {header}
                                 {list}
                                 <Overview songs={this.props.songs} />
                                 </div>
@@ -193,7 +175,6 @@ class App extends Component {
                         return (
                             <>
                                 <DocumentTitle title="Hölibu" />
-                                {header}
                                 <List songs={this.props.songs} filter={filter} />
                                 {logo}
                             </>
@@ -208,11 +189,6 @@ class App extends Component {
     }
 }
 
-const NoMatch = ({ location }) => (
-    <div>
-        <h3>No match for <code>{location.pathname}</code></h3>
-    </div>
-)
 
 App.propTypes = {
     dataLoading: PropTypes.bool.isRequired,

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { withRouter } from 'react-router-dom';
 
-export const MobileHeader = (props) => {
+export const MobileHeader: React.FunctionComponent = props => {
     return (
         <header className="show-s" id="mobileheader">
             {props.children}
@@ -9,10 +9,9 @@ export const MobileHeader = (props) => {
     )
 }
 
-export const MobileMenuButton = withRouter((props) => {
+export const MobileMenuButton = withRouter(props => {
 
-
-    const handleMobileMenu = (action?) => {
+    const handleMobileMenu = (action?: string) => {
         const menu = document.getElementById('list')
         if (action === 'close' || menu.classList.contains('collapsed-open')) {
             menu.classList.remove('collapsed-open')

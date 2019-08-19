@@ -31,11 +31,13 @@ class Viewer extends React.Component<IViewerProps, IViewerState> {
 
   key = undefined
   containerRef = undefined
+  settingPanel: React.RefObject<HTMLDivElement>;
 
   constructor(props) {
     super(props);
     this.state = { relTranspose: 0, columns: undefined };
     this.containerRef = React.createRef();
+    this.settingPanel = React.createRef();
   }
 
   componentDidUpdate(prevProps) {
@@ -58,6 +60,15 @@ class Viewer extends React.Component<IViewerProps, IViewerState> {
     this.setState({ relTranspose: pitch });
   };
 
+  toggleTranspose = ev => {
+    const el = this.settingPanel.current;
+    if (el.classList.contains('open')) {
+      el.classList.remove('open')
+    } else {
+      el.classList.add('open')
+    }
+  }
+
   render() {
     // Parse HTML to react-vdom and replace chord values.
     const vdom = this.createVdom();
@@ -68,8 +79,7 @@ class Viewer extends React.Component<IViewerProps, IViewerState> {
     }
     let edit, transpose, s=this.props.song;
     if (s) { edit = <div className="mobileheader--edit"> <NavLink to={`/edit/${s.author_}/${s.title_}`} >Edit</NavLink> </div> }
-    if (s) { transpose = <div className="mobileheader--transpose"> <a href="#">Transpose</a> </div> }
-
+    if (s) { transpose = <div className="mobileheader--transpose"> <a href="#" onClick={this.toggleTranspose}>Transpose</a> </div> }
     return (
       <>
         <MobileHeader>
@@ -77,7 +87,7 @@ class Viewer extends React.Component<IViewerProps, IViewerState> {
           {transpose}
           <MobileMenuButton />
         </MobileHeader>
-        <div id="inlineSettings">
+        <div id="inlineSettings" ref={this.settingPanel}>
           <select id="overrideNumColumns" onChange={this.handleColDropdown}>
             <option value="auto">Auto</option>
             {options}

@@ -181,7 +181,6 @@ class App extends Component {
                         )
                     }} />
 
-                    {/* Unnecessary, everything goes to filter */}
                     <Route component={NoMatch} />
                 </Switch>
             </BrowserRouter>

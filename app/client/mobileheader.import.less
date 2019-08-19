@@ -3,35 +3,50 @@
 #mobileheader {
   display: none
 }
+
 @media only screen and (max-width: @width-s) {
-#mobileheader {
-  // position        : absolute;
-  background-color: @secondary;
-  top             : 0px;
-  height          : 40px;
-  width           : 100%;
-  z-index         : 100;
-  display: grid;
-  // grid-template-columns: 
-  grid-template-areas: "transpose menu  edit";
+  #mobileheader {
+    position              : absolute;
+    background-color      : @secondary;
+    top                   : 0px;
+    height                : 40px;
+    width                 : 100%;
+    z-index               : 100;
+    display               : flex;
+    flex-direction        : row;
+    // grid-template-areas: "transpose menu  edit";
 
+    * {
+      flex: 1;
+      transition: background-color 0.3s ease-in-out;
+      
+      * {
+        color: beige;
+        text-align: center;
+        line-height: 40px;
+        height: 100%;
+        width: 100%;
+        display: block;
+        transition: color 0.3s ease-in-out;
+        &:hover {
+          color: darken(beige, 10%)
+        }
+      }
+    }
 
+    >:nth-child(2n) {
+      background-color: @accent;
+      &:hover {
+        background-color: lighten(@accent, 7%);
+      }
+    }
 
-  .mobileheader--menu {
-    grid-area: menu;
-    background-color: @secondary;
+    >:nth-child(2n+1) {
+      background-color: @secondary;
+      &:hover {
+        background-color: lighten(@secondary, 7%);
+      }
+    }
 
   }
-
-  .mobileheader--transpose {
-    grid-area: transpose;
-    background-color: @accent;
-  }
-
-  .mobileheader--edit {
-    grid-area: edit;
-    background-color: @accent;
-  }
-
-}
 }

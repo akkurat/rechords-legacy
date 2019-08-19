@@ -33,6 +33,10 @@ textarea {
   width  : 100%;
 }
 
+@light: hsv(hsvhue(@accent), 0.05, 0.9);
+@dull: hsv(hsvhue(@accent), 0.3, 0.7);
+@warm: hsv(hsvhue(@accent), 0.2, 0.6);
+
 // Layout
 html {
   height: 100%;
@@ -96,8 +100,8 @@ body {
 // Content role mixins
 
 .list {
-  color           : white;
-  background-color: @secondary;
+  color: hsv(hsvhue(@accent), 0.2, 0.4);
+  background-color: @light;
   scrollbar-color : fade(white, 50%) transparent;
 }
 
@@ -143,7 +147,7 @@ body {
     line-height     : 1.7em;
     font-weight     : 600;
     text-transform  : uppercase;
-    background-color: hsv(hsvhue(@accent), 0.2, 0.6);
+    background-color: @warm;
     color           : white;
     border-radius   : 0.4em;
     padding         : 0 0.5em;
@@ -223,7 +227,7 @@ body {
   padding-bottom: 10em;
   padding-left  : 6em;
 
-  color: hsv(hsvhue(@accent), 0.3, 0.7);
+  color: @dull;
 
 
   h2,
@@ -414,6 +418,11 @@ aside#list {
   @media only screen and (max-width: @width-s) {
     display: none;
     width  : 100%;
+          color: @accent;
+        //background-color: hsv(hsvhue(@accent), 0.8, 0.8);
+        background-color: @warm;
+          background-color: @warm;
+          color: white;
   }
 }
 
@@ -511,6 +520,7 @@ hr {
   padding       : 0;
   margin        : 0;
   height        : 100%;
+    left: -60px;
 }
 
 @import '../imports/ui/editor.import.less';

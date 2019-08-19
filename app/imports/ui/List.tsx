@@ -133,7 +133,7 @@ export default class List extends React.Component<ListProps, ListState> {
                 newFilter = state.filter + tag + ' '
             }
             return {
-                filter: newFilter.replace('  ', ' ')
+                filter: newFilter.replace('  ', ' ').trim()
             }
         });
         event.preventDefault();

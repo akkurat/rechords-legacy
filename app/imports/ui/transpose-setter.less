@@ -5,11 +5,12 @@
   float : right;
 
   .rc-slider {
-    width: 50px;
+    width: 0px;
   }
 
   .rc-slider-mark {
-    top: -18px;
+    top : 2px;
+    left: -60px;
   }
 
   .rc-slider-track {
@@ -22,8 +23,8 @@
   }
 
   .rc-slider-mark-text {
-    width     : 100%;
-    text-align: left;
+    width     : 50px;
+    text-align: right;
     color     : @secondary;
 
     i {
@@ -34,7 +35,7 @@
       color: @accent;
 
       i {
-        opacity: 0;
+        opacity   : 0;
         transition: opacity 1s;
       }
     }
@@ -42,30 +43,38 @@
 
   .rc-slider-handle {
 
-      // Spielerei mit Musiknote als handle, witzig aber nicht hilfreich
-      // &::before {
-      //   content: url('/svgs/music-solid.svg');
-      //   color: @accent;
-      //   width: 30px;
-      //   height: 30px;
-      // }
-      overflow: hidden;
-      width : 20px;
-      height: 20px;
-      text-align: center;
-      vertical-align: middle;
-      font-size: 10px;
-      transition: bottom .2s;
-      // animation: changeLetter 2s linear infinite alternate;
-      *.fadeIn {
-        animation-name: fadeIn;
-        animation-duration: 1s;
-        animation-timing-function: ease-in-out;
-        animation-fill-mode: forwards;
-      }
+    // Spielerei mit Musiknote als handle, witzig aber nicht hilfreich
+    // &::before {
+    //   content: url('/svgs/music-solid.svg');
+    //   color  : @accent;
+    //   width  : 30px;
+    //   height : 30px;
+    // }
+    overflow      : hidden;
+    width         : 20px;
+    height        : 20px;
+    text-align    : center;
+    vertical-align: middle;
+    font-size     : 10px;
+    transition    : bottom .2s;
+
+    // animation: changeLetter 2s linear infinite alternate;
+    *.fadeIn {
+      animation-name           : fadeIn;
+      animation-duration       : 1s;
+      animation-timing-function: ease-in-out;
+      animation-fill-mode      : forwards;
+    }
   }
+
   @keyframes fadeIn {
-    0% {opacity: 0; margin-left: 20px}
-    100% {opacity: 1;}
+    0% {
+      opacity    : 0;
+      margin-left: 20px
+    }
+
+    100% {
+      opacity: 1;
+    }
   }
 }

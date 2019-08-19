@@ -24,14 +24,16 @@ interface P {
 
 export default class Preview extends React.Component<P, {}> {
   private vrefs?: any[];
+  vdomref: React.RefObject<HTMLElement>;
 
   constructor(props: P) {
     super(props);
+    this.vdomref = React.createRef()
   }
 
   
   componentDidUpdate() {
-    const html: HTMLElement = this.refs.html as HTMLElement;
+    const html: HTMLElement = this.vdomref.current as HTMLElement;
 
     function traverse(node: HTMLElement): void {
       for (const child of node.children) {
@@ -68,8 +70,9 @@ export default class Preview extends React.Component<P, {}> {
       const lines = findNthLine(html.children)
       const element = lines[this.props.lastLineEdit]
       if (element) {
-        // element.scrollIntoView({block: "end", inline: "nearest", behavior: "smooth" });
-        element.scrollIntoView({block: "start", inline: "center"});
+        element.scrollIntoView({block: "start", inline: "center"})
+        // That is too unspecific.: from the editor we would have the position
+        // element.classList.add('highlight')
         console.log(element.innerText)
       }
     }
@@ -320,8 +323,13 @@ export default class Preview extends React.Component<P, {}> {
 
   render() {
     this.props.song.parse(this.props.md);
-    let vdom = Parser(this.props.song.getHtml(), {
+    // TODO: make a generic VDom for our markdown that offers tracking of the reactElements
+    const vdom: Array<React.ReactElement<any>> = Parser(this.props.song.getHtml(), {
       transform: this.transformFunction
+    })
+    // @ts-ignore
+    vdom.forEach((element: React.ReactElement<any>, idx) => {
+      element.props.key = this.props.song.title_ + idx
     })
     this.vrefs = vdom;
     return (
@@ -329,8 +337,7 @@ export default class Preview extends React.Component<P, {}> {
         className="content interactive"
         id="chordsheet"
         onClick={this.handleClick}
-        ref="html" >
-
+        ref={this.vdomref} >
         {vdom}
       </section >
     )

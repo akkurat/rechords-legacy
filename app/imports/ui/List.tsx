@@ -3,6 +3,7 @@ import { NavLink, withRouter, RouteComponentProps } from 'react-router-dom';
 import MetaContent from './MetaContent';
 import { Song, ISongReference } from '../api/collections';
 import { History } from 'history'
+import { convertNodeToElement } from 'react-html-parser';
 
 interface ListItemProps extends RouteComponentProps {
     song: Song;
@@ -179,13 +180,12 @@ export default class List extends React.Component<ListProps, ListState> {
         let active = this.state.active ? '' : 'hidden';
         let filled = this.state.filter == '' ? '' : 'filled';
 
-        const process = (node) => {
+        const process = (node, idx) => {
             if (node.name == 'li') {
                 const b = node.children.length > 1 ? <b>…</b> : null;
                 return <li onMouseDown={this.onTagClick}>{node.children[0].data}{b}</li>
             }
-
-            return node;
+            return convertNodeToElement(node, idx, process);
         }
 
         return (

@@ -2,12 +2,12 @@ module.exports = {
   servers: {
     one: {
       host: 'v22015123209630421.goodsrv.de',
-      username: 'maroggo',
+			username: 'mvifian'
     }
   },
 
   app: {
-    name: 'Rechords',
+    name: 'Rechords-Beta',
     path: '../app',
 
     servers: {
@@ -21,7 +21,7 @@ module.exports = {
     env: {
       ROOT_URL: 'http://beta.hoelibu.ch',
       PORT: 4444,
-      MONGO_URL: 'mongodb://localhost/meteor'
+      MONGO_URL: 'mongodb://localhost/hoelibubeta'
     },
 
     // ssl: { // (optional)

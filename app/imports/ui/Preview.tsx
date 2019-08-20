@@ -1,6 +1,5 @@
 import Songs, { Song } from '../api/collections.js';
 import * as React from 'react';
-import MutationObserver from 'react-mutation-observer';
 
 import Hypher = require('hypher')
 import english = require('hyphenation.en-us')

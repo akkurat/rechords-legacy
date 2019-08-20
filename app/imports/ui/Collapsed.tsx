@@ -6,7 +6,8 @@ import * as React from 'react';
 interface ICollapsedProps extends RouteComponentProps {
     id: string,
     onClick: React.MouseEventHandler<HTMLElement>
-    className: string
+    className: string,
+    edge: string
 }
 const Collapsed: React.FunctionComponent<ICollapsedProps> = props =>
     (
@@ -15,7 +16,9 @@ const Collapsed: React.FunctionComponent<ICollapsedProps> = props =>
             id={props.id}
             onClick={props.onClick}
         >
-        {props.children}&nbsp;
+            <div className={props.className + ' ' + props.edge}>
+                {props.children}&nbsp;
+            </div>
         </aside>
     )
 export default withRouter(Collapsed);

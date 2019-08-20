@@ -110,11 +110,9 @@ class Viewer extends React.Component<IViewerProps, IViewerState> {
             {vdom}
           </section>
         </div>
-        <Collapsed id="editSource" className="source hide-s" onClick={this.handleContextMenu}>
-          <div className="source">
+        <Collapsed id="editSource" className="source hide-s" onClick={this.handleContextMenu} edge="right">
             <h1>bearbeiten</h1>
             <p>Schneller:&nbsp;Rechtsklick!</p>
-          </div>
         </Collapsed>
       </>
     );

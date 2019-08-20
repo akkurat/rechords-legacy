@@ -32,52 +32,67 @@ aside {
 
   @media only screen and (min-width: @width-s) {
 
+    @width: 200px;
+
     &.collapsed {
-      @pad        : 30px;
-      overflow    : visible;
-      width       : @pad;
-      cursor      : pointer;
-      transition  : width 0.3s;
-      z-index     : 100;
-      box-sizing  : border-box;
-      padding-left: @pad;
+      overflow  : visible !important;
+      width     : 27px;
+      cursor    : pointer;
+      z-index   : 300;
+      box-sizing: border-box;
+      margin    : 0;
+      padding   : 0;
+      height    : 100%;
+      position  : relative;
 
       // Mitigates the rendering bug of the contained .label
-      position: relative;
 
-      div {
-        .source;
-        position     : absolute;
-        left         : -3px;
-        transition   : all 0.2s ease-in-out;
-        display      : block;
-        width        : 240px;
-        border-radius: 20px;
-        padding      : 10px;
-      }
+      >div {
+        opacity   : 0.85;
+        margin    : 0;
+        position  : relative;
+        transition: all 0.2s ease-out;
+        display   : block;
+        height    : 100%;
+        width     : @width+20px;
+        padding   : 10px;
+        border    : none;
+        box-shadow: 20px;
 
-      &:hover {
+        * {
+          opacity: 1;
+        }
 
-        // width: @width;
-        div {
-          left: -200px;
+        &.right {
+          left: 0;
+        }
 
-
-          // width: @width;
+        &.left {
+          left: -@width;
         }
       }
 
+      &:hover {
+        >div.right {
+          left: -@width;
+        }
+
+        >div.left {
+          left: 0;
+        }
+      }
     }
+
   }
-  
+
   @media only screen and (max-width: @width-s) {
     &.collapsed {
-      @pad        : 30px;
-      overflow    : visible;
-      height       : @pad;
-      cursor      : pointer;
-      box-sizing  : border-box;
-      width: 100%;
+      @pad      : 30px;
+      overflow  : visible;
+      height    : @pad;
+      cursor    : pointer;
+      box-sizing: border-box;
+      width     : 100%;
 
       // Mitigates the rendering bug of the contained .label
 
@@ -85,11 +100,12 @@ aside {
         * {
           display: inline;
         }
+
         .source;
-        display      : contents;
+        display       : contents;
         flex-direction: column;
         height        : 100%;
-        padding      : 5px;
+        padding       : 5px;
       }
 
 
@@ -112,11 +128,10 @@ aside {
       display : flex;
       width   : @width;
 
-      color: white;
+      color           : white;
       background-color: @light;
-k
 
-      .reset {
+      k .reset {
         flex       : 0 0 1.5em;
         font-size  : 1.4em;
         margin-left: -1.5em;
@@ -176,7 +191,7 @@ k
 
 
       -webkit-backdrop-filter: blur(10px);
-      background-color: fade(@light, 50%);
+      background-color       : fade(@light, 50%);
 
       @media all and (-webkit-min-device-pixel-ratio:0) and (min-resolution: .001dpcm) {
         // non-webkit-browsers
@@ -312,13 +327,13 @@ k
       }
 
       .author {
-        display           : none;
-        flex              : 1 0 0;
-        color: hsv(hsvhue(@accent), 0.8, 0.8);
+        display         : none;
+        flex            : 1 0 0;
+        color           : hsv(hsvhue(@accent), 0.8, 0.8);
         background-color: @light;
-        text-align        : right;
-        direction         : rtl;
-        overflow          : hidden;
+        text-align      : right;
+        direction       : rtl;
+        overflow        : hidden;
       }
 
       &:hover {
@@ -333,11 +348,12 @@ k
       }
 
       &.selected {
-        color: white;
+        color           : white;
         background-color: @warm;
+
         .author {
           background-color: @warm;
-          color: white;
+          color           : white;
         }
       }
 
@@ -347,7 +363,7 @@ k
   h2 {
     font-size    : 1em;
     margin-bottom: 0;
-    color: mix(@accent, @warm, 80%);
+    color        : mix(@accent, @warm, 80%);
 
     &.huge {
       margin-top: 0;

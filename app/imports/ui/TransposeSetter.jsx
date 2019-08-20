@@ -16,12 +16,11 @@ export default class TranposeSetter extends Component {
   constructor(props) {
     super(props)
     this.keyObjs = {}
-    this.state = {in: true}
+    this.state = {animationClass: '', in: false}
   }
 
-  handleSlider = value => {
+  handleSlider = (value, oldvalue) => {
     this.props.transposeSetter(Number.parseInt(value));
-    this.setState({in: !this.state.in})
   };
 
   tipFormatter = v => {
@@ -40,7 +39,7 @@ export default class TranposeSetter extends Component {
         let keyobj = libChrod.shift(key, i);
         this.keyObjs[i] = keyobj;
         const pm = i > 0 ? '+' : ' '
-        keys[i] =<><i>{keyobj.key}</i>{pm + i}</> ;  
+        keys[i] =<>{pm + i}</> ;  
         if (i==0) { keys[i] = <><i>{keyobj.key}</i> {keyobj.scale}</> }
       }
       marks = keys
@@ -72,6 +71,15 @@ export default class TranposeSetter extends Component {
       </div>
     );
   }
+  componentDidUpdate(oldProps) {
+    
+    // if(oldProps.transpose>this.props.transpose) {
+    //   this.setState({animationClass: 'slideFromTop'})
+    // } else {
+    //   this.setState({animationClass: 'slideFromBottom'})
+    // }
+
+  }
 
   handle = (props) => {
     // <Handle value={value} {...restProps} />
@@ -80,14 +88,6 @@ export default class TranposeSetter extends Component {
 
     const duration = 500
     
-    const fadeIn = { 'opacity': 0}
-    const visible = { 'opacity': 1}
-    const transitionStyles = {
-      entering: fadeIn,
-      entered:  visible,
-      exiting:  fadeIn,
-      exited:   visible,
-    };
 
 
     const style = vertical ? { bottom: offset + '%' } : { left: offset + '%' };
@@ -97,12 +97,8 @@ export default class TranposeSetter extends Component {
         timeout={500}
          > 
           {state => {
-            let className = ''
-            if(state=='entering' || state =='exiting') {
-              className = 'fadeIn'
-            }
             return (
-            <span className={className} >
+            <span className={this.state.animationClass} >
               {this.keyObjs[value].key}
             </span>
           )}}

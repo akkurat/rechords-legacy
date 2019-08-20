@@ -85,7 +85,7 @@ class Editor extends Component {
     if (this.state.versionTab == false) {
 
       let versions = n == 0 ? undefined : (
-        <Collapsed id="revs" className="revision hide-s" onClick={this.toggleRevTab}>
+        <Collapsed id="revs" className="revision hide-s" onClick={this.toggleRevTab} edge="right">
           <h1>Verlauf</h1>
           <p>Es existieren {n} vorherige Versionen. Klicke, um diese zu durchstöbern!</p>
         </Collapsed>
@@ -109,7 +109,7 @@ class Editor extends Component {
         </div>
         <div id="editor" onContextMenu={this.handleContextMenu}>
 
-          <Collapsed id="list" onClick={this.handleContextMenu}>
+          <Collapsed id="list" onClick={this.handleContextMenu} className="chordsheet " edge="left">
             <h1>sichern<br />&amp; zurück</h1>
             <p>Schneller: Rechtsklick!</p>
           </Collapsed>

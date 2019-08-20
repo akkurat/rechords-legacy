@@ -7,7 +7,7 @@ module.exports = {
   },
 
   app: {
-    name: 'Rechords',
+    name: 'Rechords Beta',
     path: '../app',
 
     servers: {

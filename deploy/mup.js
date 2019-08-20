@@ -21,7 +21,7 @@ module.exports = {
     env: {
       ROOT_URL: 'http://beta.hoelibu.ch',
       PORT: 4444,
-      MONGO_URL: 'mongodb://localhost/hoelibubeta'
+      MONGO_URL: 'mongodb://localhost/meteor'
     },
 
     // ssl: { // (optional)

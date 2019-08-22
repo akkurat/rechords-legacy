@@ -31,21 +31,21 @@ export default class Source extends React.Component<ISourceProps, {}> {
 
     nRows = Math.max(50, nRows);
 
-    const style = {
-      // TODO: if still necessary, add media query
-        minHeight: nRows + 'em',
-    }
+    // const style = {
+    // TODO: if still necessary, add media query
+    //     minHeight: nRows + 'em',
+    // }
+    const {style, className, children, md, readOnly} = this.props;
 
     return (
-      <div className={"content " + this.props.className}>
-          {this.props.children}
+      <div style={style} className={"content " + className}>
+          {children}
         <textarea
-          className="container"
           onInputCapture={this.handleText}
           onChange={this.callUpdateHandler}
-          value={this.props.md}
+          value={md}
           // style={style}
-          readOnly={this.props.readOnly}
+          readOnly={readOnly}
         />
       </div>
     )
@@ -58,4 +58,5 @@ interface ISourceProps {
   readOnly: boolean
   children: Element
   className: string
+  style?: React.CSSProperties
 };

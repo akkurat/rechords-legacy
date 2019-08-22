@@ -48,6 +48,17 @@ body {
   height : 100%;
 
   .select(none);
+
+  font-size       : 18px;
+
+  // .maxwidth(@width-m, {
+  //   font-size       : 25px;
+  // });
+
+  // .maxwidth(@width-s, {
+  //   font-size       : 30px;
+  // });
+
 }
 
 #body {
@@ -57,14 +68,15 @@ body {
   height        : 100%;
 
   font-family     : 'Roboto', Helvetica, Arial, sans-serif;
-  font-size       : 18px;
   background-color: grey;
   overflow: hidden;
 
-  @media only screen and (max-width: @width-s) {
+  .maxwidth(@width-s) {
     flex-direction: column;
-
   }
+  padding       : 0;
+  margin        : 0;
+    left: -60px;
 }
 
 .chordtable {
@@ -416,13 +428,12 @@ body {
 
 aside#list {
   @media only screen and (max-width: @width-s) {
-    display: none;
-    width  : 100%;
-          color: @accent;
-        //background-color: hsv(hsvhue(@accent), 0.8, 0.8);
-        background-color: @warm;
-          background-color: @warm;
-          color: white;
+    display           : none;
+    width             : 100%;
+    color             : @accent;
+    //background-color: hsv(hsvhue(@accent), 0.8, 0.8);
+    background-color  : @warm;
+    color             : white;
   }
 }
 
@@ -512,16 +523,6 @@ hr {
   margin        : 0;
   height        : auto;
 }
-.body-container {
-  display       : inherit;
-  flex-direction: inherit;
-  width         : inherit;
-  min-height    : inherit;
-  padding       : 0;
-  margin        : 0;
-  height        : 100%;
-    left: -60px;
-}
 
 @import '../imports/ui/editor.import.less';
 
@@ -587,54 +588,54 @@ hr {
 }
 
 // Show up to x
-@media only screen and (max-width: @width-s) {
+.minwidth(@width-s, {
   .show-s {
     display: initial
   }
-}
+});
 
-@media only screen and (max-width: @width-m) {
+.minwidth(@width-m, {
   .show-m {
     display: initial
   }
-}
+});
 
-@media only screen and (max-width: @width-l) {
+.minwidth(@width-l, {
   .show-l {
     display: initial
   }
-}
+});
 
-@media only screen and (min-width: @width-xl) {
+.minwidth(@width-xl, {
   .show-xl {
     display: initial
   }
-}
+});
 
 // Hide below x
-@media only screen and (max-width: @width-s) {
+.maxwidth(@width-s, {
   .hide-s {
     display: none
   }
-}
+});
 
-@media only screen and (max-width: @width-m) {
+.maxwidth(@width-m, {
   .hide-m {
     display: none
   }
-}
+});
 
-@media only screen and (max-width: @width-l) {
+.maxwidth(@width-l, {
   .hide-l {
     display: none
   }
-}
+});
 
-@media only screen and (max-width: @width-xl) {
+.maxwidth(@width-xl, {
   .hide-xl {
     display: none
   }
-}
+});
 
 // Header 
 @import 'mobileheader.import.less';

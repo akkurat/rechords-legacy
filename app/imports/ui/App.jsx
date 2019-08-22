@@ -20,6 +20,9 @@ const empty_song = {
     author: "Unknown"
 };
 
+
+// TODO: make special classs for loading and 404
+// There is no benefit of using the normal content class here
 const nA404 = (
     <div className="container">
         <DocumentTitle title="Hölibu | 404" />
@@ -76,11 +79,11 @@ class App extends Component {
     render() {
         if (this.props.dataLoading) {
             return (
-                <div className="body-container">
+                <>
                     <DocumentTitle title="Hölibu" />
                     <aside id="list" />
                     {logo}
-                </div>
+                </>
             )
         }
 
@@ -91,11 +94,11 @@ class App extends Component {
                 <Switch>
 
                     <Route exact path='/' render={() => (
-                            <div className="body-container">
+                            <>
                                 <DocumentTitle title="Hölibu" />
                                 {list}
                                 {logo}
-                            </div>
+                            </>
                     )} />
 
 
@@ -107,11 +110,11 @@ class App extends Component {
                         }
 
                         return (
-                            <div className="body-container">
+                            <>
                                 <DocumentTitle title={"Hölibu | " + song.author + ": " + song.title}/>
                                 {list}
                                 <Viewer song={song} />
-                            </div>
+                            </>
                         )
                     }} />
 
@@ -123,12 +126,12 @@ class App extends Component {
                         }
 
                         return (
-                            <div className="body-container">
+                            <>
                                 <DocumentTitle title={"Hölibu | All Lieder von " + match.author }/>
                                 {list}
                                 <Overview songs={songs} />
                                 
-                            </div>
+                            </>
                         )
                     }} />
 
@@ -142,6 +145,7 @@ class App extends Component {
                         return (
                             <>
                                 <DocumentTitle title={"Hölibu | " + song.author + ": " + song.title + " (bearbeiten)"}/>
+                                {/* <List songs={this.props.songs} className="collapsed" /> */}
                                 <Editor song={song} />
                             </>
                         )
@@ -161,11 +165,9 @@ class App extends Component {
                     <Route path="/view"  render={() => {
                         return (
                             <>
-                            <div className="body-container">
                                 <DocumentTitle title="Hölibu" />
                                 {list}
                                 <Overview songs={this.props.songs} />
-                                </div>
                             </>
                         )
                     }} />

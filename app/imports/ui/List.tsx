@@ -68,6 +68,7 @@ class ListGroup extends React.Component<ListGroupProps, {}> {
 interface ListProps {
     songs: Song[];
     filter: string;
+    className?: string;
 }
 interface ListState {
     filter: string;
@@ -189,7 +190,7 @@ export default class List extends React.Component<ListProps, ListState> {
         }
 
         return (
-            <aside id="list" className="hide-s">
+            <aside id="list" className={'hide-s ' + this.props.className}>
                 <div className="filter">
                     <input type="text"
                         placeholder="Filtern…"

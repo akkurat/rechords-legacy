@@ -84,8 +84,8 @@ class Viewer extends React.Component<IViewerProps, IViewerState> {
       <>
         <MobileHeader>
           {edit}
-          {transpose}
           <MobileMenuButton />
+          {transpose}
         </MobileHeader>
         <div id="inlineSettings" ref={this.settingPanel}>
           <select id="overrideNumColumns" onChange={this.handleColDropdown}>

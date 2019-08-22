@@ -1,15 +1,32 @@
-
 // Globals
-@accent: rgb(221, 68, 7);
+@accent  : rgb(221, 68, 7);
 //@accent: rgb(0, 141, 235);
 
 @secondary: hsv(hsvhue(@accent), 0.15, 0.6);
 
 @light: hsv(hsvhue(@accent), 0.05, 0.9);
-@dull: hsv(hsvhue(@accent), 0.3, 0.7);
-@warm: hsv(hsvhue(@accent), 0.2, 0.6);
+@dull : hsv(hsvhue(@accent), 0.3, 0.7);
+@warm : hsv(hsvhue(@accent), 0.2, 0.6);
 
 @width-xl: 1500px;
-@width-l: 1200px;
-@width-m: 900px;
-@width-s: 700px;
+@width-l : 1200px;
+@width-m : 900px;
+@width-s : 700px;
+
+.maxwidth(@w, @rules) {
+
+    @media only screen and (max-width: @w),
+    only screen and (max-width: (1.5*@w)) and (min-resolution: 1.5dppx),
+    only screen and (max-width: (2.5*@w)) and (min-resolution: 3dppx) {
+        @rules();
+    }
+}
+
+.minwidth(@w, @rules) {
+
+    @media only screen and (min-width: @w),
+    only screen and (min-width: (1.5*@w)) and (min-resolution: 1.5dppx),
+    only screen and (min-width: (2.5*@w)) and (min-resolution: 3dppx) {
+        @rules();
+    }
+}

@@ -14,11 +14,13 @@ import { DomElement, Parser as HP2 } from 'htmlparser2'
 // The almighty expression matching a verse. Stolen from showdown-rechords.js:48
 const verseRegex = /(.*?): *\n((?:[^\n:<>]+\n\n?)+)/gi;
 
-interface P {
+interface P extends React.HTMLProps<HTMLElement> {
   md: string;
   song: Song;
   updateHandler?: Function;
   lastLineEdit?: number;
+  className?: string;
+
 }
 
 export default class Preview extends React.Component<P, {}> {
@@ -29,7 +31,6 @@ export default class Preview extends React.Component<P, {}> {
     super(props);
     this.vdomref = React.createRef()
   }
-
   
   componentDidUpdate() {
     const html: HTMLElement = this.vdomref.current as HTMLElement;
@@ -321,6 +322,7 @@ export default class Preview extends React.Component<P, {}> {
   };
 
   render() {
+    const { md, song, className, lastLineEdit, updateHandler, ...otherProps} = this.props;
     this.props.song.parse(this.props.md);
     // TODO: make a generic VDom for our markdown that offers tracking of the reactElements
     const vdom: Array<React.ReactElement<any>> = Parser(this.props.song.getHtml(), {
@@ -333,9 +335,9 @@ export default class Preview extends React.Component<P, {}> {
     this.vrefs = vdom;
     return (
       <section
-        className="content interactive"
+        {...otherProps}
+        className={"content interactive " + className }
         id="chordsheet"
-        onClick={this.handleClick}
         ref={this.vdomref} >
         {vdom}
       </section >

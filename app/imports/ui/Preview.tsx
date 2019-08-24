@@ -247,7 +247,7 @@ export default class Preview extends React.Component<P, {}> {
           letter += node.textContent.replace(/\s/g, '').length;
           continue;
         }
-        if (node.nodeName == 'SPAN' && (node as Element).className == 'before') {
+        if (node.nodeName == 'SPAN' && (node as Element).classList.contains('before')) {
           letter += 2;
           letter += this.textLen(node.textContent);
           continue;
@@ -273,7 +273,7 @@ export default class Preview extends React.Component<P, {}> {
       let chord;
       if ('data-chord' in node.attribs) {
         chord = (
-          <span className="before"
+          <span className="before chord"
             key={'chord'+index}
             contentEditable={true}
             suppressContentEditableWarning={true}

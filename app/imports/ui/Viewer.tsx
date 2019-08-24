@@ -32,12 +32,15 @@ class Viewer extends React.Component<IViewerProps, IViewerState> {
   key = undefined
   containerRef = undefined
   settingPanel: React.RefObject<HTMLDivElement>;
+  vrefs: { mobileTransposePanel: React.RefObject<HTMLDivElement>; };
 
   constructor(props) {
     super(props);
     this.state = { relTranspose: 0, columns: undefined };
+    // TODO: group those refs in vrefs, too
     this.containerRef = React.createRef();
     this.settingPanel = React.createRef();
+    this.vrefs = { mobileTransposePanel: React.createRef() };
   }
 
   componentDidUpdate(prevProps) {
@@ -60,8 +63,15 @@ class Viewer extends React.Component<IViewerProps, IViewerState> {
     this.setState({ relTranspose: pitch });
   };
 
+  transposePlus: React.MouseEventHandler = ev => {
+    this.setState({ relTranspose: this.state.relTranspose + 1})
+  }
+  transposeMinus = () => {
+    this.setState({ relTranspose: this.state.relTranspose - 1})
+  }
+
   toggleTranspose = ev => {
-    const el = this.settingPanel.current;
+    const el = this.vrefs.mobileTransposePanel.current;
     if (el.classList.contains('open')) {
       el.classList.remove('open')
     } else {
@@ -79,7 +89,14 @@ class Viewer extends React.Component<IViewerProps, IViewerState> {
     }
     let edit, transpose, s=this.props.song;
     if (s) { edit = <div className="mobileheader--edit"> <NavLink to={`/edit/${s.author_}/${s.title_}`} >Edit</NavLink> </div> }
-    if (s) { transpose = <div className="mobileheader--transpose"> <a href="#" onClick={this.toggleTranspose}>Transpose</a> </div> }
+    if (s) {
+      transpose = <div className="mobileheader--transpose"> <a href="#" onClick={this.toggleTranspose}>Transpose</a>
+        <div id="mobileTransposePanel" ref={this.vrefs.mobileTransposePanel} className="hide-s">
+          <span onClick={this.transposePlus}>+</span>
+          <span onClick={this.transposeMinus}>-</span>
+        </div>
+      </div>
+    }
     return (
       <>
         <MobileHeader>

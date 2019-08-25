@@ -88,9 +88,21 @@ class App extends Component {
         }
 
         const list = (<List songs={this.props.songs}/>);
+        let debugBar;
+        if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
+            debugBar = (
+            <div id="hoeliDebug">
+                pixelRatio: {window.devicePixelRatio}<br />
+                width: {window.innerWidth}<br />
+                height: {window.innerHeight}<br />
+            </div>
+            )
+        } else {
+            debugBar = undefined
+        }
 
         return (
-            <BrowserRouter>
+            <><BrowserRouter>
                 <Switch>
 
                     <Route exact path='/' render={() => (
@@ -186,6 +198,8 @@ class App extends Component {
                     <Route component={NoMatch} />
                 </Switch>
             </BrowserRouter>
+            {debugBar}
+            </>
         );
     }
 }

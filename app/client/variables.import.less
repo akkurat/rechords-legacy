@@ -15,18 +15,44 @@
 
 .maxwidth(@w, @rules) {
 
-    @media only screen and (max-width: @w),
-    only screen and (max-width: (1.5*@w)) and (min-resolution: 1.5dppx),
-    only screen and (max-width: (2.5*@w)) and (min-resolution: 3dppx) {
+    @media only screen and (max-width: @w)
+    // only screen and (max-width: (1.5*@w)) and (min-resolution: 1.5dppx),
+    // only screen and (max-width: (2.5*@w)) and (min-resolution: 3dppx)
+     {
         @rules();
     }
 }
 
 .minwidth(@w, @rules) {
 
-    @media only screen and (min-width: @w),
-    only screen and (min-width: (1.5*@w)) and (min-resolution: 1.5dppx),
-    only screen and (min-width: (2.5*@w)) and (min-resolution: 3dppx) {
+    @media only screen and (min-width: @w)
+    // only screen and (min-width: (1.5*@w)) and (min-resolution: 1.5dppx),
+    // only screen and (min-width: (2.5*@w)) and (min-resolution: 3dppx)
+     {
+        @rules();
+    }
+}
+
+/* smartphones, touchscreens */
+.touchdevice(@rules) {
+    @media (hover: none) {// and (pointer: coarse) {
+        @rules();
+    }
+}
+
+/* stylus-based screens */
+@media (hover: none) and (pointer: fine) {
+    /* ... */
+}
+
+/* Nintendo Wii controller, Microsoft Kinect */
+@media (hover: hover) and (pointer: coarse) {
+    /* ... */
+}
+
+/* mouse, touch pad */
+.mousepointer(@rules) {
+    @media (hover: hover) and (pointer: fine) {
         @rules();
     }
 }

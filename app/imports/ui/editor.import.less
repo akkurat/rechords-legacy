@@ -1,56 +1,71 @@
 @import '../../client/variables.import.less';
+
 // Editor.jsx
 // TODO: attach at jsx level?
 #editor {
-  display: flex;
-  flex-direction: row;
-  width  : 100%;
-  height: 100%;
-  flex: 1;
-  * {
-      overflow: scroll;
-  }
-  textarea {
-      overflow: inherit;
-      height: 100%;
-      width: 100%;
-  }
-  .maxwidth( @width-s, {
-    flex-direction: column;
+    display       : flex;
+    flex-direction: row;
+    width         : 100%;
+    height        : 100%;
+    flex          : 1 1 90%;
 
-    >* {
-        width: 100% !important;
+    * {
+        overflow: scroll;
     }
 
-    .first{
-        order: 1;
+    textarea {
+        overflow: inherit;
+        height  : 100%;
+        width   : 100%;
     }
-    .second{
-        order: 2;
-    }
-    .small {
-        // height: 100px;
-        // height: unset;
-        padding-top: 5px;
-        padding-bottom: 5px;
-        
-        flex: 0.3 0 100px;
 
-        .highlight {
-            background-color: yellow;
+    .maxwidth(@width-s, {
+            flex-direction: column;
+
+            >* {
+                width: 100% !important;
+            }
+
+            .first {
+                order: 2;
+
+                &.all {
+                    flex : 1 1 100%;
+                    order: 2;
+
+                }
+
+                &.third {
+                    // height     : 100px;
+                    // height     : unset;
+                    padding-top   : 5px;
+                    padding-bottom: 5px;
+
+                    flex: 0.2 0 100px;
+
+                    .highlight {
+                        background-color: yellow;
+                    }
+
+                }
+            }
+
+            .second {
+                order: 3;
+
+                &.all {
+                    display: none;
+                }
+
+                &.third {
+                    flex: 1 1;
+                }
+            }
+
+            .half {
+                flex: 0.5 0.5 50%;
+            }
         }
 
-    }
-    .large {
-        flex: 1 1 90%;
-    }
-    .none {
-        display: none;
-    }
-    .all {
-        flex: 1 1 100%;
-        order: 1;
-
-    }
-  });
+    );
 }

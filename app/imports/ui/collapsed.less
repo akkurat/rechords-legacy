@@ -30,9 +30,9 @@ aside {
     opacity: 0.7;
   }
 
-  @media only screen and (min-width: @width-s) {
+  .minwidth(@width-s, {
 
-    @width: 200px;
+    @width: 227px;
 
     &.collapsed {
       overflow  : visible !important;
@@ -48,13 +48,13 @@ aside {
       // Mitigates the rendering bug of the contained .label
 
       >div {
-        opacity   : 0.85;
+        opacity   : 1;
         margin    : 0;
         position  : relative;
         transition: all 0.2s ease-out;
         display   : block;
         height    : 100%;
-        width     : @width+20px;
+        width     : @width;
         padding   : 10px;
         border    : none;
         box-shadow: 20px;
@@ -83,36 +83,41 @@ aside {
       }
     }
 
-  }
+  });
 
-  @media only screen and (max-width: @width-s) {
+  .maxwidth(@width-s, {
     &.collapsed {
+      @width    : 200px;
+      position  : absolute;
+      right: -@width;
       @pad      : 30px;
       overflow  : visible;
       height    : @pad;
       cursor    : pointer;
       box-sizing: border-box;
-      width     : 100%;
+      width     : @width;
+      height: 100%;
 
       // Mitigates the rendering bug of the contained .label
 
-      div {
-        * {
-          display: inline;
-        }
+      // div {
+      //   * {
+      //     display: inline;
+      //   }
 
-        .source;
-        display       : contents;
-        flex-direction: column;
-        height        : 100%;
-        padding       : 5px;
-      }
+      //   .source;
+      //   display       : contents;
+      //   flex-direction: column;
+      //   height        : 100%;
+      //   padding       : 5px;
+      // }
 
 
 
     }
-  }
+  });
 
+  // TODO: make own component for list and put it to this less file
   &#list {
 
 
@@ -259,6 +264,7 @@ aside {
 
   }
 
+  // TODO: Move to Editor .less
   &#revs {
 
     ol {
@@ -374,7 +380,11 @@ aside {
 }
 
 .collapsed-open {
-  height : 100%;
+  position: fixed;
+  top: 48px;
+  height : ~"calc(100% - 48px)";
   display: block !important;
+  overflow: scroll;
+  z-index: 200
 
 }

@@ -34,7 +34,7 @@ export default class RevBrowser extends Component {
         <Source md={this.state.revision.text} readOnly={true} className="revision">
           {label}
         </Source>
-        <Collapsed id="revs" className="revisions">
+        <Collapsed id="revs" className="revisions" edge="right">
           <h1>Versionen</h1>
           <ol>
             {revs.map((rev, idx) =>

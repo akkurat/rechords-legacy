@@ -1,64 +1,69 @@
 @import './variables.import.less';
 
 #mobileheader {
-  display: none
-}
+  flex: 0 0 3rem;
+  background-color: @secondary;
+  top             : 0px;
+  width           : 100%;
+  height          : 3rem;
+  z-index         : 100;
 
+  display: none;
 
-.maxwidth(@width-s, {
-    #mobileheader {
-      position              : absolute;
-      background-color      : @secondary;
-      top                   : 0px;
-      width                 : 100%;
-      height                : 3rem;
-      z-index               : 100;
-      display               : flex;
-      flex-direction        : row;
-      transition: all 1s;
-      // grid-template-areas: "transpose menu  edit";
+  .maxwidth(@width-s, {
+      display : flex;
+    }
+  );
 
-      >* {
-        flex      : 1;
-        transition: background-color 0.3s ease-in-out;
+  flex-direction        : row;
+  transition            : all 1s;
+  // grid-template-areas: "transpose menu  edit";
 
-        color      : beige;
-        text-align : center;
-        line-height: 3rem;
-        height     : 100%;
-        width      : 100%;
-        display    : flex;
-        transition : color 0.3s ease-in-out;
+  svg {
+    fill: white;
+    stroke: white;
+    height: ~"calc(100% - 10px)";
+    width: 38px;
+    padding: 5px;
+  }
+  >* {
+    flex      : 1;
+    transition: background-color 0.3s ease-in-out;
 
-        &:hover {
-          color: darken(beige, 10%)
-        }
-        * { 
-          flex: 1;
-          color: inherit;
+    color      : white;
+    text-align : center;
+    line-height: 3rem;
+    height     : 100%;
+    width      : 100%;
+    display    : flex;
+    transition : color 0.3s ease-in-out;
 
-        }
-      }
-
-
-      :nth-child(2n) {
-        background-color: @accent;
-
-        &:hover {
-          background-color: lighten(@accent, 7%);
-        }
-      }
-
-      :nth-child(2n+1) {
-        background-color: @secondary;
-
-        &:hover {
-          background-color: lighten(@secondary, 7%);
-        }
-      }
-
+    &:hover {
+      color: darken(white, 10%)
     }
 
+    * {
+      flex : 1;
+      color: inherit;
+
+    }
   }
 
-);
+
+  >:nth-child(2n) {
+    background-color: @accent;
+
+    &:hover {
+      background-color: lighten(@accent, 7%);
+    }
+  }
+
+  >:nth-child(2n+1) {
+    background-color: @secondary;
+
+    &:hover {
+      background-color: lighten(@secondary, 7%);
+    }
+  }
+
+}

@@ -8,13 +8,13 @@ import RevBrowser from './RevBrowser.jsx';
 import Preview from './Preview.tsx';
 import { MobileHeader } from './MobileMenu';
 import { MouseEventHandler } from 'react'
-import Split from 'react-split'
+import { Swipeable } from 'react-swipeable';
+import { highlightSwipe } from './Viewer';
 
 const splitModes = [
-  { source: 'large', preview: 'small' },
-  { source: 'small', preview: 'large' },
-  { source: 'none', preview: 'all' },
-  { source: 'all', preview: 'none' },
+  { source: 'third', preview: 'third' },
+  { source: 'half', preview: 'half' },
+  { source: 'all', preview: 'all' },
 ]
 const splitOrders = [
   { source: 'first', preview: 'second' },
@@ -32,9 +32,8 @@ class Editor extends Component {
       dirty: false,
       splitmode: 0,
       splitorder: 0,
-      center: 50,
     };
-    this.vrefs = {editorpane: createRef()};
+    this.vrefs = { editorpane: createRef() };
 
     this.mdServer = props.song.text;
   }
@@ -95,21 +94,6 @@ class Editor extends Component {
   handleSetViewOrder = (ev) => {
     this.state.splitorder = (this.state.splitorder + 1) % splitOrders.length
   }
-  handleDrag = (ev) => {
-    if(ev.type==='dragstart') {
-      this.dragx = ev.pageX;
-    }
-    if(ev.type ==='dragend') {
-      const deltaX = this.dragx - ev.pageX;
-      const pane = this.vrefs.editorpane.current
-      const target = ev.target
-      const relX = ev.clientX-pane.clientLeft
-      const rel = relX/pane.clientWidth
-
-      this.setState({center: rel*100})
-    }
-
-  }
 
   render() {
 
@@ -134,11 +118,24 @@ class Editor extends Component {
 
       let viewlink, revisions, splitmode, s = this.props.song;
       // TODO: this component should fail in the constructor without song present
-      if (s) { viewlink = <div> <NavLink to={`/view/${s.author_}/${s.title_}`} >Back</NavLink> </div> }
+      if (s) { viewlink = <div> <NavLink to={`/view/${s.author_}/${s.title_}`} >
+        <svg className="icon">
+          <use href="/icons/003-back-arrow.svg#Capa_1" />
+      </svg>
+        </NavLink> </div> }
       if (s) {
         splitmode = <div>
-          <a href="#" onClick={this.handleSetViewToggle}>Splitmode</a>
-          <a href="#" onClick={this.handleSetViewOrder}>Order</a>
+          <a href="#" onClick={this.handleSetViewToggle}>
+        <svg className="icon">
+          <use href="/icons/006-resize.svg#Capa_1" width="100%" height="100%"/>
+      </svg>
+        
+</a>
+          <a href="#" onClick={this.handleSetViewOrder}>
+        <svg className="icon">
+          <use href="/icons/002-shuffle.svg#Capa_1" />
+      </svg>
+</a>
         </div>
       }
       if (s) { revisions = <div> <a href="#">Revisions</a> </div> }
@@ -153,49 +150,52 @@ class Editor extends Component {
           <MobileHeader>
             {viewlink}
             {splitmode}
-            {revisions}
+            {/* {revisions} */}
           </MobileHeader>
 
           <Collapsed onClick={this.handleContextMenu} className="chordsheet hide-s" edge="left">
             <h1>sichern<br />&amp; zurück</h1>
             <p>Schneller: Rechtsklick!</p>
           </Collapsed>
-          <div id="editor" onContextMenu={this.handleContextMenu} ref={this.vrefs.editorpane}>
-            {dirtyLabel}
+          <Swipeable onSwipedLeft={this.toggleRevTab} onSwipedRight={this.handleContextMenu}
+            onSwiping={highlightSwipe} onSwiped={highlightSwipe}
+            className="contents" >
+            <div id="editor" onContextMenu={this.handleContextMenu} ref={this.vrefs.editorpane}>
+              {dirtyLabel}
               <Preview md={this.state.md} song={this.props.song} className={split.preview + ' ' + order.preview}
                 updateHandler={this.update} lastLineEdit={this.state.lastLineEdit}
-                style={{width: this.state.center+'%'}} />
-              <div style={{width: '15px'}} 
-              onDragStart={this.handleDrag} 
-              onDragEnd={this.handleDrag} 
-              draggable="true" className="hide-s"/>
-              <Source md={this.state.md} updateHandler={this.update} 
+              />
+              <Source md={this.state.md} updateHandler={this.update}
+                className={'source ' + split.source + ' ' + order.source}
                       className={'source ' + split.source + ' ' + order.source} 
-                      style={{ width: (100-this.state.center) + '%' }} />
-                      
-            {versions}
-            {prompt}
-          </div>
+                className={'source ' + split.source + ' ' + order.source}
+                      className={'source ' + split.source + ' ' + order.source} 
+                className={'source ' + split.source + ' ' + order.source}
+              />
+              {versions}
+              {prompt}
+            </div>
+          </Swipeable>
         </>
       );
 
     } else {
       // Versionen vergleichen
+      // Additional URL?
       return (
-        <div id="editor" onContextMenu={this.handleContextMenu}>
-
-          <Collapsed className="chordsheet" onClick={this.toggleRevTab}>
+        <>
+          <Collapsed edge="left" className="chordsheet" onClick={this.toggleRevTab}>
             <h1>zurück</h1>
             <p>…und weiterbearbeiten!</p>
-
           </Collapsed>
-
-          <Source md={this.state.md} updateHandler={this.update} className="source">
-            <span className="label">Version in Bearbeitung</span>
-          </Source>
-          <RevBrowser song={this.props.song} />
-          {prompt}
-        </div>
+          <div id="editor" onContextMenu={this.handleContextMenu}>
+            <Source md={this.state.md} updateHandler={this.update} className="source">
+              <span className="label">Version in Bearbeitung</span>
+            </Source>
+            <RevBrowser song={this.props.song} />
+            {prompt}
+          </div>
+        </>
       );
 
     }

@@ -24,7 +24,11 @@ export const MobileMenuButton = withRouter(props => {
 
     return (
         <div className="mobileheader--menu">
-            <a href="#" onClick={handleClick} className="icn-menu">Songs</a>
+            <a href="#" onClick={handleClick} className="icn-menu">
+                <svg className="icon">
+                    <use href="/icons/005-menu-button.svg#Capa_1" width="100%" height="100%"/>
+                </svg>
+            </a>
         </div>
     )
 })

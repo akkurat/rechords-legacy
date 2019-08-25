@@ -2,7 +2,7 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom'
 import { withRouter, NavLink } from 'react-router-dom';
 import TranposeSetter from './TransposeSetter.jsx';
-import ChrodLib from '../api/libchrod.js';
+import ChrodLib, { IScaleReference } from '../api/libchrod.js';
 import Collapsed from './Collapsed';
 
 import './Viewer.less'
@@ -12,9 +12,23 @@ import { History } from 'history';
 import ReactHtmlParser from 'react-html-parser'
 import { DomElement } from 'htmlparser2'
 import { MobileHeader, MobileMenuButton } from './MobileMenu';
+import { Swipeable, useSwipeable } from 'react-swipeable'
 
 // import { findDOMNode } from 'react-dom';
 
+export const highlightSwipe = ev => {
+  // This feels wrong, altering the body property.
+  // But stuff issn't really modular anyways
+  const bodyContainer = document.getElementById('body');
+  if (ev.event.type === 'touchend') {
+    // view.style.marginLeft = '';
+    // view.style.opacity = ''
+    bodyContainer.style.left = '0px'
+
+    return;
+  }
+  bodyContainer.style.left = -ev.deltaX + 20 + 'px'; // 20 is offset when swipe becomes active
+}
 
 // type Parser = (html: string, options?: ParserOptions) => ReactNode[]
 interface IViewerState {
@@ -29,18 +43,23 @@ interface IViewerProps {
 
 class Viewer extends React.Component<IViewerProps, IViewerState> {
 
-  key = undefined
-  containerRef = undefined
+  key: IScaleReference = undefined
+  containerRef: React.RefObject<HTMLDivElement>
   settingPanel: React.RefObject<HTMLDivElement>;
   vrefs: { mobileTransposePanel: React.RefObject<HTMLDivElement>; };
+  chrodlib: ChrodLib;
+  keytrans: IScaleReference;
 
   constructor(props) {
     super(props);
+    this.chrodlib = new ChrodLib();
     this.state = { relTranspose: 0, columns: undefined };
     // TODO: group those refs in vrefs, too
     this.containerRef = React.createRef();
     this.settingPanel = React.createRef();
-    this.vrefs = { mobileTransposePanel: React.createRef() };
+    this.vrefs = {
+      mobileTransposePanel: React.createRef(),
+    };
   }
 
   componentDidUpdate(prevProps) {
@@ -54,8 +73,7 @@ class Viewer extends React.Component<IViewerProps, IViewerState> {
   }
 
   handleContextMenu = event => {
-    let m = this.props.match.params;
-    this.props.history.push("/edit/" + m.author + "/" + m.title);
+    this.openEditView();
     event.preventDefault();
   };
 
@@ -64,13 +82,17 @@ class Viewer extends React.Component<IViewerProps, IViewerState> {
   };
 
   transposePlus: React.MouseEventHandler = ev => {
-    this.setState({ relTranspose: this.state.relTranspose + 1})
+    this.setState({ relTranspose: this.state.relTranspose + 1 })
   }
   transposeMinus = () => {
-    this.setState({ relTranspose: this.state.relTranspose - 1})
+    this.setState({ relTranspose: this.state.relTranspose - 1 })
+  }
+  transposeReset = () => {
+    this.setState({ relTranspose: 0 })
   }
 
-  toggleTranspose = ev => {
+  toggleTranspose: React.MouseEventHandler = ev => {
+    ev.preventDefault()
     const el = this.vrefs.mobileTransposePanel.current;
     if (el.classList.contains('open')) {
       el.classList.remove('open')
@@ -79,24 +101,48 @@ class Viewer extends React.Component<IViewerProps, IViewerState> {
     }
   }
 
+  openEditView = () => {
+    let m = this.props.match.params;
+    this.props.history.push("/edit/" + m.author + "/" + m.title);
+  }
+
   render() {
     // Parse HTML to react-vdom and replace chord values.
     const vdom = this.createVdom();
 
     const options = []
     for (let i = 1; i < 6; i++) {
-      options.push(<option key={i+'column'} value={i}>{i}</option>)
+      options.push(<option key={i + 'column'} value={i}>{i}</option>)
     }
-    let edit, transpose, s=this.props.song;
-    if (s) { edit = <div className="mobileheader--edit"> <NavLink to={`/edit/${s.author_}/${s.title_}`} >Edit</NavLink> </div> }
+    let edit, transpose, s = this.props.song;
     if (s) {
-      transpose = <div className="mobileheader--transpose"> <a href="#" onClick={this.toggleTranspose}>Transpose</a>
-        <div id="mobileTransposePanel" ref={this.vrefs.mobileTransposePanel} className="hide-s">
-          <span onClick={this.transposePlus}>+</span>
-          <span onClick={this.transposeMinus}>-</span>
-        </div>
-      </div>
+      edit = (<div className="mobileheader--edit"> <NavLink to={`/edit/${s.author_}/${s.title_}`} >
+        <svg className="icon">
+          <use href="/icons/001-edit.svg#Capa_1" />
+        </svg>
+
+      </NavLink> </div>)
     }
+    let transposed = <></>
+    if (this.state.relTranspose !== 0) {
+      const pm = this.state.relTranspose > 0 ? '+' : ' '
+      transposed = <span className="pitchIndicator">{pm}{this.state.relTranspose}</span>
+    }
+    if (s) {
+      transpose = (
+        <div className="mobileheader--transpose"> <a href="#" onClick={this.toggleTranspose}>
+          <svg className="icon">
+            <use href="/icons/004-settings.svg#Capa_1" />
+          </svg>
+          {transposed}
+        </a>
+        </div>
+      )
+    }
+    // const swipers = useSwipeable({ onSwipedLeft: this.openEditView })
+
+
+
     return (
       <>
         <MobileHeader>
@@ -104,6 +150,11 @@ class Viewer extends React.Component<IViewerProps, IViewerState> {
           <MobileMenuButton />
           {transpose}
         </MobileHeader>
+        <div id="mobileTransposePanel" ref={this.vrefs.mobileTransposePanel}>
+          <span onClick={this.transposePlus}>+</span>
+          <span onClick={this.transposeReset}>{this.keytrans.key}</span>
+          <span onClick={this.transposeMinus}>-</span>
+        </div>
         <div id="inlineSettings" ref={this.settingPanel}>
           <select id="overrideNumColumns" onChange={this.handleColDropdown}>
             <option value="auto">Auto</option>
@@ -120,16 +171,21 @@ class Viewer extends React.Component<IViewerProps, IViewerState> {
           }
         </div>
         <div
+          // {...swipers}
           className="content chordsheet"
           id="chordsheet"
           onContextMenu={this.handleContextMenu} >
-          <section ref={this.containerRef} id="chordSheetContent">
-            {vdom}
-          </section>
+          <Swipeable onSwiping={highlightSwipe}
+            onSwiped={highlightSwipe}
+            onSwipedLeft={this.openEditView} delta={20} className="contents">
+            <section ref={this.containerRef} id="chordSheetContent">
+              {vdom}
+            </section>
+          </Swipeable>
         </div>
-        <Collapsed id="editSource" className="source hide-s" onClick={this.handleContextMenu} edge="right">
-            <h1>bearbeiten</h1>
-            <p>Schneller:&nbsp;Rechtsklick!</p>
+        <Collapsed id="editSource" className="source" onClick={this.handleContextMenu} edge="right">
+          <h1>bearbeiten</h1>
+          <p>Schneller:&nbsp;Rechtsklick!</p>
         </Collapsed>
       </>
     );
@@ -152,7 +208,6 @@ class Viewer extends React.Component<IViewerProps, IViewerState> {
   }
 
   createVdom() {
-    const chrodlib = new ChrodLib();
     const song = this.props.song
     const chords = song.getChords()
     const rmd_html = song.getHtml()
@@ -163,10 +218,12 @@ class Viewer extends React.Component<IViewerProps, IViewerState> {
 
     // TODO: if key undef, write something there
     const dT = this.state.relTranspose;
+    this.keytrans = this.chrodlib.shift(this.key, dT)
+
     const trans = (domNode: DomElement, idx: number) => {
       if (domNode.name && domNode.name == 'i' && 'data-chord' in domNode.attribs) {
         const chord = domNode.attribs['data-chord'];
-        const t = chrodlib.transpose(chord, this.key, dT);
+        const t = this.chrodlib.transpose(chord, this.key, dT);
         let chord_;
         if (t == null) {
           chord_ = <span className="before">{chord}</span>;
@@ -186,7 +243,7 @@ class Viewer extends React.Component<IViewerProps, IViewerState> {
     const wrappable = ['h1', 'h2', 'ul']
     for (const element of inp) {
       if (wrappable.indexOf(element.type as string) >= 0) {
-          miniState.wrappees.push(element)
+        miniState.wrappees.push(element)
       } else {
         this.wrap(miniState)
         miniState.outElements.push(element)
@@ -205,5 +262,3 @@ class Viewer extends React.Component<IViewerProps, IViewerState> {
 }
 
 export default withRouter(Viewer); // injects history, location, match
-
-

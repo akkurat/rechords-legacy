@@ -80,6 +80,9 @@ body {
   padding       : 0;
   margin        : 0;
   position: absolute;
+  left: 0px;
+
+  transition: all 0.5s ease-in-out;
 
 }
 
@@ -200,7 +203,7 @@ body {
 #chordSheetContent {
 
   .minwidth( @width-m , {
-    column-count: 1;
+    column-count: 2;
   });
 
   .minwidth(@width-l, {
@@ -453,16 +456,25 @@ body {
 
 // .chordsheet
 
-
 aside#list {
+
   .maxwidth(@width-s, {
-    display           : none;
-    width             : 100%;
-    color             : @accent;
-    //background-color: hsv(hsvhue(@accent), 0.8, 0.8);
-    background-color  : @warm;
-    color             : white;
-  })
+      display : none;
+      width   : 100%;
+      // Gagi
+    }
+
+  );
+
+  .minmaxwidth(@width-s, @width-l, {
+      position        : absolute;
+      left           : -200px;
+      padding-right: 20px;
+      height: 100%;
+
+    }
+
+  );
 }
 
 // #editSource {
@@ -674,6 +686,9 @@ hr {
   pointer-events: none;
   background-color: white;
   border: 2px solid black;
+  .touchdevice({
+    background-color: yellow;
+  });
 }
 
 .contents {

@@ -13,7 +13,7 @@
 @width-m : 900px;
 @width-s : 700px;
 
-.maxwidth(@w, @rules) {
+.maxwidth(@w; @rules) {
 
     @media only screen and (max-width: @w)
     // only screen and (max-width: (1.5*@w)) and (min-resolution: 1.5dppx),
@@ -23,7 +23,7 @@
     }
 }
 
-.minwidth(@w, @rules) {
+.minwidth(@w; @rules) {
 
     @media only screen and (min-width: @w)
     // only screen and (min-width: (1.5*@w)) and (min-resolution: 1.5dppx),
@@ -31,6 +31,14 @@
      {
         @rules();
     }
+}
+
+.minmaxwidth(@wmin; @wmax; @rules) {
+    @media only screen and (min-width: @wmin) and (max-width: @wmax)
+    {
+        @rules();
+    }
+
 }
 
 /* smartphones, touchscreens */

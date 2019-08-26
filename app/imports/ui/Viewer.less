@@ -40,16 +40,15 @@
   z-index : 400;
   display : none;
 
+  .minwidth(@width-s, {
   .touchdevice( {
-      .minwidth(@width-m, {
           display: flex;
           right: 40px
         }
 
-      )
-    }
+      );
+  });
 
-  );
   flex-direction: row;
 
   &.open {

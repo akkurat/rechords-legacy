@@ -5,6 +5,7 @@ import { Song, ISongReference } from '../api/collections';
 import { History } from 'history'
 import { convertNodeToElement } from 'react-html-parser';
 
+
 interface ListItemProps extends RouteComponentProps {
     song: Song;
     key: string;
@@ -84,6 +85,31 @@ export default class List extends React.Component<ListProps, ListState> {
     }
 
 
+
+    shiftScreen: (event) => void = ev => {
+        // The clean way would be: event bus
+        // and on app.jsx listen for it and do the actual styling
+        const mql = window.matchMedia('(min-width: 700px) and (max-width: 1200px)');
+
+        const body = document.getElementById('body')
+
+        // const width = ev.target.clientWidth
+        if (mql.matches) {
+            body.style.left = '200px';
+        }
+
+    };
+    resetScreen = (ev) => {
+        // The clean way would be: event bus
+        // and on app.jsx listen for it and do the actual styling
+        const body = document.getElementById('body')
+        if(ev.target.id !== 'list') {
+
+        body.style.left = ''
+        }
+
+    };
+
     keyHandler = e => {
         if (e.key === 'Escape') {
             this.setState({
@@ -98,10 +124,12 @@ export default class List extends React.Component<ListProps, ListState> {
 
     componentDidMount() {
         document.addEventListener("keydown", this.keyHandler);
+        document.addEventListener('click', this.resetScreen)
     }
 
     componentWillUnmount() {
         document.removeEventListener("keydown", this.keyHandler);
+        document.removeEventListener('click', this.resetScreen)
     }
 
     onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -190,7 +218,8 @@ export default class List extends React.Component<ListProps, ListState> {
         }
 
         return (
-            <aside id="list" className={'hide-s ' + this.props.className}>
+            <aside id="list" className={this.props.className} 
+            onPointerEnter={this.shiftScreen}  onPointerLeave={this.resetScreen}>
                 <div className="filter">
                     <input type="text"
                         placeholder="Filtern…"

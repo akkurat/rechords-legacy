@@ -4,6 +4,7 @@ import MetaContent from './MetaContent';
 import { Song, ISongReference } from '../api/collections';
 import { History } from 'history'
 import { convertNodeToElement } from 'react-html-parser';
+import { useMediaQuery } from 'react-responsive'
 
 
 interface ListItemProps extends RouteComponentProps {
@@ -66,6 +67,7 @@ class ListGroup extends React.Component<ListGroupProps, {}> {
     }
 }
 
+
 interface ListProps {
     songs: Song[];
     filter: string;
@@ -84,19 +86,29 @@ export default class List extends React.Component<ListProps, ListState> {
         }
     }
 
+    ScreenShifter: React.FunctionComponent = (props) => {
+        const mql = useMediaQuery({ maxWidth: 1224, minWdth: 700 })
+        let handlers: any = {}
+        if(mql) {
+                handlers.onClick = this.shiftScreen
+        }
+        return (
+            <aside id="list" className={this.props.className} {...handlers}>
+                {props.children}
+            </aside>
+        )
+    }
 
 
     shiftScreen: (event) => void = ev => {
         // The clean way would be: event bus
         // and on app.jsx listen for it and do the actual styling
-        const mql = window.matchMedia('(min-width: 700px) and (max-width: 1200px)');
+        // const mql = window.matchMedia('(min-width: 700px) and (max-width: 1200px)');
 
         const body = document.getElementById('body')
 
         // const width = ev.target.clientWidth
-        if (mql.matches) {
-            body.style.left = '200px';
-        }
+        body.style.left = '200px';
 
     };
     resetScreen = (ev) => {
@@ -218,8 +230,7 @@ export default class List extends React.Component<ListProps, ListState> {
         }
 
         return (
-            <aside id="list" className={this.props.className} 
-            onPointerEnter={this.shiftScreen}  onPointerLeave={this.resetScreen}>
+            <this.ScreenShifter>
                 <div className="filter">
                     <input type="text"
                         placeholder="Filtern…"
@@ -247,14 +258,14 @@ export default class List extends React.Component<ListProps, ListState> {
                         <h2><NavLink to="/new">+ Neues Lied</NavLink></h2>
                     </li>
                 </ul>
-            </aside>
+            </this.ScreenShifter>
         )
     }
 }
 
 export const LinkTag: React.FunctionComponent<{ tag: string }> = props => {
     const tag = props.tag
-    return (<a href={'/%23' + tag}>
+    return (<a href={'/?f=%23' + tag}>
         {props.children}
     </a> // %23 is #
     )

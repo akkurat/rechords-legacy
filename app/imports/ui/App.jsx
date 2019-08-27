@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, createContext } from 'react';
 import PropTypes from 'prop-types';
 
 import { withTracker } from 'meteor/react-meteor-data';
@@ -13,6 +13,7 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import DocumentTitle from 'react-document-title';
 import { Overview } from './Overview';
 // import './collapsed.less'
+import { MobileHeader, MobileMenuButton } from './MobileMenu';
 
 const empty_song = {
     title: "Neues Lied",
@@ -23,20 +24,23 @@ const empty_song = {
 
 // TODO: make special classs for loading and 404
 // There is no benefit of using the normal content class here
-const nA404 = (
-    <div className="container">
+const NA404 = ({songs}) => (
+    <>
+        <MobileHeader>
+          <MobileMenuButton />
+        </MobileHeader>
         <DocumentTitle title="Hölibu | 404" />
-        <aside id="list">&nbsp;</aside>
+        <List songs={songs} />
         <div className="content chordsheet">
             <span id="logo">
                 <h1>404</h1>
                 <h2>n/A</h2>
             </span>
         </div>
-    </div>
+    </>
 )
 
-const logo = (
+const Logo = ({}) => (
     <div className="content chordsheet">
         <span id="logo">
             <h2>Hölibu</h2>
@@ -51,7 +55,7 @@ const NoMatch = ({ location }) => (
     </div>
 )
 
-
+export const GlobalSwipe = createContext(null)
 // App component - represents the whole app
 class App extends Component {
 
@@ -76,18 +80,22 @@ class App extends Component {
 
     }
 
+    shift = (direction) => {
+        console.log(direction) 
+    }
+
     render() {
         if (this.props.dataLoading) {
             return (
                 <>
                     <DocumentTitle title="Hölibu" />
                     <aside id="list" />
-                    {logo}
+                    <Logo />
                 </>
             )
         }
 
-        const list = (<List songs={this.props.songs}/>);
+        const FilledList = (props) => (<List {...props} songs={this.props.songs}/>);
         let debugBar;
         if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
             debugBar = (
@@ -101,30 +109,39 @@ class App extends Component {
             debugBar = undefined
         }
 
+        const initialState = {isShifted: 'hallo', shift: this.shift}
+
+
         return (
-            <><BrowserRouter>
+            <GlobalSwipe.Provider value={initialState}>
+            <BrowserRouter>
                 <Switch>
 
-                    <Route exact path='/' render={() => (
+                    <Route exact path='/' render={({location}) => { 
+                        const search = new URLSearchParams(location.search)
+                        const f = search.get('f')
+
+                        return (
                             <>
                                 <DocumentTitle title="Hölibu" />
-                                {list}
-                                {logo}
+                                <FilledList filter={f} />
+                                <Logo />
                             </>
-                    )} />
+                    )}
+                    } />
 
 
                     <Route path='/view/:author/:title' render={(match) => {
                         let song = this.getSong(match.match.params);
 
                         if (song === undefined) {
-                            return nA404; 
+                            return <NA404 {...this.props}/>; 
                         }
 
                         return (
                             <>
                                 <DocumentTitle title={"Hölibu | " + song.author + ": " + song.title}/>
-                                {list}
+                                <FilledList />
                                 <Viewer song={song} />
                             </>
                         )
@@ -134,13 +151,13 @@ class App extends Component {
                         const songs = this.getSongs(match.match.params);
 
                         if (songs === undefined) {
-                            return nA404; 
+                            return <NA404 {...this.props}/>; 
                         }
 
                         return (
                             <>
-                                <DocumentTitle title={"Hölibu | All Lieder von " + match.author }/>
-                                {list}
+                                <DocumentTitle title={"Hölibu | Alle Lieder von " + match.author }/>
+                                <FilledList />
                                 <Overview songs={songs} />
                                 
                             </>
@@ -151,13 +168,12 @@ class App extends Component {
                         let song = this.getSong(match.match.params);
 
                         if (song === undefined) {
-                            return nA404;
+                            return <NA404 {...this.props}/>;
                         }
 
                         return (
                             <>
                                 <DocumentTitle title={"Hölibu | " + song.author + ": " + song.title + " (bearbeiten)"}/>
-                                {/* <List songs={this.props.songs} className="collapsed" /> */}
                                 <Editor song={song} />
                             </>
                         )
@@ -178,36 +194,24 @@ class App extends Component {
                         return (
                             <>
                                 <DocumentTitle title="Hölibu" />
-                                {list}
+                                <FilledList />
                                 <Overview songs={this.props.songs} />
-                            </>
-                        )
-                    }} />
-
-                    <Route path="/:filter" render={(match) => {
-                        const filter = match.match.params.filter
-                        return (
-                            <>
-                                <DocumentTitle title="Hölibu" />
-                                <List songs={this.props.songs} filter={filter} />
-                                {logo}
                             </>
                         )
                     }} />
 
                     <Route component={NoMatch} />
                 </Switch>
-            </BrowserRouter>
+            </ BrowserRouter>
             {debugBar}
-            </>
+            </GlobalSwipe.Provider>
         );
     }
 }
 
-
 App.propTypes = {
     dataLoading: PropTypes.bool.isRequired,
-    songs: PropTypes.array.isRequired,
+    songs: PropTypes.array.isRequired
 };
 
 export default withTracker(props => {

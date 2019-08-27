@@ -9,7 +9,7 @@ export const MobileHeader: React.FunctionComponent = props => {
     )
 }
 
-export const MobileMenuButton = withRouter(props => {
+export const MobileMenuButton: React.FunctionComponent = withRouter(props => {
 
     const handleMobileMenu = (action?: string) => {
         const menu = document.getElementById('list')

@@ -10,6 +10,7 @@ import { MobileHeader } from './MobileMenu';
 import { MouseEventHandler } from 'react'
 import { Swipeable } from 'react-swipeable';
 import { highlightSwipe } from './Viewer';
+import { GlobalSwipe } from './App';
 
 const splitModes = [
   { source: 'third', preview: 'third' },
@@ -97,6 +98,7 @@ class Editor extends Component {
 
   render() {
 
+
     let revs = this.props.song.getRevisions();
     let n = revs.count();
 
@@ -147,6 +149,12 @@ class Editor extends Component {
       // Bearbeiten mit Echtzeit-Vorschau
       return (
         <>
+          <GlobalSwipe.Consumer>
+            {({isShifted, shift}) => {
+              shift('left');
+              console.log(isShifted)}}
+
+          </GlobalSwipe.Consumer>
           <MobileHeader>
             {viewlink}
             {splitmode}

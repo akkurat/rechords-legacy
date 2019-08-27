@@ -27,7 +27,13 @@ export const highlightSwipe = ev => {
 
     return;
   }
-  bodyContainer.style.left = -ev.deltaX + 20 + 'px'; // 20 is offset when swipe becomes active
+  // TODO: for right edge we should only move the overlay of the collapse panel
+  const offset = ev.direction === 'right' ? 30 : -30;
+  if(ev.absX < 200 ) {
+    bodyContainer.style.left = -ev.deltaX + 'px'; // 20 is offset when swipe becomes active
+  } else {
+    bodyContainer.style.left = -ev.deltaX/ev.absX*200 + 'px'; // 20 is offset when swipe becomes active
+  }
 }
 
 // type Parser = (html: string, options?: ParserOptions) => ReactNode[]
@@ -146,7 +152,7 @@ class Viewer extends React.Component<IViewerProps, IViewerState> {
     return (
       <>
         <MobileHeader>
-          {edit}
+          {/* {edit} */}
           <MobileMenuButton />
           {transpose}
         </MobileHeader>
@@ -177,7 +183,7 @@ class Viewer extends React.Component<IViewerProps, IViewerState> {
           onContextMenu={this.handleContextMenu} >
           <Swipeable onSwiping={highlightSwipe}
             onSwiped={highlightSwipe}
-            onSwipedLeft={this.openEditView} delta={20} className="contents">
+            onSwipedLeft={this.openEditView} delta={30} className="contents">
             <section ref={this.containerRef} id="chordSheetContent">
               {vdom}
             </section>

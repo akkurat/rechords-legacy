@@ -1,0 +1,397 @@
+@import (reference) './variables.import.less';
+@import (reference) './responsive.import.less';
+
+// Separate files for Viewer and Editor and Preview and Source? Yeah or nay?
+#editor {
+  display: flex;
+  width: 100%;
+}
+
+#chordsheet {
+  .chordsheet-colors;
+
+  padding-top: 2em;
+  padding-bottom: 10em;
+  padding-left: 6em;
+
+  color: @dull;
+
+  h2, h3, h4 {
+    color: black;
+  }
+
+  h1, h2 {
+    margin-bottom: 1rem;
+    font-size: 2.4em;
+    display: inline-block;
+  }
+
+  h1 {
+    margin-right: 0.5em;
+    margin-left: -0.1em;
+  }
+
+  h3 {
+    font-size: 1em;
+    margin: 0;
+
+    height: 3em;
+    line-height: 2em;
+    margin-bottom: -4em;
+
+    text-align: right;
+    width: 5em;
+    margin-left: -6em;
+  }
+
+  // Verse container
+  p {
+    margin: 1.4em 0;
+  }
+
+  h4 {
+    margin-top: 2em;
+    margin-bottom: -0.5em;
+  }
+
+  a {
+    color: @accent;
+
+    &:hover{
+      text-decoration: underline;
+    }
+  }
+
+  .ref {
+    color: black;
+    font-weight: bold;
+    padding-left: 8px;
+    margin-left: -12px;
+    border-left: 4px solid @accent;
+    margin-top: 2em;
+    margin-bottom: 2em;
+  }
+
+  code {
+    display: inline-block;
+    font-family: 'Input Mono', Courier New, Courier, monospace;
+    font-size: 0.8em;
+    font-weight: 300;
+    color: black;
+    padding: 0 0.5em;
+    border-radius: 0.4em;
+    .source-colors;
+  }
+
+  &.interactive i{
+    cursor: pointer;
+
+    &:not(.hasChord):hover {
+      border-top: 2px solid @accent;
+      margin-top: -2px;
+    }
+  }
+
+  .line {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;  
+    min-height: 1em;
+  }
+
+  .line i {
+    font-style: normal;
+    font-weight: 400;
+    color: black;
+
+    flex-direction:column;
+    display:flex;
+    white-space:pre-wrap;
+
+
+    /* currently not in use: Both Viewer and Preview have preprocessors.
+    &::before {
+      content: attr(data-chord);
+      .before();
+    }
+    */
+
+    .before {  // aka. Chords.
+
+      color: @accent;
+      font-weight: 600;
+      font-style: normal;
+
+      .select(none);
+      .noFocusBorder;
+
+      margin-top: 0;
+      margin-right: 0.5em;
+      margin-bottom: -0.3em;
+
+
+      sup {
+        vertical-align: 0.4em;
+        font-size: 0.7em;
+        letter-spacing: 0.02em;
+        padding-left: 0.1em;
+        font-weight: 700;
+      }
+
+      &:focus {
+        background-color: hsv(hsvhue(@accent), 0.1, 0.95);
+        min-width: 1.5em;
+
+        &:empty:before {
+          content: "\feff"; // Patches height rendering of empty contenteditables
+        }
+      }
+
+      &.optional {
+        color: hsv(hsvhue(@accent), 0.3, 0.7);
+        &:before { 
+          content: '('; 
+        }
+        &:after { 
+          content: ')'; 
+        }
+        &:after, &:before{
+          font-weight: 200;
+          vertical-align: 0.05em;
+        }
+      }
+ 
+    } // before aka. chords
+  } // i
+
+  &.interactive .line i .before {
+    // Re-allow chord text selection when editing.
+    .select(text);
+  }
+
+  li {
+    line-height: 1.6em;
+    list-style-type: none;
+
+    &::before {
+      content: '–';
+      display: inline-block;
+      position: relative;
+      width: 0;
+      left: -1.2em;
+
+    }
+  }
+
+} // .chordsheet
+#chordsheet {
+  .chordsheet-colors;
+
+  padding-top: 2em;
+  padding-bottom: 10em;
+  padding-left: 6em;
+
+  color: @dull;
+
+  h2, h3, h4 {
+    color: black;
+  }
+
+  h1, h2 {
+    margin-bottom: 1rem;
+    font-size: 2.4em;
+    display: inline-block;
+  }
+
+  h1 {
+    margin-right: 0.5em;
+    margin-left: -0.1em;
+  }
+
+  h3 {
+    font-size: 1em;
+    margin: 0;
+
+    height: 3em;
+    line-height: 2em;
+    margin-bottom: -4em;
+
+    text-align: right;
+    width: 5em;
+    margin-left: -6em;
+  }
+
+  // Verse container
+  p {
+    margin: 1.4em 0;
+  }
+
+  h4 {
+    margin-top: 2em;
+    margin-bottom: -0.5em;
+  }
+
+  a {
+    color: @accent;
+
+    &:hover{
+      text-decoration: underline;
+    }
+  }
+
+  .ref {
+    color: black;
+    font-weight: bold;
+    padding-left: 8px;
+    margin-left: -12px;
+    border-left: 4px solid @accent;
+    margin-top: 2em;
+    margin-bottom: 2em;
+  }
+
+  code {
+    display: inline-block;
+    font-family: 'Input Mono', Courier New, Courier, monospace;
+    font-size: 0.8em;
+    font-weight: 300;
+    color: black;
+    padding: 0 0.5em;
+    border-radius: 0.4em;
+    .source-colors;
+  }
+
+  &.interactive i{
+    cursor: pointer;
+
+    &:not(.hasChord):hover {
+      border-top: 2px solid @accent;
+      margin-top: -2px;
+    }
+  }
+
+  .line {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;  
+    min-height: 1em;
+  }
+
+  .line i {
+    font-style: normal;
+    font-weight: 400;
+    color: black;
+
+    flex-direction:column;
+    display:flex;
+    white-space:pre-wrap;
+
+
+    /* currently not in use: Both Viewer and Preview have preprocessors.
+    &::before {
+      content: attr(data-chord);
+      .before();
+    }
+    */
+
+    .before {  // aka. Chords.
+
+      color: @accent;
+      font-weight: 600;
+      font-style: normal;
+
+      .select(none);
+      .noFocusBorder;
+
+      margin-top: 0;
+      margin-right: 0.5em;
+      margin-bottom: -0.3em;
+
+
+      sup {
+        vertical-align: 0.4em;
+        font-size: 0.7em;
+        letter-spacing: 0.02em;
+        padding-left: 0.1em;
+        font-weight: 700;
+      }
+
+      &:focus {
+        background-color: hsv(hsvhue(@accent), 0.1, 0.95);
+        min-width: 1.5em;
+
+        &:empty:before {
+          content: "\feff"; // Patches height rendering of empty contenteditables
+        }
+      }
+
+      &.optional {
+        color: hsv(hsvhue(@accent), 0.3, 0.7);
+        &:before { 
+          content: '('; 
+        }
+        &:after { 
+          content: ')'; 
+        }
+        &:after, &:before{
+          font-weight: 200;
+          vertical-align: 0.05em;
+        }
+      }
+ 
+    } // before aka. chords
+  } // i
+
+  &.interactive .line i .before {
+    // Re-allow chord text selection when editing.
+    .select(text);
+  }
+
+  li {
+    line-height: 1.6em;
+    list-style-type: none;
+
+    &::before {
+      content: '–';
+      display: inline-block;
+      position: relative;
+      width: 0;
+      left: -1.2em;
+
+    }
+  }
+
+} // .chordsheet
+
+
+#transposer {
+
+  .maxwidth(@width-m, {
+    display: none;
+  });
+
+  height: 400px;
+  float: right;
+
+  .rc-slider {
+    width: 0px;
+  }
+
+  .rc-slider-mark {
+    top: 2px;
+    left: -60px;
+  }
+
+  .rc-slider-mark-text {
+    width: 50px;
+    text-align: right;
+  }
+
+  .rc-slider-track {
+    background-color: @accent;
+  }
+
+  .rc-slider-handle,
+  .rc-slider-dot-active {
+    border-color: @accent;
+  }
+}

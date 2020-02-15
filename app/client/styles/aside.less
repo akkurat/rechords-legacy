@@ -1,0 +1,337 @@
+@import (reference) './variables.import.less';
+@import (reference) './responsive.import.less';
+
+
+
+aside.drawer {
+  @open: 220px;
+  @closed: 30px;
+
+  flex-grow: 0;
+  flex-shrink: 0;
+  box-sizing: border-box;
+  width: @open;
+
+  .scroll;
+
+  padding-top: 1em;
+  padding-right: 0;
+  padding-bottom: 2em;
+  padding-left: 0.5em;
+
+  &.closed {
+    overflow: hidden;
+    width: @closed;
+    padding-left: @closed;
+    cursor: pointer;
+    transition: all 0.3s;
+    z-index: 100;
+    box-sizing: border-box;
+
+    // Mitigates the rendering bug of the contained .label
+    position: relative;
+    
+    &:hover {
+      width: @open;
+      padding-left: 0.5em;
+    }
+  }
+
+  // Content-width blocker:
+  & > div {
+    width: @open - @closed; //ie. width - padding
+  }
+
+  // Drawer Contents:
+
+  h1, h2, h3 {
+    font-size: 2em;
+    font-weight: 600;
+  }
+
+  & > h1 {
+    margin-top: 0;
+  }
+
+  h2 {
+    font-size: 1em;
+    margin-bottom: 0;
+    color: mix(@accent, @warm, 80%);
+
+    &.huge {
+      margin-top: 0;
+      font-size: 2em;
+    }
+  }
+
+  // Make list items fill the entire width
+  li {
+
+    // Stick to one row per li
+    white-space: nowrap;
+    overflow: hidden;
+
+    margin-left: -0.5em;
+    padding-left: 0.5em;
+
+    a {
+      display: flex;
+
+      .noFocusBorder;
+
+      padding-top: 0.1em;
+      padding-bottom: 0.2em;
+      padding-left: 0.5em;
+      padding-right: 1.0em;
+      margin-left: -0.5em;
+      margin-right: -0.5em;
+
+      span {
+        display: inline-block;
+        box-sizing: border-box;
+        min-width: 0;
+        text-overflow: ellipsis;
+        overflow: hidden;
+      }
+
+      .title {
+      }
+
+      .author {
+        display: none;
+        flex: 1 0 0;
+        color: hsv(hsvhue(@accent), 0.8, 0.8);
+        background-color: @light;
+        text-align: right;
+        direction: rtl;
+        overflow: hidden;
+      }
+
+      &:hover {
+        .title {
+          flex: 1 0 0;
+        }
+
+        .author {
+          display: inline-block;
+          flex: 0 0 auto;
+          color: @accent;
+        }
+      }
+
+      &.selected {
+        color: white;
+        background-color: @warm;
+
+        .author {
+          color: white;
+          background-color: @warm;
+        }
+      }
+
+    }
+  }
+
+  &#list {
+
+    .maxwidth(@width-m, {
+      position: absolute;
+      width: 100%;
+      min-height: 100%;
+      &.closed {
+        display: none;
+      }
+
+    });
+
+    .list-colors;
+
+    > div {
+      padding-top: 1em;
+      width: auto;
+    }
+
+
+    .filter {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: @open;
+
+      .phone({
+        position: static;
+        width: 100%;
+        margin-left: -0.5em;
+      });
+
+      display: flex;
+
+      color: white;
+      background-color: @light;
+
+      .reset {
+        flex: 0 0 1.5em;
+        font-size: 1.4em;
+        margin-left: -1.5em;
+        cursor: pointer;
+        margin-top: 1rem;
+
+        display: none;
+
+        &.filled {
+          display: block;
+        }
+      }
+
+      input {
+        margin-top: 1rem;
+        padding-left: 0.5em;
+        height: 2em;
+
+        display: block;
+        flex: 1 1 auto;
+
+        .noFocusBorder;
+
+        transition: color, background-color 0.5s;
+
+        background-color: @warm;
+        &::placeholder {
+          color: transparent;
+        }
+
+        &[value=""] {
+          background-color: @light;
+          &::placeholder {
+            color: hsv(hsvhue(@accent), 0.2, 0.4);
+          }
+        }
+
+        &:focus {
+          background-color: @warm;
+          &::placeholder {
+            color: fade(white, 50%);
+          }
+        }
+      }
+    }
+
+    div.filterMenu {
+      position: absolute;
+      box-sizing: border-box;
+      width: calc(~"100% - " @open  );
+      left: @open;
+      top: 0;
+      margin: 0;
+      padding-top: 0.5em;
+      padding-left: 2em;
+      padding-bottom: 1.5em;
+
+      .phone({
+        position: static;
+        width: 100%;
+        margin-left: -0.5em;
+        padding-left: 0.5em;
+      });
+
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      // justify-content: space-around;
+      align-content: flex-start;
+      z-index: 1;
+      overflow: hidden;
+
+      -webkit-backdrop-filter: blur(10px);
+      background-color: fade(@light, 60%);
+
+      @media all and (-webkit-min-device-pixel-ratio:0) and (min-resolution: .001dpcm) {
+        // non-webkit-browsers
+        background-color: mix(@light, white);
+      }
+
+
+      div.taggroup {
+        margin-right: 20px;
+      }
+
+      h1, h2{
+        display: none;
+      }
+
+      h4 {
+        color: black;
+        display: block;
+        transform-origin: left;
+        font-weight: 600;
+        transform: rotate(-14deg);
+
+      }
+
+      ul {
+        margin-left: 0.5em;
+        flex: 0 0 7em;
+        display: flex;
+        flex-direction: column;
+      }
+
+      li {
+        display: inline-table;
+        color: white;
+        margin-bottom: 0.5em;
+        transform-origin: left;
+        transform: rotate(-14deg);
+        cursor: pointer;
+
+        &:hover {
+          background-color: black;
+        }
+
+        b {
+          width: 1em;
+        }
+      }
+
+      max-height: 800px;
+
+      &.hidden{
+        opacity: 0;
+        visibility: hidden;
+
+        .phone({
+          opacity: inherit;
+          visibility: visible;
+          max-height: 0;
+          padding-top: 0;
+          padding-bottom: 0;
+        });
+      }
+
+
+      opacity: 1;
+      transition: all 0.5s;
+    }
+  }
+} // drawer
+
+aside.drawer#revs {
+
+  ol {
+    list-style-type: lower-greek;
+
+    li {
+      font-size: 0.8em;
+      padding: 0.3em;
+
+      &:hover {
+        background-color: hsva(0,0,0,0.3)
+      }
+
+      &.active {
+        background-color: hsva(0,0,0,0.5)
+      }
+
+    }
+  }
+
+}

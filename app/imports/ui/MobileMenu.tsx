@@ -1,7 +1,5 @@
 import * as React from 'react';
 
-import './MobileMenu.less'
-
 interface MobileMenuProps extends React.HTMLProps<HTMLElement>
 {
     toggleMenu: Function

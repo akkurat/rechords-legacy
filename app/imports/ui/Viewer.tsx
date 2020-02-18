@@ -186,7 +186,7 @@ ITransposeHandler {
             transpose={this.state.relTranspose}
             keym={key}
           />
-          <section ref="html">
+          <section ref="html" id="chordSheetContent">
             {vdom}
           </section>
         <div className="content-footer"><NavLink to={`/edit/${s.author_}/${s.title_}`} >Edit</NavLink></div>

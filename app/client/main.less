@@ -370,6 +370,53 @@ body {
 
 } // .chordsheet
 
+// It should be also possible to override this manually
+#chordSheetContent {
+
+  .minwidth( @width-m , {
+    column-count: 2;
+  });
+
+  .minwidth(@width-l, {
+    column-count: 2;
+
+    .span-wrapper {
+      column-count: 2;
+      column-gap  : inherit;
+
+    }
+  });
+
+  .minwidth( @width-xl, {
+    column-count: 3;
+  });
+
+  column-gap: 100px;
+  min-width : 350px;
+
+  p {
+    position    : relative;
+    break-inside: avoid;
+    break-before: avoid;
+  }
+
+  span.line {
+    break-inside: avoid;
+    break-before: avoid;
+  }
+
+  #head,
+  .span-wrapper {
+    column-span: all;
+  }
+
+  h3 {
+    break-after : avoid;
+    break-before: always;
+    position    : relative;
+  }
+}
+
 #progress {
   .chordsheet-colors;
 

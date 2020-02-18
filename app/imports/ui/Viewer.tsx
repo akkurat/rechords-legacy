@@ -178,7 +178,7 @@ class Viewer extends React.Component<RouteComponentProps & ViewerProps, ViewerSt
             transpose={this.state.relTranspose}
             keym={key}
           />
-          <section ref="html">
+          <section ref="html" id="chordSheetContent">
             {vdom}
           </section>
         <div><NavLink to={`/edit/${s.author_}/${s.title_}`} >Edit</NavLink></div>

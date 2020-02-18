@@ -506,6 +506,33 @@ div.mobile-footer {
   }
 } // .chordsheet
 
+// It should be also possible to override this manually
+#chordSheetContent {
+
+  column-width: 350px;
+
+  p {
+    position    : relative;
+    break-inside: avoid;
+    break-before: avoid;
+  }
+
+  span.line {
+    break-inside: avoid;
+    break-before: avoid;
+  }
+
+  #head,
+  .span-wrapper {
+    column-span: all;
+  }
+
+  h3 {
+    break-after : avoid;
+    break-before: always;
+  }
+}
+
 #progress {
   .chordsheet-colors;
 

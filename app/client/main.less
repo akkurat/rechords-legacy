@@ -373,33 +373,7 @@ body {
 // It should be also possible to override this manually
 #chordSheetContent {
 
-  .minwidth( @width-m , {
-    column-count: 2;
-  });
-
-  .minwidth(@width-l, {
-    column-count: 2;
-
-    .span-wrapper {
-      column-count: 2;
-      column-gap  : inherit;
-
-    }
-  });
-
-  .minwidth( @width-xl, {
-    column-count: 3;
-  });
-
-  .minwidth( @width-2xl, {
-    column-count: 4;
-  });
-  .minwidth( @width-3xl, {
-    column-count: 5;
-  });
-
-  column-gap: 100px;
-  min-width : 350px;
+  column-width: 350px;
 
   p {
     position    : relative;

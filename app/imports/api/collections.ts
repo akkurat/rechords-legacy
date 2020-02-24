@@ -20,6 +20,7 @@ var options = {
     h2: [],
     h3: [],
     h4: [],
+    section: ["class", "id"],
     ul: ["class"],
     ol: [],
     li: [],

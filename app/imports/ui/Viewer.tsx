@@ -1,6 +1,4 @@
 import * as React from "react";
-import * as ReactDOM from 'react-dom';
-import { useParams, useLocation, useHistory, useRouteMatch } from 'react-router-dom';
 import {  NavLink, RouteComponentProps } from "react-router-dom";
 import TranposeSetter from "./TransposeSetter.jsx";
 import ChrodLib from "../api/libchrod";

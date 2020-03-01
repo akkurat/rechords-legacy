@@ -1,0 +1,19 @@
+#chordSheetContent {
+  height: 100%;
+  display: flex;
+  flex-flow: column wrap;
+  align-items: start;
+  align-content: flex-start;
+  justify-content: start;
+}
+#chordSheetContent * {
+  box-sizing: border-box;
+  width: 230px;
+}
+#chordSheetContent section {
+  display: contents;
+}
+h3 {
+  break-after: avoid-column;
+  break-after: avoid;
+}

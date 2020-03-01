@@ -44,18 +44,45 @@ const logo = (
     </div>
 )
 
-const createWh = () => ({
-    wh: { w: window.innerWidth, h: window.innerHeight, desktop: window.innerWidth > 900 }
-});
+
+class SizeInfo {
+
+
+    constructor(wc, o) {
+        this.widthClass = wc
+        this.orientation = o
+    }
+    widthClass 
+    orientation
+
+    equals = ( sizeInfo ) => 
+        this.widthClass == sizeInfo.widthClass
+        &&
+        this.orientation == sizeInfo.orientation
+}
+
+const createWh = (ev) => {
+    const w = window.innerWidth 
+    const h = window.innerHeight 
+
+    console.log(w,h)
+
+    let orientation = w>h? 'landscape' : 'portrait'
+
+    let widthClass;
+
+    if( w > 900 )
+        widthClass = 'desktop'
+    else if( w > 600 )
+        widthClass = 'tablet'
+    else
+        widthClass = 'phone'
+
+    return new SizeInfo( widthClass, orientation )
+    
+};
 
 export const SizeContext = React.createContext(createWh(),
-     (p, n) => {
-    let returnValue = 0b000;
-    if (p.h != n.h) returnValue |= 0b100
-    if (p.w != n.w) returnValue |= 0b010
-    if (p.desktop!= n.desktop) returnValue |= 0b001
-    return returnValue
-}
 );
 
 // App component - represents the whole app
@@ -64,11 +91,16 @@ class App extends Component {
 
     constructor(props) {
         super(props);
-        this.state = { songListHidden: false, wh: createWh() }
+        this.state = { 
+            songListHidden: false, 
+            sizeInfo: createWh(),
+            transposeInfo: undefined 
+         }
         this.viewerRef = React.createRef()
     }
 
     componentDidMount() {
+        // todo use matchMedia
         window.addEventListener('resize', this.updateDimensions);
     }
     componentWillUnmount() {
@@ -77,7 +109,10 @@ class App extends Component {
 
 
     updateDimensions = (ev) => {
-        this.setState(createWh());
+        
+            let wh = createWh(ev)
+            if( !this.state.sizeInfo.equals(wh) )
+        this.setState({sizeInfo: wh});
     };
 
     hideSongList = (hide) => {
@@ -90,6 +125,12 @@ class App extends Component {
         this.setState((state) => {
             return {songListHidden: !state.songListHidden}
         });
+    }
+
+    setTransposeInfo = (val) => {
+        if(val)
+            this.setState({transposeInfo: val})
+
     }
 
     render() {
@@ -114,12 +155,11 @@ class App extends Component {
 
 
         return (
-            <SizeContext.Provider value={this.state.wh} >
             <BrowserRouter>
-            <>
+            <SizeContext.Provider value={this.state.sizeInfo} >
                 <MobileMenu 
                     transposeHandler = {this.viewerRef}
-                    relTranspose={this.viewerRef.current? this.viewerRef.current.relTranspose : 0}
+                    transposeInfo={this.state.transposeInfo}
                     toggleMenu={this.toggleSongList}
                 />
                 <div id="body">
@@ -144,6 +184,7 @@ class App extends Component {
                             <>
                                 <DocumentTitle title={"Hölibu | " + song.author + ": " + song.title}/>
                                 <Viewer song={song}  songs={this.props.songs} ref={this.viewerRef} 
+                                updateTransposeInfo={this.setTransposeInfo}
                                 {...routerProps} />
                             </>
                         )
@@ -188,9 +229,8 @@ class App extends Component {
                     <Route component={NoMatch} />
                 </Switch>
                 </div>
-            </>
-            </BrowserRouter>
             </SizeContext.Provider>
+            </BrowserRouter>
         );
     }
 }

@@ -1,3 +1,6 @@
+:root {
+  font-size: 19pt;
+}
 #chordSheetContent {
   height: 100%;
   display: flex;
@@ -6,9 +9,15 @@
   align-content: flex-start;
   justify-content: start;
 }
+@media print {
+  #chordSheetContent {
+    transform: rotate(90deg);
+    transform-origin: top left;
+  }
+}
 #chordSheetContent * {
   box-sizing: border-box;
-  width: 230px;
+  width: 99mm;
 }
 #chordSheetContent section {
   display: contents;

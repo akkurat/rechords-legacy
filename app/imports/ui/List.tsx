@@ -80,10 +80,21 @@ class List extends React.Component<ListProps, ListState> {
         // Focus grabber
         if (this.props.hidden) return;
 
+        const target = e.target;
+
+        if( target.tagName == 'INPUT' )
+        {
+            if( target.id != 'rechords-filter')
+            // Don't steal other inputs focus
+                return;
+        }
+
+        // attach this event rather to the input itself?
         if (e.key == 'Escape') {
             this.setState({
                 filter: '',
             });
+            // FIXME: replace refs by React.createRef() callback
             this.refs.filter.blur();
             e.preventDefault();
         } else {
@@ -206,11 +217,13 @@ class List extends React.Component<ListProps, ListState> {
                     <input type="text" 
                         placeholder="Filtern…" 
                         value={this.state.filter} 
+                        // FIXME: Replace string ref by callback ref
                         ref="filter"
                         onChange={this.onChange}
                         onFocus={this.onFocus}
                         onBlur={this.onBlur}
                         onKeyDown={this.onKeyDown}
+                        id="rechords-filter"
                         />
                     <span className={'reset ' + filled} onClick={(e)=>{this.setState({filter: ''})}}>&times;</span>
                 </div>

@@ -4,6 +4,7 @@ import TranposeSetter from "./TransposeSetter.jsx";
 import ChrodLib from "../api/libchrod";
 import { Song } from '../api/collections';
 import Drawer from './Drawer';
+import { SizeContext } from './App.jsx'
 
 var Parser = require("html-react-parser");
 
@@ -16,7 +17,8 @@ interface ViewerStates {
   relTranspose: number,
   menuOpen: boolean,
   viewPortGtM: boolean,
-  inlineReferences: boolean
+  inlineReferences: boolean,
+  columnWidth: number
 }
 
 // Only expose necessary handler for transpose setting, not complete component
@@ -25,20 +27,26 @@ export interface ITransposeHandler {
   decreaseTranspose: Function 
 }
 
+export interface ITransposeState {
+  relTranspose: Number
+}
+
 export default class Viewer extends React.Component<RouteComponentProps & ViewerProps, ViewerStates> implements
-ITransposeHandler {
+ITransposeHandler, ITransposeState {
+  relTranspose: Number = 0;
   constructor(props) {
     super(props);
     this.state = {
       relTranspose: this.getInitialTranspose(),
       menuOpen: false,
       viewPortGtM: window.innerWidth > 900,
-      inlineReferences: true
+      inlineReferences: true,
+      columnWidth: 15
     };
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.song == prevProps.song) return;
+    if (this.props.song._id == prevProps.song._id) return;
 
     // Song has changed.
     window.scrollTo(0, 0)
@@ -57,16 +65,8 @@ ITransposeHandler {
     return 0;
   }
 
-  updateDimensions = () => {
-    this.setState({ viewPortGtM: window.innerWidth > 900 });
-  };
 
-  componentDidMount() {
-    window.addEventListener('resize', this.updateDimensions);
-  }
-  componentWillUnmount() {
-    window.removeEventListener('resize', this.updateDimensions);
-  }
+
 
   handleContextMenu = event => {
     let m = this.props.match.params;
@@ -100,7 +100,14 @@ ITransposeHandler {
     this.setState(state => ({ inlineReferences: !state.inlineReferences }))
   };
 
+  changeColumnWidth = (ev) => {
+    this.setState({columnWidth: ev.target.value})
+  }
+
   render() {
+    // Write rel tranpose only if was rendered 
+    this.relTranspose = this.state.relTranspose
+
     let chords = this.props.song.getChords();
     let chrodlib = new ChrodLib();
     let rmd_html = this.props.song.getHtml();
@@ -173,6 +180,11 @@ ITransposeHandler {
 
     this.enrichReferences(vdom);
 
+    const Bla : React.FunctionComponent  = (props) => {
+            const sizeContext = React.useContext(SizeContext, 0b001)
+            return <div>{JSON.stringify(sizeContext)}</div>
+    }
+
     return (
 
       <>
@@ -186,10 +198,18 @@ ITransposeHandler {
             transpose={this.state.relTranspose}
             keym={key}
           />
-          <section ref="html" id="chordSheetContent">
+          <input type="number" value={this.state.columnWidth} onChange={this.changeColumnWidth} /> rem
+          <section ref="html" id="chordSheetContent" 
+          style={{columnWidth: this.state.columnWidth + 'rem' }}
+          >
+            <Bla />
             {vdom}
+            
+                                {/* <SizeContext.Consumer unstable_observedBits={0b001}>
+                                    {any => <div>{any.desktop}</div>}
+                                </SizeContext.Consumer> */}
+          <div><NavLink className="content-footer" to={`/edit/${s.author_}/${s.title_}`}>Edit</NavLink></div>
           </section>
-        <div className="content-footer"><NavLink to={`/edit/${s.author_}/${s.title_}`} >Edit</NavLink></div>
         </div>
         <Drawer className="source-colors hide-m" onClick={this.handleContextMenu}>
           <h1>bearbeiten</h1>

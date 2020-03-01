@@ -44,16 +44,41 @@ const logo = (
     </div>
 )
 
+const createWh = () => ({
+    wh: { w: window.innerWidth, h: window.innerHeight, desktop: window.innerWidth > 900 }
+});
+
+export const SizeContext = React.createContext(createWh(),
+     (p, n) => {
+    let returnValue = 0b000;
+    if (p.h != n.h) returnValue |= 0b100
+    if (p.w != n.w) returnValue |= 0b010
+    if (p.desktop!= n.desktop) returnValue |= 0b001
+    return returnValue
+}
+);
 
 // App component - represents the whole app
 class App extends Component {
 
+
     constructor(props) {
         super(props);
-        this.state = { songListHidden: false }
+        this.state = { songListHidden: false, wh: createWh() }
         this.viewerRef = React.createRef()
     }
 
+    componentDidMount() {
+        window.addEventListener('resize', this.updateDimensions);
+    }
+    componentWillUnmount() {
+        window.removeEventListener('resize', this.updateDimensions);
+    }
+
+
+    updateDimensions = (ev) => {
+        this.setState(createWh());
+    };
 
     hideSongList = (hide) => {
         this.setState({
@@ -89,10 +114,12 @@ class App extends Component {
 
 
         return (
+            <SizeContext.Provider value={this.state.wh} >
             <BrowserRouter>
             <>
                 <MobileMenu 
                     transposeHandler = {this.viewerRef}
+                    relTranspose={this.viewerRef.current? this.viewerRef.current.relTranspose : 0}
                     toggleMenu={this.toggleSongList}
                 />
                 <div id="body">
@@ -163,6 +190,7 @@ class App extends Component {
                 </div>
             </>
             </BrowserRouter>
+            </SizeContext.Provider>
         );
     }
 }

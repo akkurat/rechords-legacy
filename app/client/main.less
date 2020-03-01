@@ -272,9 +272,8 @@ div.mobile-footer {
   // padding-bottom: 10em;
   // padding-left: 6em;
 
-  overflow-y: hidden;
   overflow-x: scroll;
-  
+
   color: @dull;
 
   .phone({
@@ -310,10 +309,13 @@ div.mobile-footer {
     height: 3em;
     line-height: 2em;
     margin-bottom: -4em;
+    margin-top:2em;
 
+    .tablet{
     text-align: right;
     width: 5em;
     margin-left: -6em;
+    }
 
     .phone({
       margin: 2em 0 0; 
@@ -526,7 +528,7 @@ input {
   overflow: show;
   // set in react!
   // column-width: 10rem; 
-  column-fill: auto;
+  // column-fill: balance;
   .phone-tablet( {
     column-count: 1;
     column-width: unset !important;
@@ -535,11 +537,12 @@ input {
 
   section {
     display: contents;
+    p { margin-top: 0; margin-bottom: 0;}
+    p:first-of-type { margin-top: 3em }
   }
 
   p {
     break-inside: avoid;
-    // break-before: avoid;
   }
 
   span.line {
@@ -554,10 +557,8 @@ input {
 
   h3 {
     break-after : avoid;
-    break-before: always;
   }
   div.ref {
-    break-before: always;
     break-after: avoid;
   }
 }

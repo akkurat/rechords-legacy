@@ -1,0 +1,15 @@
+:root {
+  font-size: 19pt;
+}
+#chordSheetContent {
+  column-width: 6cm ;
+  column-fill: auto;
+  width: 100%;
+}
+#chordSheetContent section {
+  display: contents;
+}
+h3 {
+  break-after: avoid-column;
+  break-after: avoid;
+}

@@ -7,6 +7,7 @@ interface MobileMenuProps extends React.HTMLProps<HTMLElement>
 {
     toggleMenu: Function
     transposeHandler: {current: ITransposeHandler}
+    relTranspose: Number
 }
 
 
@@ -30,6 +31,7 @@ export class MobileMenu extends React.Component<MobileMenuProps>  {
             <span onClick={ev => this.props.toggleMenu()} id="menu">Menu</span>
             <span onClick={ev => this.increaseTranspose()} id="plus">+</span>
             <span onClick={ev => this.decreaseTranspose()} id="minus">-</span>
+            {this.props.relTranspose != 0 ? <span>{this.props.relTranspose}</span> : ""}
         </div>
     )
     }

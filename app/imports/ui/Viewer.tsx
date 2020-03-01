@@ -11,6 +11,7 @@ var Parser = require("html-react-parser");
 interface ViewerProps extends RouteComponentProps {
   song: Song,
   songs: Array<Song>
+  updateTransposeInfo: Function
 }
 
 interface ViewerStates {
@@ -27,13 +28,9 @@ export interface ITransposeHandler {
   decreaseTranspose: Function 
 }
 
-export interface ITransposeState {
-  relTranspose: Number
-}
 
 export default class Viewer extends React.Component<RouteComponentProps & ViewerProps, ViewerStates> implements
-ITransposeHandler, ITransposeState {
-  relTranspose: Number = 0;
+ITransposeHandler {
   constructor(props) {
     super(props);
     this.state = {
@@ -45,7 +42,18 @@ ITransposeHandler, ITransposeState {
     };
   }
 
-  componentDidUpdate(prevProps) {
+  renderedKey : { key: string, scale: string} 
+
+  getRelTranspose = () => this.state.relTranspose
+  
+  componentDidUpdate(prevProps, prevState) {
+
+    // check for change, otherwise there will be an endless update loop
+    if(prevState.relTranspose != this.state.relTranspose)
+      this.props.updateTransposeInfo({ relTranspose: this.state.relTranspose, key: this.renderedKey })
+    
+
+
     if (this.props.song._id == prevProps.song._id) return;
 
     // Song has changed.
@@ -75,18 +83,21 @@ ITransposeHandler, ITransposeState {
   };
 
   transposeSetter = pitch => {
-    this.setState({ relTranspose: pitch });
+    const val = { relTranspose: pitch }
+    this.setState(val);
   };
 
   increaseTranspose = () => {
     this.setState(function (state, props) {
-      return { relTranspose: state.relTranspose + 1 }
+      const val = { relTranspose: state.relTranspose + 1 }
+      return val 
     })
   };
 
   decreaseTranspose = () => {
     this.setState(function (state, props) {
-      return { relTranspose: state.relTranspose - 1 }
+      const val = { relTranspose: state.relTranspose - 1 }
+      return val 
     })
   };
 
@@ -106,7 +117,6 @@ ITransposeHandler, ITransposeState {
 
   render() {
     // Write rel tranpose only if was rendered 
-    this.relTranspose = this.state.relTranspose
 
     let chords = this.props.song.getChords();
     let chrodlib = new ChrodLib();
@@ -114,6 +124,7 @@ ITransposeHandler, ITransposeState {
 
     let key = ChrodLib.guessKey(chords);
 
+    this.renderedKey = key
     // TODO: if key undef, write something there
 
     let dT = this.state.relTranspose;
@@ -180,10 +191,6 @@ ITransposeHandler, ITransposeState {
 
     this.enrichReferences(vdom);
 
-    const Bla : React.FunctionComponent  = (props) => {
-            const sizeContext = React.useContext(SizeContext, 0b001)
-            return <div>{JSON.stringify(sizeContext)}</div>
-    }
 
     return (
 
@@ -196,7 +203,7 @@ ITransposeHandler, ITransposeState {
           <TranposeSetter
             transposeSetter={this.transposeSetter}
             transpose={this.state.relTranspose}
-            keym={key}
+            keym={this.renderedKey}
           />
           <input type="number" value={this.state.columnWidth} onChange={this.changeColumnWidth} /> rem
           <section ref="html" id="chordSheetContent" 
@@ -258,3 +265,8 @@ ITransposeHandler, ITransposeState {
   }
 }
 
+
+    const Bla : React.FunctionComponent  = (props) => {
+            const sizeContext = React.useContext(SizeContext, 0b001)
+            return <div>{JSON.stringify(sizeContext)}</div>
+    }

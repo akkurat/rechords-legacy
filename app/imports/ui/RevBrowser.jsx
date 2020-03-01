@@ -1,4 +1,4 @@
-import Songs, {Revisions} from '../api/collections.js';
+import Songs, {Revisions} from '../api/collections.ts';
 import React, { Component } from 'react';
 import Source from './Source.jsx';
 import PropTypes from 'prop-types';

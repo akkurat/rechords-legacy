@@ -22,4 +22,4 @@ react-meteor-data
 less@2.8.0
 static-html
 underscore@1.0.10
-adornis:typescript
+typescript

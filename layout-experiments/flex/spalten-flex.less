@@ -3,26 +3,27 @@
 }
 
 #chordSheetContent {
-    @media print {
-    transform: rotate(90deg);
-    transform-origin: top left;
+    // @media print {
+    // transform-origin: top left;
 
-    };
+    // };
 
-    height: 100%;
+    width: 100%;
 
     display: flex;
-    flex-flow: column wrap;
-    align-items: start;
+    flex-flow: row-reverse wrap;
+    align-items: flex-start;
     align-content: flex-start;
     justify-content: start;
 
 
-    * {
+    >section>*, >:not(section) {
         
+    transform: rotate(90deg);
         // margin-right: 20px;
         box-sizing: border-box;
-        width: 99mm
+        width: 99mm;
+        page-break-inside: avoid;
     }
     
     section {

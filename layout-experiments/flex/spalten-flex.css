@@ -2,22 +2,19 @@
   font-size: 19pt;
 }
 #chordSheetContent {
-  height: 100%;
+  width: 100%;
   display: flex;
-  flex-flow: column wrap;
-  align-items: start;
+  flex-flow: row-reverse wrap;
+  align-items: flex-start;
   align-content: flex-start;
   justify-content: start;
 }
-@media print {
-  #chordSheetContent {
-    transform: rotate(90deg);
-    transform-origin: top left;
-  }
-}
-#chordSheetContent * {
+#chordSheetContent > section > *,
+#chordSheetContent > :not(section) {
+  transform: rotate(90deg);
   box-sizing: border-box;
   width: 99mm;
+  page-break-inside: avoid;
 }
 #chordSheetContent section {
   display: contents;

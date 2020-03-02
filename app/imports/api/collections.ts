@@ -1,5 +1,6 @@
 import { Mongo } from "meteor/mongo";
 import { _ } from "meteor/underscore";
+import { ReactDOM } from "react";
 
 var DATACHORD = 'data-chord';
 var showdown = require("showdown");
@@ -195,14 +196,17 @@ let Songs = new Mongo.Collection<Song>('songs', {
 
 
 export class RmdHelpers {
-  static collectTags(dom) {
+  static collectTags(dom ) {
     let tags = [];
     let uls = dom.getElementsByTagName("ul");
-    for (let ul of uls) {
+    // Not sure if dom implementation or typesript changed
+    for (let i = 0; i < uls.length; i++) {
+      let ul = uls[i];
       if (ul.getAttribute("class") != "tags") continue;
 
       let lis : Array<HTMLElement> = ul.getElementsByTagName("li");
-      for (let li of lis) {
+      for (let j = 0; j < lis.length; j++) {
+        let li = lis[j];
         let contents = Array.from(li.childNodes).map(child => child.textContent);
         tags.push( contents.join(':') );
       }
@@ -216,7 +220,8 @@ export class RmdHelpers {
     let chords = [];
 
     let uls = dom.getElementsByTagName("i");
-    for (let chord_dom of uls) {
+    for (let i = 0; i < uls.length; i++) {
+      let chord_dom = uls[i];
       if (chord_dom.hasAttribute(DATACHORD)) {
         var chord = chord_dom.getAttribute(DATACHORD);
         chords.push(chord);

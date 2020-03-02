@@ -526,11 +526,21 @@ input {
 
   height: 100%;
   overflow: show;
+
+  display: flex;
+  flex-flow: column wrap;
+  align-content: flex-start;
+  
+  >*:not(section), >section>* {
+    width: 500px;
+  }
+
+
   // set in react!
   // column-width: 10rem; 
   // column-fill: balance;
   .phone-tablet( {
-    column-count: 1;
+    column-count: unset !important;
     column-width: unset !important;
     height: auto;
   });
@@ -559,7 +569,8 @@ input {
     break-after : avoid;
   }
   div.ref {
-    break-after: avoid;
+    padding: 0;
+    margin: 0;
   }
 }
 

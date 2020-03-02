@@ -191,10 +191,19 @@ ITransposeHandler {
 
     this.enrichReferences(vdom);
 
+    const style = <style dangerouslySetInnerHTML={ {__html: 
+      `#chordSheetContent >*:not(section), #chordSheetContent >section>* {
+    width: ${this.state.columnWidth}rem;
+    `
+
+    }}></style>;
 
     return (
 
       <>
+        <SizeContext.Consumer>
+          {(info) => info.widthClass == 'desktop' ? <>{style}</> : <></>}
+        </SizeContext.Consumer>
         <div
           className="content"
           id="chordsheet"
@@ -206,9 +215,7 @@ ITransposeHandler {
             keym={this.renderedKey}
           />
           <input type="number" value={this.state.columnWidth} onChange={this.changeColumnWidth} /> rem
-          <section ref="html" id="chordSheetContent" 
-          style={{columnWidth: this.state.columnWidth + 'rem' }}
-          >
+          <section ref="html" id="chordSheetContent">
             <Bla />
             {vdom}
             

@@ -5,7 +5,7 @@ module.exports = function showdownRechords() {
 
   function parseLine(match, content) {
     if( content.match(/^\s*$/g) )
-      return "</p><p>";
+      return "</p>\n</div>\n<div>\n<p>";
     var line = content.replace(/^([^\[]+)/, '<i>$1</i>');
     line = line.replace(/\[([^\]]*)\]([^\[]*)/gi, function(match, chord, text) {
       if (text === '') {
@@ -62,7 +62,9 @@ module.exports = function showdownRechords() {
         content = content.replace(/\n{3,}/g, '\n\n'); // remove excessive line breaks
         content = content.replace(/(.*?)\n/g, parseLine);
 
-        var verse = '<section id="sd-ref-' + id + '">\n' + h3 + '<p>\n' + content + '</p>' + '\n</section>';
+        var verse = '<section id="sd-ref-' + id + '">\n<div>\n'
+          + h3 + '<p>\n' + content + '</p>'
+          + '\n</div>\n</section>';
 
         return verse;
       }

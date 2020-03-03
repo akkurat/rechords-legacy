@@ -1,5 +1,5 @@
 export interface ISettingsStorage {
-
+    
     /**
      * 
      * Retrieves a setting for a certain document

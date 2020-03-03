@@ -43,8 +43,8 @@ ITransposeHandler {
       menuOpen: false,
       viewPortGtM: window.innerWidth > 900,
       inlineReferences: true,
-      columnWidth: this.settingsStorage.getValue( 'columnsOptin', this.props?.song?._id, '20' ),
-      columnsOptin: this.settingsStorage.getValue( 'columnsOptin', this.props?.song?._id, 'true' )
+      columnWidth: this.settingsStorage.getValue( 'columnWidth', this.props?.song?._id, 20 ),
+      columnsOptin: this.settingsStorage.getValue( 'columnsOptin', this.props?.song?._id, true )
     };
   }
 
@@ -76,8 +76,8 @@ ITransposeHandler {
   }
 
   private setStateFromStorage(songId: any) {
-    const columnWidth = this.settingsStorage.getValue('columnsOptin', songId, '20');
-    const columnsOptin = this.settingsStorage.getValue('columnsOptin', songId, 'true');
+    const columnWidth = this.settingsStorage.getValue('columnWidth', songId, 20);
+    const columnsOptin = this.settingsStorage.getValue('columnsOptin', songId, true);
     this.setState({ columnWidth: columnWidth, columnsOptin: columnsOptin });
   }
 
@@ -138,7 +138,7 @@ ITransposeHandler {
 
     const value = ev.target.checked;
     this.setState({columnsOptin: value})
-    this.settingsStorage.setValue('columnsOpting', this.props.song._id, value)
+    this.settingsStorage.setValue('columnsOptin', this.props.song._id, value)
   }
 
   render() {
@@ -217,8 +217,10 @@ ITransposeHandler {
 
     this.enrichReferences(vdom);
 
-    const leStyle: React.FunctionComponent = () => <style dangerouslySetInnerHTML={ {__html: 
-      `#chordSheetContent >*:not(section), #chordSheetContent >section>* {
+    this.context
+
+    const leStyle =  <style dangerouslySetInnerHTML={ {__html: 
+      `#chordSheetContent.flexCols >*:not(section), #chordSheetContent.flexCols >section>* {
     width: ${this.state.columnWidth}rem;
     `
 
@@ -229,7 +231,7 @@ ITransposeHandler {
 
       <>
         <SizeContext.Consumer>
-          {(info) => info.widthClass == 'desktop' && this.state.columnsOptin ? <leStyle/>: <></>}
+          {(info) => info.widthClass == 'desktop' && this.state.columnsOptin ? <>{leStyle}</>: <></>}
         </SizeContext.Consumer>
         <div
           className="content"

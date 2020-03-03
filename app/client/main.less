@@ -524,8 +524,11 @@ input {
 // It should be also possible to override this manually
 #chordSheetContent {
 
+  width: 100%;
+
+  &.flexCols {
   height: 100%;
-  overflow: show;
+  width: auto;
 
   display: flex;
   flex-flow: column wrap;
@@ -534,6 +537,7 @@ input {
   >*:not(section), >section>* {
     width: 500px;
   }
+}
 
 
   // set in react!

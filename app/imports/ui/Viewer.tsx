@@ -19,7 +19,8 @@ interface ViewerStates {
   menuOpen: boolean,
   viewPortGtM: boolean,
   inlineReferences: boolean,
-  columnWidth: number
+  columnWidth: number,
+  columnsOptin: boolean
 }
 
 // Only expose necessary handler for transpose setting, not complete component
@@ -38,7 +39,8 @@ ITransposeHandler {
       menuOpen: false,
       viewPortGtM: window.innerWidth > 900,
       inlineReferences: true,
-      columnWidth: 15
+      columnWidth: 15,
+      columnsOptin: true
     };
   }
 
@@ -113,6 +115,10 @@ ITransposeHandler {
 
   changeColumnWidth = (ev) => {
     this.setState({columnWidth: ev.target.value})
+  }
+
+  changeColumnsOptin = (ev) => {
+    this.setState({columnsOptin: ev.target.checked})
   }
 
   render() {
@@ -191,18 +197,19 @@ ITransposeHandler {
 
     this.enrichReferences(vdom);
 
-    const style = <style dangerouslySetInnerHTML={ {__html: 
+    const leStyle: React.FunctionComponent = () => <style dangerouslySetInnerHTML={ {__html: 
       `#chordSheetContent >*:not(section), #chordSheetContent >section>* {
     width: ${this.state.columnWidth}rem;
     `
 
     }}></style>;
 
+    const cordSheetClasses = this.state.columnsOptin ? "flexCols" : "";
     return (
 
       <>
         <SizeContext.Consumer>
-          {(info) => info.widthClass == 'desktop' ? <>{style}</> : <></>}
+          {(info) => info.widthClass == 'desktop' && this.state.columnsOptin ? <leStyle/>: <></>}
         </SizeContext.Consumer>
         <div
           className="content"
@@ -214,8 +221,10 @@ ITransposeHandler {
             transpose={this.state.relTranspose}
             keym={this.renderedKey}
           />
+
           <input type="number" value={this.state.columnWidth} onChange={this.changeColumnWidth} /> rem
-          <section ref="html" id="chordSheetContent">
+          <input type="checkbox" checked={this.state.columnsOptin} onChange={this.changeColumnsOptin} />
+          <section ref="html" id="chordSheetContent" className={cordSheetClasses}>
             <Bla />
             {vdom}
             

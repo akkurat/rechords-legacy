@@ -5,6 +5,7 @@ import ChrodLib from "../api/libchrod";
 import { Song } from '../api/collections';
 import Drawer from './Drawer';
 import { SizeContext } from './App.jsx'
+import { DefaultSettingsStorage } from '../api/localStorageDefs'
 
 var Parser = require("html-react-parser");
 
@@ -19,8 +20,8 @@ interface ViewerStates {
   menuOpen: boolean,
   viewPortGtM: boolean,
   inlineReferences: boolean,
-  columnWidth: number,
-  columnsOptin: boolean
+  columnWidth: string,
+  columnsOptin: string
 }
 
 // Only expose necessary handler for transpose setting, not complete component
@@ -32,6 +33,9 @@ export interface ITransposeHandler {
 
 export default class Viewer extends React.Component<RouteComponentProps & ViewerProps, ViewerStates> implements
 ITransposeHandler {
+
+  settingsStorage = new DefaultSettingsStorage( "viewer" );
+
   constructor(props) {
     super(props);
     this.state = {
@@ -39,14 +43,15 @@ ITransposeHandler {
       menuOpen: false,
       viewPortGtM: window.innerWidth > 900,
       inlineReferences: true,
-      columnWidth: 15,
-      columnsOptin: true
+      columnWidth: this.settingsStorage.getValue( 'columnsOptin', this.props?.song?._id, '20' ),
+      columnsOptin: this.settingsStorage.getValue( 'columnsOptin', this.props?.song?._id, 'true' )
     };
   }
 
   renderedKey : { key: string, scale: string} 
 
   getRelTranspose = () => this.state.relTranspose
+
   
   componentDidUpdate(prevProps, prevState) {
 
@@ -56,7 +61,11 @@ ITransposeHandler {
     
 
 
-    if (this.props.song._id == prevProps.song._id) return;
+    const songId = this.props.song._id;
+    if (songId == prevProps.song._id) return;
+
+    // TODO: shift click stores the value of the checkbox
+    this.setStateFromStorage(songId);
 
     // Song has changed.
     window.scrollTo(0, 0)
@@ -64,6 +73,12 @@ ITransposeHandler {
       relTranspose: this.getInitialTranspose(),
       menuOpen: false
     });
+  }
+
+  private setStateFromStorage(songId: any) {
+    const columnWidth = this.settingsStorage.getValue('columnsOptin', songId, '20');
+    const columnsOptin = this.settingsStorage.getValue('columnsOptin', songId, 'true');
+    this.setState({ columnWidth: columnWidth, columnsOptin: columnsOptin });
   }
 
   getInitialTranspose() {
@@ -114,11 +129,16 @@ ITransposeHandler {
   };
 
   changeColumnWidth = (ev) => {
-    this.setState({columnWidth: ev.target.value})
+    const value = ev.target.value;
+    this.setState({columnWidth: value})
+    this.settingsStorage.setValue('columnWidth', this.props.song._id, value)
   }
 
   changeColumnsOptin = (ev) => {
-    this.setState({columnsOptin: ev.target.checked})
+
+    const value = ev.target.checked;
+    this.setState({columnsOptin: value})
+    this.settingsStorage.setValue('columnsOpting', this.props.song._id, value)
   }
 
   render() {

@@ -16,7 +16,6 @@ class ListItem extends React.Component<ListItemProps, {}> {
         super(props);
     }
 
-
     render() {
         return (
             <li><NavLink to={`/view/${this.props.song.author_}/${this.props.song.title_}`}
@@ -84,24 +83,18 @@ class List extends React.Component<ListProps, ListState> {
 
         if( target.tagName == 'INPUT' )
         {
-            if( target.id != 'rechords-filter')
-            // Don't steal other inputs focus
                 return;
         }
 
-        // attach this event rather to the input itself?
-        if (e.key == 'Escape') {
-            this.setState({
-                filter: '',
-            });
-            // FIXME: replace refs by React.createRef() callback
-            this.refs.filter.blur();
-            e.preventDefault();
-        } else {
-            // Check if the pressed key has a printable representation
-            if (e.key && e.key.length === 1) {
-                this.refs.filter.focus();
-            }
+        const specialKey = e.altKey || e.shiftKey || e.metaKey || e.ctrlKey 
+
+        // Mostly annoying because of cmd+alt+c doesn't work 
+        if ( specialKey )
+            return;
+
+        // Check if the pressed key has a printable representation
+        if (e.key && e.key.length === 1) {
+            this.refs.filter.focus();
         }
     }
 
@@ -121,7 +114,14 @@ class List extends React.Component<ListProps, ListState> {
       };
 
     onKeyDown = (event : React.KeyboardEvent) => {
-        if (event.key == 'Enter' && this.last_matched_song) {
+        if (event.key == 'Escape') {
+            this.setState({
+                filter: '',
+            });
+            // FIXME: replace refs by React.createRef() callback
+            this.refs.filter.blur();
+            event.preventDefault();
+        } else if (event.key == 'Enter' && this.last_matched_song) {
             let s = this.last_matched_song;
             this.props.history.push('/view/' + s.author_ + '/' + s.title_);
             this.setState({

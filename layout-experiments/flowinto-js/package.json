@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "detect-element-overflow": "^1.2.0",
+    "lorem-ipsum": "^2.0.3"
+  }
+}

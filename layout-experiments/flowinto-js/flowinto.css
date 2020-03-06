@@ -1,0 +1,57 @@
+body {
+    display: flex;
+    height: 100%;
+}
+
+.flexContainer {
+    display: flex;
+}
+
+.flexRow{
+    flex-flow: row wrap;
+    flex: 1  1;
+}
+
+.flexCol{
+    flex-flow: column ;
+}
+
+#con1 {
+    flex: 1 1 200px
+}
+
+#con2 {
+    flex: 1 1 200px
+}
+
+#header {
+    height: auto;
+}
+
+._ {
+    height: 70%;
+}
+
+.col {
+    background-color: lightblue;
+    margin: 2px;
+    flex: 1 1 100px;
+    overflow: hidden;
+}
+
+
+#c1 {
+    flow-into: c13 contents
+}
+
+#c3 {
+    flow-from: c13;
+    flow-into: c34 contents;
+
+}
+
+#c4 {
+    flow-from: c34;
+}
+
+

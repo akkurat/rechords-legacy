@@ -1,0 +1,37 @@
+body {
+    height: 100%;
+}
+#wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    width: 100vw;
+   height: 100vh;
+   grid-template-rows: repeat(4,200px)
+
+}
+#header {
+    grid-column: auto / span 2;
+    /* grid-column-start: 1;
+    grid-column-end: 3;
+    grid-row-start: 1;
+    grid-row-end: 2; */
+}
+.halfCol {
+
+    background-color: lightblue;
+    grid-row-start: 2;
+    grid-row-end: 4;
+}
+.fulCol {
+
+    background-color: lightgreen;
+    grid-row-start: 1;
+    grid-row-end: 4;
+}
+.col {
+    display: inline-block;
+    overflow: hidden;
+    width: 200px;
+    flex: 0 0 20%;
+    height: 100%;
+}

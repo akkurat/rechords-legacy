@@ -25,7 +25,7 @@ module.exports = function showdownRechords() {
       type: 'lang',
       regex: /([^\n]+)\n([^\n]+)\n=+\s*\n/,
       replace: function (match, song, artist) {
-        return '<h1>' + song + '</h1>\n<h2>' + artist + '</h2>\n\n';
+        return '<div class="sd-header"><h1>' + song + '</h1>\n<h2>' + artist + '</h2></div>\n\n';
       }
     },
 

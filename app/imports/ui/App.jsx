@@ -189,6 +189,21 @@ class App extends Component {
                             </>
                         )
                     }} />
+                    <Route path='/print/:author/:title/:transpose' render={(routerProps) => {
+                        let song = getSong(routerProps.match.params);
+
+                        if (song === undefined) {
+                            return nA404; 
+                        }
+
+                        return (
+                            <>
+                                <DocumentTitle title={"Hölibu | " + song.author + ": " + song.title}/>
+                                <PrintViewer song={song}  songs={this.props.songs} relTranspose={routerProps.match.params} 
+                                {...routerProps} />
+                            </>
+                        )
+                    }} />
 
                     <Route path='/edit/:author/:title' render={(match) => {
                         let song = getSong(match.match.params);

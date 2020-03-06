@@ -20,8 +20,8 @@ interface ViewerStates {
   menuOpen: boolean,
   viewPortGtM: boolean,
   inlineReferences: boolean,
-  columnWidth: string,
-  columnsOptin: string
+  columnWidth: number,
+  columnsOptin: boolean
 }
 
 // Only expose necessary handler for transpose setting, not complete component
@@ -34,7 +34,8 @@ export interface ITransposeHandler {
 export default class Viewer extends React.Component<RouteComponentProps & ViewerProps, ViewerStates> implements
 ITransposeHandler {
 
-  settingsStorage = new DefaultSettingsStorage( "viewer" );
+  settingsStorage = new DefaultSettingsStorage( "viewer" )
+  chordSheetContentRef: React.Ref<HTMLElement> = React.createRef()
 
   constructor(props) {
     super(props);
@@ -222,17 +223,24 @@ ITransposeHandler {
     const leStyle =  <style dangerouslySetInnerHTML={ {__html: 
       `#chordSheetContent.flexCols >*:not(section), #chordSheetContent.flexCols >section>* {
     width: ${this.state.columnWidth}rem;
+    #chordSheetContent.flexCols div.sd-header {
+    width: ${this.state.columnWidth * 3}rem;
+;
+  }
+
     `
 
-    }}></style>;
+    }}></style>
+
+    this.chordSheetContentRef.current?.style.setProperty('--columnWidth', this.state.columnWidth + "rem");
 
     const cordSheetClasses = this.state.columnsOptin ? "flexCols" : "";
     return (
 
       <>
-        <SizeContext.Consumer>
+        {/* <SizeContext.Consumer>
           {(info) => info.widthClass == 'desktop' && this.state.columnsOptin ? <>{leStyle}</>: <></>}
-        </SizeContext.Consumer>
+        </SizeContext.Consumer> */}
         <div
           className="content"
           id="chordsheet"
@@ -246,8 +254,8 @@ ITransposeHandler {
 
           <input type="number" value={this.state.columnWidth} onChange={this.changeColumnWidth} /> rem
           <input type="checkbox" checked={this.state.columnsOptin} onChange={this.changeColumnsOptin} />
-          <section ref="html" id="chordSheetContent" className={cordSheetClasses}>
-            <Bla />
+          <section ref={this.chordSheetContentRef} id="chordSheetContent" className={cordSheetClasses}>
+            {/* <Bla /> */}
             {vdom}
             
                                 {/* <SizeContext.Consumer unstable_observedBits={0b001}>

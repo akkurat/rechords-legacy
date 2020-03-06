@@ -272,7 +272,10 @@ div.mobile-footer {
   // padding-bottom: 10em;
   // padding-left: 6em;
 
-  overflow-x: scroll;
+  display: flex;
+  flex-flow: row-reverse nowrap;
+
+  overflow: hidden;
 
   color: @dull;
 
@@ -524,19 +527,37 @@ input {
 // It should be also possible to override this manually
 #chordSheetContent {
 
+  --columnWidth: 500px;
   width: 100%;
 
   &.flexCols {
   height: 100%;
-  width: auto;
+  overflow-x: scroll;
 
   display: flex;
   flex-flow: column wrap;
   align-content: flex-start;
+  // columns: 3;
+
+  
   
   >*:not(section), >section>* {
-    width: 500px;
+    width: var(--columnWidth);
   }
+
+  div.sd-header {
+    column-span: all;
+    display: flex;
+    // position: fixed;
+    float: inline-start;
+    
+      width: 200px;//calc( var(--columnWidth) * 3);
+    flex-flow: row wrap;
+    * {
+
+    }
+  }
+
 }
 
 
@@ -936,6 +957,8 @@ hr {
 }
 
 #transposer {
+
+
   .phone({
     display: none;
   });

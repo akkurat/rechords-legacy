@@ -3,10 +3,11 @@ body {
 }
 #wrapper {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-    width: 100vw;
-   height: 100vh;
-   grid-template-rows: repeat(4,200px)
+    grid-template-columns: repeat( auto-fill, 200px);
+    width: max-content;
+    height: 100vh;
+    max-height: 100%;
+   grid-template-rows: repeat(auto-fill,200px)
 
 }
 #header {

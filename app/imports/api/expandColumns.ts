@@ -40,7 +40,7 @@ async function layout(c1, c2, maxIterations) {
 }
 
 export function increaseHeaderSpan( element: HTMLElement, maxIterations=10 ): number {
-  let spanHeader;
+  let spanHeader = 1;
   for( let i=0; (isVerticalOverflow(element) || isHorizontalOverflow(element) ) && i<maxIterations; i++) {
     const num = getComputedStyle(element).getPropertyValue('--spanHeader');
     spanHeader = parseInt(num);

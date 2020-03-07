@@ -7,8 +7,8 @@ import Drawer from './Drawer';
 import { SizeContext } from './App.jsx'
 import { DefaultSettingsStorage } from '../api/localStorageDefs'
 import { increaseHeaderSpan, expandColumns } from "../api/expandColumns";
-import Test from "./Test";
 // import { ColumnExpander } from "./ColumnGrid";
+import { Test } from './Test'
 
 var Parser = require("html-react-parser");
 
@@ -245,6 +245,7 @@ export default class Viewer extends React.Component<RouteComponentProps & Viewer
             transpose={this.state.relTranspose}
             keym={this.renderedKey}
           />
+          <Test></Test>
 
           <input type="number" value={this.state.columnWidth} onChange={this.changeColumnWidth} /> rem
           <input type="checkbox" checked={this.state.columnsOptin} onChange={this.changeColumnsOptin} />

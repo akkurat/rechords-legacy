@@ -8,7 +8,7 @@ import { SizeContext } from './App.jsx'
 import { DefaultSettingsStorage } from '../api/localStorageDefs'
 import { increaseHeaderSpan, expandColumns } from "../api/expandColumns";
 // import { ColumnExpander } from "./ColumnGrid";
-import { Test } from './Test'
+import { Test, ColumnExpander } from './Test'
 
 var Parser = require("html-react-parser");
 
@@ -322,41 +322,3 @@ const Bla: React.FunctionComponent = (props) => {
   return <div>{JSON.stringify(sizeContext)}</div>
 }
 
-class ColumnExpander extends React.Component<{ header: React.ReactNode, scope?: string },{}>
-{
-    public static defaultProps = {
-      scope: "gagi"
-    }
-    constructor(props) {
-        super(props);
-    }
-    colRef: React.RefObject<HTMLDivElement> = React.createRef()
-    headerRef: React.RefObject<HTMLDivElement> = React.createRef()
-
-    private effect() {
-
-        if (this.colRef.current) {
-            const span = increaseHeaderSpan(this.headerRef.current)
-            expandColumns(this.colRef.current, 10, idx => idx > span ? 'fullColumn' : 'halfColumn')
-        }
-        return () => console.log("I was destroyed");
-    }
-
-    componentDidMount = this.effect
-    componentDidUpdate = this.effect
-
-
-    render() {
-        const className = `${this.props.scope}grid-header`
-        return (
-            <div>
-                <div {...className} ref={this.headerRef}>
-                    {this.props.header}
-                </div>
-                <div ref={this.colRef}>
-                    {this.props.children}
-                </div>
-            </div>
-        );
-    }
-}

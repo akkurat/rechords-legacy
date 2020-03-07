@@ -6,7 +6,9 @@
 			"dom.iterable",
 			"dom"
 		],
+		"downlevelIteration": true,
 		"preserveConstEnums": true,
+		"diagnostics": true,
 		"sourceMap": true,
 							    
 		"plugins": [

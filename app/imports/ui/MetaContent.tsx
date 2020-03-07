@@ -36,7 +36,12 @@ export default class MetaContent extends React.Component<Props, {}> {
                 }
                 if(group)
                 {
-                    group.props.children.push(element);
+                    const children = group.props.children;
+                    if( typeof element == 'object')
+                    {
+                        element= React.cloneElement(element, {key: children.length});
+                        children.push(element);
+                    }
                 }
 
             }

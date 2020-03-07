@@ -527,38 +527,37 @@ input {
 // It should be also possible to override this manually
 #chordSheetContent {
 
-  --columnWidth: 500px;
-  width: 100%;
 
-  &.flexCols {
-  height: 100%;
-  overflow-x: scroll;
-
-  display: flex;
-  flex-flow: column wrap;
-  align-content: flex-start;
-  // columns: 3;
-
-  
-  
-  >*:not(section), >section>* {
-    width: var(--columnWidth);
+  div {
+    grid-auto-rows: minmax(auto, 100vh);
+    overflow: hidden;
   }
 
+  .halfColumn {
+    grid-row: 2 ~"/" 3;
+    background-color: lightblue;
+  }
+
+  .fullColumn {
+    grid-row:  1 ~"/" 3;
+    background-color: lightgreen;
+  }
+
+
+ 
+
   div.sd-header {
-    column-span: all;
-    display: flex;
-    // position: fixed;
+    grid-column: 1 ~"/" span var(--spanHeader);
+    grid-row: 1 ~"/" 1;
+
+    display: inline-flex;
     float: inline-start;
-    
-      width: 200px;//calc( var(--columnWidth) * 3);
     flex-flow: row wrap;
     * {
-
+      display: inline;
     }
   }
 
-}
 
 
   // set in react!
@@ -576,27 +575,6 @@ input {
     p:first-of-type { margin-top: 3em }
   }
 
-  p {
-    break-inside: avoid;
-  }
-
-  span.line {
-    break-inside: avoid;
-    break-before: avoid;
-  }
-
-  #head,
-  .span-wrapper {
-    column-span: 2;
-  }
-
-  h3 {
-    break-after : avoid;
-  }
-  div.ref {
-    padding: 0;
-    margin: 0;
-  }
 }
 
 #progress {

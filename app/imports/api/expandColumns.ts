@@ -5,7 +5,7 @@
  * zero based idx of columns (oppose to css, but this is js)
  */
 export function expandColumns(element: Node, maxIterations = 10,
-    specialClass?: (idx: number) => string) {
+    specialClass?: (idx: number) => string, depth = 1) {
 
     const stencil = element.cloneNode();
     let lastElement = element;
@@ -32,32 +32,45 @@ export function expandColumns(element: Node, maxIterations = 10,
 
 };
 
-function layout(c1, c2, maxIterations) {
+function layout(c1: HTMLElement, c2, maxIterations) {
 
-    for (let i = 0; isVerticalOverflow(c1) && i < 30; i++) {
+    for (let i = 0; isVerticalOverflow(c1) && i < maxIterations; i++) {
         // c2.scrollIntoView()
         // await Sleep(500);
-        c2.prepend(c1.lastChild)
+        const lastChild = c1.lastChild;
+
+        if (lastChild.hasChildNodes()) {
+
+            const container = lastChild.cloneNode(false);
+            container.id += 'copy_' + i;
+            c2.prepend(container)
+            for (let j = 0; isVerticalOverflow(c1) && j < maxIterations && lastChild.hasChildNodes(); j++) {
+                container.prepend(lastChild.lastChild);
+            }
+            if (!lastChild.hasChildNodes()) {
+                const origId = lastChild.id;
+                lastChild.remove()
+                container.id = origId;
+            }
+        } else {
+            c2.prepend(c1.lastChild)
+        }
     }
 
 }
 
 export function increaseHeaderSpan(element: HTMLElement, maxSpan = 3): number {
 
-
     // TODO: fuzzy guessing 
-
 
     let i = fitHeaderSpan();
 
-    element.parentElement.style.setProperty('--headerHight', element.firstChild.scrollHeight +'px') 
+    element.parentElement.style.setProperty('--headerHight', element.firstChild.scrollHeight + 'px')
 
     // fit again in case multiline makes less span necessary
     i = fitHeaderSpan();
 
-
     return i;
-
 
     function fitHeaderSpan() {
         const vname = '--spanHeader';

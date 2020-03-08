@@ -219,8 +219,6 @@ export default class Viewer extends React.Component<RouteComponentProps & Viewer
 
     const [sheetHeader, sheetContent]: React.ReactNode[] = this.splitSongVdom(vdom);
 
-    this.chordSheetContentRef.current?.style.setProperty('--columnWidth', this.state.columnWidth + "rem");
-
     const cordSheetClasses = this.state.columnsOptin ? "flexCols" : "";
 
     return (
@@ -238,10 +236,14 @@ export default class Viewer extends React.Component<RouteComponentProps & Viewer
 
           <input type="checkbox" checked={this.state.columnsOptin} onChange={this.changeColumnsOptin} />
           <section ref={this.chordSheetContentRef} id="chordSheetContent" className={cordSheetClasses}>
+            {this.state.columnsOptin?
             <ColumnExpander header={sheetHeader} scope="chordSheetContent" song_id={this.props.song?._id}>
               {sheetContent}
               <div><NavLink className="content-footer" to={`/edit/${s.author_}/${s.title_}`}>Edit</NavLink></div>
             </ColumnExpander>
+            :
+            <>{vdom}</>
+            }
           </section>
         </div>
         <Drawer className="source-colors hide-m" onClick={this.handleContextMenu}>

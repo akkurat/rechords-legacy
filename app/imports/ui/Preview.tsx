@@ -289,8 +289,8 @@ export default class Preview extends React.Component<P, {}> {
 
     return (
       <section
-        className="content interactive"
-        id="chordsheet"
+        className="content interactive chordsheet"
+        id="chordsheetPreview"
         onClick={this.handleClick.bind(this)}
         ref="html">
 

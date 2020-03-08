@@ -24,7 +24,6 @@ interface ViewerStates {
   menuOpen: boolean,
   viewPortGtM: boolean,
   inlineReferences: boolean,
-  columnWidth: number,
   columnsOptin: boolean
 }
 
@@ -48,7 +47,6 @@ export default class Viewer extends React.Component<RouteComponentProps & Viewer
       menuOpen: false,
       viewPortGtM: window.innerWidth > 900,
       inlineReferences: true,
-      columnWidth: this.settingsStorage.getValue('columnWidth', this.props?.song?._id, 20),
       columnsOptin: this.settingsStorage.getValue('columnsOptin', this.props?.song?._id, true)
     };
   }
@@ -63,7 +61,6 @@ export default class Viewer extends React.Component<RouteComponentProps & Viewer
     // check for change, otherwise there will be an endless update loop
     if (prevState.relTranspose != this.state.relTranspose)
       this.props.updateTransposeInfo({ relTranspose: this.state.relTranspose, key: this.renderedKey })
-
 
 
     const songId = this.props.song._id;
@@ -81,9 +78,8 @@ export default class Viewer extends React.Component<RouteComponentProps & Viewer
   }
 
   private setStateFromStorage(songId: any) {
-    const columnWidth = this.settingsStorage.getValue('columnWidth', songId, 20);
     const columnsOptin = this.settingsStorage.getValue('columnsOptin', songId, true);
-    this.setState({ columnWidth: columnWidth, columnsOptin: columnsOptin });
+    this.setState({ columnsOptin: columnsOptin });
   }
 
   getInitialTranspose() {
@@ -133,11 +129,6 @@ export default class Viewer extends React.Component<RouteComponentProps & Viewer
     this.setState(state => ({ inlineReferences: !state.inlineReferences }))
   };
 
-  changeColumnWidth = (ev) => {
-    const value = ev.target.value;
-    this.setState({ columnWidth: value })
-    this.settingsStorage.setValue('columnWidth', this.props.song._id, value)
-  }
 
   changeColumnsOptin = (ev) => {
 
@@ -236,8 +227,8 @@ export default class Viewer extends React.Component<RouteComponentProps & Viewer
     return (
 
       <>
-        <div className="content"
-          id="chordsheet"
+        <div className="content chordsheet"
+          id="chordsheetView"
           onContextMenu={this.handleContextMenu}
         >
           <TranposeSetter
@@ -247,10 +238,9 @@ export default class Viewer extends React.Component<RouteComponentProps & Viewer
           />
           <Test></Test>
 
-          <input type="number" value={this.state.columnWidth} onChange={this.changeColumnWidth} /> rem
           <input type="checkbox" checked={this.state.columnsOptin} onChange={this.changeColumnsOptin} />
           <section ref={this.chordSheetContentRef} id="chordSheetContent" className={cordSheetClasses}>
-            <ColumnExpander header={sheetHeader} scope="chordSheetContent">
+            <ColumnExpander header={sheetHeader} scope="chordSheetContent" song_id={this.props.song?._id}>
               {sheetContent}
               <div><NavLink className="content-footer" to={`/edit/${s.author_}/${s.title_}`}>Edit</NavLink></div>
             </ColumnExpander>

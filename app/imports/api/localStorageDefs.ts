@@ -95,8 +95,9 @@ export class DefaultSettingsStorage implements ISettingsStorage {
     }
 
     private checkVariableName( name: String ) : void {
-        if (name == '')
+        if (name == '' || typeof name == 'undefined' )
             return;
+
         const match = name.match(validVariableName)
         if( match == null || match.length == 0 )
             throw new Error("Invalid Variable Name");

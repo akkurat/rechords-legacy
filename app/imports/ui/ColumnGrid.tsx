@@ -1,16 +1,10 @@
 import * as React from 'react'
 import { increaseHeaderSpan, expandColumns } from '../api/expandColumns';
 
-import './Test.less'
+import './ColumnGridStyle.less'
 import { DefaultSettingsStorage } from '../api/localStorageDefs';
 
-export class Test extends React.Component<any> {
-    render() {
-        return <div>Gagi</div>
-    }
-}
-
-const debugColumns = true;
+const debugColumns = false;
 type ColumnExpanderProps = { header: React.ReactNode, scope?: string, song_id: string }
 type ColumnExpanderState = { columnWidth: number }
 

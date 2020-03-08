@@ -7,8 +7,7 @@ import Drawer from './Drawer';
 import { SizeContext } from './App.jsx'
 import { DefaultSettingsStorage } from '../api/localStorageDefs'
 import { increaseHeaderSpan, expandColumns } from "../api/expandColumns";
-// import { ColumnExpander } from "./ColumnGrid";
-import { Test, ColumnExpander } from './Test'
+import { ColumnExpander } from './ColumnGrid'
 
 var Parser = require("html-react-parser");
 
@@ -236,7 +235,6 @@ export default class Viewer extends React.Component<RouteComponentProps & Viewer
             transpose={this.state.relTranspose}
             keym={this.renderedKey}
           />
-          <Test></Test>
 
           <input type="checkbox" checked={this.state.columnsOptin} onChange={this.changeColumnsOptin} />
           <section ref={this.chordSheetContentRef} id="chordSheetContent" className={cordSheetClasses}>

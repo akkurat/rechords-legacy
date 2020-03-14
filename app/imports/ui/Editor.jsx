@@ -66,24 +66,24 @@ class Editor extends Component {
 
   render() {
 
-    let revs = this.props.song.getRevisions();
-    let n = revs.count();
+    const revs = this.props.song.getRevisions();
+    const n = revs.count();
 
-    let prompt = <Prompt
+    const prompt = <Prompt
             when={this.state.dirty && n > 0}
             message={"Du hast noch ungespeicherte Änderungen. Verwerfen?"}
           />
 
     if (this.state.versionTab == false) {
 
-      let versions = n == 0 ? undefined : (
+      const versions = n == 0 ? undefined : (
         <Drawer id="revs" className="revision-colors" onClick={this.toggleRevTab}>
           <h1>Verlauf</h1>
           <p>Es existieren {n} vorherige Versionen. Klicke, um diese zu durchstöbern!</p>
         </Drawer>
       );
 
-      let dirtyLabel = this.state.dirty ? <span id="dirty" title="Ungesicherte Änderungen"></span> : undefined;
+      const dirtyLabel = this.state.dirty ? <span id="dirty" title="Ungesicherte Änderungen"></span> : undefined;
 
       // Bearbeiten mit Echtzeit-Vorschau
       return (

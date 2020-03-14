@@ -99,10 +99,29 @@ export default class Preview extends React.Component<P, {}> {
       return;
     }
 
+    if ( event.ctrlKey || event.metaKey  ) {
+      if (event.key == 'ArrowRight') {
+        event.preventDefault();
+        n.innerText = n.getAttribute('data-initial');
+        n.blur();
+        const target = n.parentElement
+        this.handleClick({ target: target.nextElementSibling })
+        return;
+      }
+
+      if (event.key == 'ArrowLeft') {
+        event.preventDefault();
+        n.innerText = n.getAttribute('data-initial');
+        n.blur();
+        const target = n.parentElement
+        this.handleClick({ target: target.previousElementSibling })
+        return;
+      }
+    }
+
     if (!n.hasAttribute('data-initial')) {
       n.setAttribute('data-initial', n.innerText);
     }
-
   }
 
 

@@ -5,7 +5,6 @@ import ChrodLib from "../api/libchrod";
 import { Song } from '../api/collections';
 import Drawer from './Drawer';
 import { Abcjs } from './Abcjs'
-import { MobileMenu } from "./MobileMenu";
 import { ColumnExpander } from "./ColumnGrid.js";
 import Kord from "./Kord.js";
 
@@ -13,7 +12,7 @@ import { LayoutH, LayoutV, Day, Night, Sharp, Flat, Conveyor } from './Icons.jsx
 
 import parse, { domToReact }  from 'html-react-parser';
 
-interface ViewerProps extends RouteComponentProps {
+export type IViewerProps = RouteComponentProps & {
   song: Song,
   toggleTheme: Function,
   themeDark: boolean
@@ -32,7 +31,7 @@ const userMayWrite = () => {
   return role == 'admin' || role == 'writer';
 }
 
-export default class Viewer extends React.Component<RouteComponentProps & ViewerProps, ViewerStates> {
+export default class Viewer extends React.Component<RouteComponentProps & IViewerProps, ViewerStates> implements ITransposeHandler {
   constructor(props) {
     super(props);
 

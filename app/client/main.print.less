@@ -4,50 +4,12 @@
     display: none !important;
   }
 
-  #body {
-    font-size: 12pt;
+  body, #body {
+    display: contents;
   }
 
-  #chordsheetContent {
-    columns: 2;
-    column-gap: 3em;
-
-    section > div {
-      break-inside: avoid;
-    }
-
-    margin-bottom: 0 !important;
-
-    .ref.open, h3 {
-      width: 2em;
-      margin-left: -3em;
-      overflow: hidden;
-    }
-
-    .abc-notation {
-      column-span: all;
-    }
-  }
-
-  .content {
-    overflow-x: visible !important;
-    overflow-y: visible !important;
-
-    padding: 0 !important;
-    padding-left: 4em !important;
-
-    .sd-header {
-      column-span: all;
-      margin-top: 0.3em; // Für die Umlautzeichen
-
-      h1, h2 {
-        font-size: 2.5em !important;
-      }
-
-      h2 {
-        margin-bottom: 1em !important;
-      }
-    }
+  #chordsheet {
+    height: 210mm;
   }
 
 .chord-container {

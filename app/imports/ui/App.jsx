@@ -9,6 +9,7 @@ import Editor from './Editor.jsx';
 import Progress from './Progress.tsx';
 import Users from './Users.tsx';
 import User from './User.tsx';
+import {PdfViewer} from './PdfViewer.tsx';
 import HideSongList from './HideSongList';
 import Login from './Login.tsx';
 
@@ -212,6 +213,24 @@ class App extends Component {
                             </>
                         )
                     }} />
+
+                    <Route path='/pdf/:author/:title' render={(routerProps) => {
+                        let song = getSong(routerProps.match.params);
+
+                        if (song === undefined) {
+                            return nA404; 
+                        }
+
+                        return (
+                            <>
+                                <DocumentTitle title={"Hölibu | " + song.author + ": " + song.title}/>
+                                {/* Lift state of transpose after all? Make it fully controlled */}
+                                <PdfViewer song={song} songs={this.props.songs} ref={this.viewerRef} 
+                                {...routerProps} />
+                            </>
+                        )
+                    }} />
+
 
                     <Route component={NoMatch} />
                 </Switch>

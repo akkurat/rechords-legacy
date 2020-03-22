@@ -1,6 +1,4 @@
 import * as React from "react";
-import * as ReactDOM from 'react-dom';
-import { useParams, useLocation, useHistory, useRouteMatch } from 'react-router-dom';
 import {  NavLink, RouteComponentProps } from "react-router-dom";
 import TranposeSetter from "./TransposeSetter.jsx";
 import ChrodLib from "../api/libchrod";
@@ -11,7 +9,7 @@ import { ColumnExpander } from "./ColumnGrid.js";
 
 var Parser = require("html-react-parser");
 
-interface ViewerProps extends RouteComponentProps {
+export type IViewerProps = RouteComponentProps & {
   song: Song,
 }
 
@@ -29,7 +27,7 @@ export interface ITransposeHandler {
   decreaseTranspose: Function 
 }
 
-export default class Viewer extends React.Component<RouteComponentProps & ViewerProps, ViewerStates> implements
+export default class Viewer extends React.Component< IViewerProps, ViewerStates> implements
 ITransposeHandler {
   constructor(props) {
     super(props);

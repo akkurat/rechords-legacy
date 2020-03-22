@@ -2,13 +2,12 @@
 @media print {
   aside, #transposer, .tags { display: none; }
 
-  #body {
-    font-size: 12pt;
-    width: 210mm;
+  body, #body {
+    display: contents;
   }
 
   #chordsheet {
-    columns: 2;
+    height: 210mm;
   }
 
   #head, h1, h2 {

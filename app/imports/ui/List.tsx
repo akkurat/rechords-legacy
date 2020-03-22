@@ -21,7 +21,10 @@ class ListItem extends React.Component<ListItemProps, {}> {
                 activeClassName="selected">
                 <span className="title">{this.props.song.title}</span>
                 <span className="author">{this.props.song.author}</span>
-                </NavLink></li>
+                </NavLink>
+                <NavLink onClick={this.props.onClickHandler} to={`/pdf/${this.props.song.author_}/${this.props.song.title_}`}
+                    activeClassName="selected">PDF</NavLink>
+                </li>
         );
     }
 }

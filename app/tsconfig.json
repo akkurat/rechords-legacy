@@ -1,14 +1,14 @@
 {
 	"compilerOptions": {
 		"importHelpers": true,
-		"target": "es5",
-		"downlevelIteration": true,
+		"target": "es6",
 		"lib": [
 			"DOM",
 			"ESNext"
 		],
 		"preserveConstEnums": true,
 		"sourceMap": true,
+		"downlevelIteration": true,
 							    
 		"plugins": [
 			{
@@ -23,7 +23,8 @@
 		"types": [
 			"meteor-typings",
 			"core-js",
-			"requirejs"
+			"requirejs",
+			"node"
 		],
 
 		"jsx": "react"

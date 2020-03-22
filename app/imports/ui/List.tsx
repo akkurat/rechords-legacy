@@ -59,7 +59,9 @@ class ListItem extends React.Component<ListItemProps, {}> {
                     <span className="author">{this.props.song.author}</span>
                     {darling_or_not}
                 </NavLink>
-            </li>
+                <NavLink onClick={this.props.onClickHandler} to={`/pdf/${this.props.song.author_}/${this.props.song.title_}`}
+                    activeClassName="selected">PDF</NavLink>
+                </li>
         );
     }
 }

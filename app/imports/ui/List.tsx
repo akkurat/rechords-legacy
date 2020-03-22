@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {MouseEventHandler} from 'react';
-import {Link, NavLink, RouteComponentProps, withRouter} from 'react-router-dom';
+import { RouteComponentProps } from 'react-router-dom';
+import { withRouter, NavLink, Link, useRouteMatch, useLocation } from 'react-router-dom';
 import MetaContent from './MetaContent';
 import {Song} from '../api/collections';
 
@@ -14,14 +15,10 @@ interface ListItemProps {
     onClickHandler: MouseEventHandler<HTMLAnchorElement>;
     user: Meteor.User;
 }
-class ListItem extends React.Component<ListItemProps> {
-    constructor(props) {
-        super(props);
-    }
-
-    toggleDarling = e => {
-        const u = this.props.user;
-        const id = this.props.song._id;
+const ListItem:  React.FunctionComponent<ListItemProps> = ({song,user,onClickHandler}) => {
+    const toggleDarling = e => {
+        const u = user;
+        const id = song._id;
 
         if (u.profile.darlings.includes(id)) {
             u.profile.darlings = u.profile.darlings.filter( i => i != id );
@@ -37,8 +34,8 @@ class ListItem extends React.Component<ListItemProps> {
         e.preventDefault();
     }
 
-    render() {
-        const u = this.props.user;
+    {
+        const u = user;
 
         if (!('darlings' in u.profile) || !(u.profile.darlings instanceof Array)) {
             u.profile.darlings = [];
@@ -50,17 +47,28 @@ class ListItem extends React.Component<ListItemProps> {
 
         const darlings = u.profile.darlings;
 
-        const is_darling = darlings.includes(this.props.song._id) ? 'is_darling' : '';
+        const is_darling = darlings.includes(song._id) ? 'is_darling' : '';
 
-        const darling_or_not = <span onClick={this.toggleDarling} className={"darling " + is_darling}>{darling_icon}</span>
+        const darling_or_not = <span onClick={toggleDarling} className={"darling " + is_darling}>{darling_icon}</span>
+
+        const to = `/view/${song.author_}/${song.title_}`
+
+        const route = useRouteMatch(to)
+
         
         return (
-            <li><NavLink onClick={this.props.onClickHandler} to={routePath(View.view, this.props.song)}
+            <li><NavLink onClick={onClickHandler} to={to}
                 activeClassName="selected">
-                    <span className="title">{this.props.song.title}</span>
-                    <span className="author">{this.props.song.author}</span>
+                    <span className="title">{song.title}</span>
+                    <span className="author">{song.author}</span>
                     {darling_or_not}
                 </NavLink>
+                { route &&
+                    <NavLink className="selected pdf" to={`/pdf/${song.author_}/${song.title_}`}>
+                        <span className="title">Configure PDF</span>
+                        {darling_or_not}
+                    </NavLink>
+                }
             </li>
         );
     }
@@ -92,7 +100,11 @@ class ListGroup extends React.Component<ListGroupProps, {}> {
                 <h2 className="huge">{this.props.label}</h2>
                 <ul>
                     {this.props.songs.map((song) => 
-                        <ListItem song={song} user={this.props.user} key={song._id} onClickHandler={this.props.onClickHandler}/>
+                        <ListItem 
+                        song={song} 
+                        user={this.props.user} 
+                        key={song._id} 
+                        onClickHandler={this.props.onClickHandler}/>
                     )}
                 </ul>
             </li>

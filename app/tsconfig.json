@@ -1,8 +1,7 @@
 {
 	"compilerOptions": {
 		"importHelpers": true,
-		"target": "es5",
-		"downlevelIteration": true,
+		"target": "es6",
 		"lib": [
 			"DOM",
 			"ESNext",
@@ -14,12 +13,17 @@
 		"esModuleInterop": true,
 		"allowSyntheticDefaultImports": true,
 		// "jsxImportSource": "react",
+		"downlevelIteration": true,
+		"paths": {
+			"@/*": ["./imports/*"]
+		},
 							    
 		"plugins": [
 			{
 				"name": "typescript-plugin-add-type"
 			}
 		],
+		"paths": {"@/*":["./imports/*"]},
 
 		"typeRoots": [
 			"./node_modules/@types",

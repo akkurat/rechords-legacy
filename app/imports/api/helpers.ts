@@ -1,10 +1,11 @@
 import {generatePath} from "react-router-dom";
-import {Song} from "./collections";
+import { ParsedSong, Song } from './collections'
 import {History} from 'history';
+import ChrodLib, { KeyAndScale } from './libchrod'
 
 export const userMayWrite = () => {
-  const role = Meteor.user().profile.role;
-  return role == 'admin' || role == 'writer';
+  const role = Meteor.user().profile.role
+  return role == 'admin' || role == 'writer'
 }
 
 export enum View {
@@ -140,4 +141,15 @@ export const useScrollHideEffectRef = (ref: RefObject<HTMLElement>,maxheight: nu
     document.addEventListener('scroll', handler)
     return () => document.removeEventListener('scroll',handler)
   },[])
+}
+
+
+export function extractOrGuessKey(song: ParsedSong): KeyAndScale {
+  const chords = song.getChords()
+  const key_tag = song.getTag('tonart')
+  let key = key_tag && ChrodLib.parseTag(key_tag)
+  if (key == null) {
+    key = ChrodLib.guessKey(chords)
+  }
+  return key
 }

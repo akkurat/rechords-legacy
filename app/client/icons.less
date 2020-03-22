@@ -1,4 +1,3 @@
-
 @import (reference) "./variables.import.less";
 
 
@@ -18,18 +17,49 @@
     #pfeil {
         fill: var(--accent);
     }
+
+    &:hover {
+        #text {
+            fill: var(--accent-flat);
+        }
+
+        #pfeil {
+            fill: var(--gray-dark);
+        }
+    }
+
 }
 
 #theme-toggler svg {
     fill: var(--gray-light);
+
+    &:hover {
+        fill: var(--accent-flat);
+    }
 }
 
 #scroll-toggler svg {
     fill: var(--gray-light);
+
+    &:hover {
+        fill: var(--accent-flat);
+    }
 }
 
 #scroll-toggler.active svg {
     fill: var(--accent);
+    &:hover {
+        fill: var(--gray-dark);
+    }
+}
+
+#pdfLink svg {
+    fill  : var(--gray-light);
+    stroke: none;
+
+    &:hover {
+        fill: var(--accent-flat);
+    }
 }
 
 svg {

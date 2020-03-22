@@ -39,7 +39,7 @@ const options: XSS.IFilterXSSOptions = {
 };
 
 const converter = new showdown.Converter({ 
-  extensions: [rmd],
+  extensions: rmd,
   striketrough: true,
   ghCodeBlocks: true,
   smoothLivePreview: true
@@ -56,7 +56,13 @@ function isDefined<T>(a: T | null | undefined): a is T {
 }
 
 export const rmd_version = 7;
-export class Song {
+export interface ParsedSong {
+  getHtml(): string 
+  getChords(): string[]
+  getTags(): string[]
+  getTag(tag_name : string): string 
+}
+export class Song implements ParsedSong {
   _id?: string;
 
   text: string;
@@ -111,8 +117,8 @@ export class Song {
 
   }
 
-  checkTag(needle : string) {
-      for (let tag of this.getTags()) {
+  checkTag(needle : string): string | true {
+      for (const tag of this.getTags()) {
           if (!(tag.toLowerCase().startsWith(needle.toLowerCase()))) continue;
 
           let chunks = tag.split(':');
@@ -126,7 +132,7 @@ export class Song {
       return null; // Tag not present
   }
 
-  getTag(tag_name : string) {
+  getTag(tag_name : string): string {
     for (let tag of this.getTags()) {
         if (!(tag.toLowerCase().startsWith(tag_name.toLowerCase()))) continue;
 
@@ -234,11 +240,11 @@ let Songs = new Mongo.Collection<Song>('songs', {
 export class RmdHelpers {
   static collectTags(dom) {
     let tags = [];
-    let uls = dom.getElementsByTagName("ul");
+    let uls = Array.from(dom.getElementsByTagName("ul"));
     for (let ul of uls) {
       if (ul.getAttribute("class") != "tags") continue;
 
-      let lis : Array<HTMLElement> = ul.getElementsByTagName("li");
+      let lis : Array<HTMLElement> =Array.from(ul.getElementsByTagName("li"));
       for (let li of lis) {
         let contents = Array.from(li.childNodes).map(child => child.textContent);
         tags.push( contents.join(':') );
@@ -252,7 +258,7 @@ export class RmdHelpers {
   static collectChordsDom(dom) {
     let chords = [];
 
-    let uls = dom.getElementsByTagName("i");
+    let uls = Array.from(dom.getElementsByTagName("i"));
     for (let chord_dom of uls) {
       if (chord_dom.hasAttribute(DATACHORD)) {
         var chord = chord_dom.getAttribute(DATACHORD);

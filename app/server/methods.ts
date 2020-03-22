@@ -1,6 +1,5 @@
 import Songs, {Song, Revisions, rmd_version} from '../imports/api/collections';
 import { check } from 'meteor/check'
-import { useReducer } from 'react';
 
 Meteor.methods({
 

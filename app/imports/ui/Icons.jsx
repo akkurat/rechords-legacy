@@ -11,5 +11,11 @@ import Cancel from '../../private/cancel3.svg'
 import Conveyor from '../../private/conveyor.svg'
 import ConveyorActive from '../../private/conveyor_active.svg'
 import Printer from '../../private/printer2.svg'
+import Conveyor from '../../private/conveyor0.svg'
+import PDF from '../../private/pdf.svg'
+import Clef from '../../private/clef.svg'
+import Note from '../../private/note.svg'
+import Globe from '../../private/globe.svg'
+import User from '../../private/user.svg'
 
-export { LayoutH, LayoutV, Header, Day, Night, Menu, Sharp, Flat, Ok, Cancel, Conveyor, ConveyorActive, Printer};
+export { LayoutH, LayoutV, Header, Day, Night, Menu, Sharp, Flat, Ok, Cancel, Conveyor, ConveyorActive, Printer, PDF, Clef, Note, Globe, User };

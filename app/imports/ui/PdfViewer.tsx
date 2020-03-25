@@ -7,12 +7,6 @@ import * as jsPDF from 'jspdf'
 import * as blobStream from 'blob-stream'
 /// <reference types="@types/pdfkit/index.d.ts">
 import * as PDFDocument from "../api/pdfkit.standalone.js"
-// import * as PDFDocument from "pdfkit"
-
-
-const lorem = `Die Ae 6/6, nach neuem Bezeichnungsschema Ae 610, ist eine Baureihe von 120 Universallokomotiven der Schweizerischen Bundesbahnen. Sie werden aufgrund ihres früheren Einsatzgebietes den Gotthardlokomotiven zugeordnet.
-Die ersten 25 Lokomotiven werden häufig als Kantonslokomotiven bezeichnet, da sie die Wappen der damals 25 Schweizer Kantone trugen. An den Lokkästen befinden sich Chrom-Zierlinien und an den Frontseiten ein Schnäuzchen. Diese Verzierung, begleitet von den Wappen an den Seitenwänden, fand grossen Anklang und machte diese leistungsstarken Maschinen europaweit berühmt. Die weiteren 95 Lokomotiven der Serie erhielten keine Chromverzierung, aber die Wappen der Kantonshauptorte sowie wichtiger Städte und Ortschaften.
-Dort wo sich die Wappen befanden, war bei den Prototyplokomotiven zuerst die Fahrzeugnummer (11401, 11402) angebracht. Die Lokomotivtaufen wurden als festliche Anlässe durchgeführt. Ursprünglich waren die Maschinen tannengrün lackiert. Heute haben etwa die Hälfte aller Lokomotiven einen roten Anstrich. Mit dieser Umlackierung wurde – und das nicht nur bei den Ae 6/6 – in den späten Achtzigerjahren begonnen.`
 
 interface IPdfViewerStates {
     pdfData: ArrayBuffer
@@ -32,9 +26,10 @@ export class PdfViewer extends React.Component<IViewerProps, IPdfViewerStates> {
     pdfDoc: jsPDF
     pdfKitDoc: PDFKit.PDFDocument
 
-    componentWillReceiveProps(newProps: IViewerProps) {
-        if (this.props.song != newProps) {
-            this.jsPdfGenerator(newProps.song?.getHtml())
+    componentDidUpdate( 
+    oldProps: IViewerProps) {
+        if (this.props.song != oldProps.song) {
+            this.generatePdf()
         }
 
     }
@@ -54,10 +49,16 @@ export class PdfViewer extends React.Component<IViewerProps, IPdfViewerStates> {
         if (!vdom)
             return;
 
+        const cols= 3
+
         const html = new DOMParser().parseFromString(vdom, 'text/html')
 
         
-        const doc = new PDFDocument()
+        const doc = new PDFDocument({
+            layout : 'landscape',
+            size   : 'a4'
+        })
+        doc.font('Helvetica')
         //
         // doc.font('http://localhost:3000/fonts/Roboto-Regular-webfont.woff')
         function placeChord( text, chord ) {
@@ -65,21 +66,28 @@ export class PdfViewer extends React.Component<IViewerProps, IPdfViewerStates> {
                 doc.text(chord, { baseline: 'bottom', continued: true});
                 doc.x = doc.x - doc.widthOfString(chord);
             }
-            let what = doc.text(text, { baseline: 'top', continued: true})
+            let what = doc.text(text, { baseline: 'top', continued: true, lineBreak: false})
 
         }
+        let x_pos =  doc.page.margins.left
         function resetX() {
-            doc.x = doc.page.margins.left
+            doc.moveTo( x_pos, doc.y )
         }
         var stream = doc.pipe(blobStream());
 
         for( let section of html.querySelectorAll('section') )
         {
+            if(doc.y > doc.page.height - 100 )
+            {
+                // if(doc.x < doc.page.width * (1 - 1/cols) )
+                x_pos += doc.page.width/cols;
+                    
+            }
             resetX()
             doc.fontSize(25)
             doc.moveDown()
             doc.text('') // end continued text
-            doc.text( section.querySelector('h3').innerText, {continued: false} )
+            doc.text( section.querySelector('h3').innerText, x_pos, doc.y, {continued: false} )
             doc.fontSize(12)
             for (let line of section.querySelectorAll('span.line')) {
                 resetX()

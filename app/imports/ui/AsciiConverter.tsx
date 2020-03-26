@@ -21,7 +21,7 @@ export class AsciiConverter extends React.Component<{},{text: string}> {
 
         let out = "";
 
-        const lines = text.split(/\r?\n/) 
+        const lines: string[] = text.split(/\r?\n/) 
 
         let lastChordMap: Map<number, string> = null;
         for( const line of lines )
@@ -35,8 +35,8 @@ export class AsciiConverter extends React.Component<{},{text: string}> {
                 } else {
                     out += line
                 }
+                out += '\n'
             }
-            out += '\n'
         }
         return out;
 

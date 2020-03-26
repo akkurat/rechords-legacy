@@ -1,6 +1,9 @@
 import * as React from 'react'
 
 import './AsciiConverter.less'
+import { Chord } from '../api/libchrod';
+
+const matchchord = /^\(?([a-h](#|b)?)(-|\+|m?(?!aj))([^a-z](.*))?$/i;
 export class AsciiConverter extends React.Component<{},{text: string}> {
     constructor(props) {
         super(props);
@@ -40,10 +43,22 @@ export class AsciiConverter extends React.Component<{},{text: string}> {
         }
         return out;
 
-        function isChordLine(str) {
-            const regex = /^(\s*[a-h](b|#)?m?(aj)?\d{0,2}(\s*))+$/i
-            const match = regex.test(str)
-            return match
+        function isChordLine(str: string) {
+
+            const parts = str.trim().split(/\s+/)
+
+            let numChords=0, numNonChords=0
+
+            for( let part of parts) {
+                console.log(matchchord.exec(part))
+                if( matchchord.test(part) ) {
+                    numChords++;
+                } else {
+                    numNonChords++;
+                }
+            }
+            return numChords > numNonChords;
+
         }
 
         function parseChords(str: string) {
@@ -60,7 +75,7 @@ export class AsciiConverter extends React.Component<{},{text: string}> {
             let output = ""
             if(map.size > str.length)
             {
-                return Array.of(map.values())
+                return Array.from(map.values())
                 .map(c => `[${c}]`)
                 .join('')
             }

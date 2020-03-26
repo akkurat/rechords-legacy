@@ -41,7 +41,7 @@ export class AsciiConverter extends React.Component<{},{text: string}> {
         return out;
 
         function isChordLine(str) {
-            const regex = /^(\s*[a-h]m?(aj)?\d{0,2}(\s*))+$/i
+            const regex = /^(\s*[a-h](b|#)?m?(aj)?\d{0,2}(\s*))+$/i
             const match = regex.test(str)
             return match
         }

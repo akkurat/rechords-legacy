@@ -11,6 +11,7 @@ import Users from './Users.tsx';
 import User from './User.tsx';
 import HideSongList from './HideSongList';
 import Login from './Login.tsx';
+import { AsciiConverter } from './AsciiConverter'
 
 import { BrowserRouter, Route, Switch, useHistory} from 'react-router-dom';
 import DocumentTitle from 'react-document-title';
@@ -212,6 +213,16 @@ class App extends Component {
                             </>
                         )
                     }} />
+
+                    <Route path="/converter" render={() => {
+                        return (
+                            <>
+                                <DocumentTitle title={"Hölibu | Converter" } />
+                                <AsciiConverter></AsciiConverter>
+                            </>
+                        )
+                    }} />
+
 
                     <Route component={NoMatch} />
                 </Switch>

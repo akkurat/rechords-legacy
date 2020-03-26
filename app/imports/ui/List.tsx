@@ -87,8 +87,8 @@ class List extends React.Component<ListProps, ListState> {
             return
         } 
 
-        // Do not steal focus if on <input>
-        if( e.target?.tagName == 'INPUT' ) return;
+        // Do not steal focus if on <input> or <textarea>
+        if( e.target?.tagName == 'INPUT' | e.target?.tagName == 'TEXTAREA') return;
 
         // Ignore special keys
         if (e.altKey || e.shiftKey || e.metaKey || e.ctrlKey) return;

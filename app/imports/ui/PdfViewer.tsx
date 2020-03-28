@@ -56,12 +56,16 @@ export class PdfViewer extends React.Component<IViewerProps, IPdfViewerStates> {
         
         const doc = new PDFDocument({
             layout : 'landscape',
-            size   : 'a4'
+            size   : 'a4',
+            margins: {
+                top: 0, left: 0, bottom: 0, right: 0
+            }
         })
         doc.font('Helvetica')
         //
         // doc.font('http://localhost:3000/fonts/Roboto-Regular-webfont.woff')
-        function placeChord( text, chord ) {
+        // todo: using _fragment lowlevel function might be more apropriate
+        function placeChord( text, chord) {
             if( chord ) {
                 doc.text(chord, { baseline: 'bottom', continued: true});
                 doc.x = doc.x - doc.widthOfString(chord);
@@ -71,31 +75,42 @@ export class PdfViewer extends React.Component<IViewerProps, IPdfViewerStates> {
         }
         let x_pos =  doc.page.margins.left
         function resetX() {
+            doc.x = x_pos
             doc.moveTo( x_pos, doc.y )
         }
         var stream = doc.pipe(blobStream());
 
         for( let section of html.querySelectorAll('section') )
         {
-            if(doc.y > doc.page.height - 100 )
+
+            const lines = section.querySelectorAll('span.line')
+
+
+
+            if(doc.y + lines.length*24 + 30  > doc.page.height-doc.page.margins.bottom  )
             {
                 // if(doc.x < doc.page.width * (1 - 1/cols) )
                 x_pos += doc.page.width/cols;
+                doc.y = doc.page.margins.top;
                     
             }
             resetX()
             doc.fontSize(25)
-            doc.moveDown()
-            doc.text('') // end continued text
-            doc.text( section.querySelector('h3').innerText, x_pos, doc.y, {continued: false} )
+            // no linebreak gives as complete control over advancing y
+            // however
+            doc.y +=30
+            doc.text( section.querySelector('h3').innerText, x_pos, doc.y, {lineBreak: false} )
             doc.fontSize(12)
-            for (let line of section.querySelectorAll('span.line')) {
+            for (let line of lines ) {
                 resetX()
-                doc.moveDown()
-                if( line.querySelector('i[data-chord]') )
-                    doc.moveDown()
-                for (let chord of line.querySelectorAll('i')) {
+                doc.y += 15;
+                // if( line.querySelector('i[data-chord]') )
+                    doc.y +=9
+                const chords = line.querySelectorAll('i')
+                for (let i=0; i<chords.length; i++ ) {
+                    const chord = chords[i]
                     placeChord(chord.innerText, chord.dataset.chord)
+                    console.log('after: ', chord.innerText, doc.x, doc.y,)
                 }
                 doc.text('')
             }

@@ -58,7 +58,7 @@ export class PdfViewer extends React.Component<IViewerProps, IPdfViewerStates> {
             layout : 'landscape',
             size   : 'a4',
             margins: {
-                top: 0, left: 0, bottom: 0, right: 0
+                top: 10, left: 10, bottom: 0, right: 10
             }
         })
         doc.font('Helvetica')
@@ -67,9 +67,13 @@ export class PdfViewer extends React.Component<IViewerProps, IPdfViewerStates> {
         // todo: using _fragment lowlevel function might be more apropriate
         function placeChord( text, chord) {
             if( chord ) {
+                doc.font('Helvetica-Bold')
+                doc.fontSize(9)
                 doc.text(chord, { baseline: 'bottom', continued: true});
                 doc.x = doc.x - doc.widthOfString(chord);
             }
+            doc.font('Helvetica')
+            doc.fontSize(12)
             let what = doc.text(text, { baseline: 'top', continued: true, lineBreak: false})
 
         }
@@ -85,9 +89,12 @@ export class PdfViewer extends React.Component<IViewerProps, IPdfViewerStates> {
 
             const lines = section.querySelectorAll('span.line')
 
+            const contentheight = Array.from(lines)
+                .map(getLineHeight)
+                .reduce((prev,curr) => prev + curr)
 
 
-            if(doc.y + lines.length*24 + 30  > doc.page.height-doc.page.margins.bottom  )
+            if(doc.y + contentheight + 30  > doc.page.height-doc.page.margins.bottom  )
             {
                 // if(doc.x < doc.page.width * (1 - 1/cols) )
                 x_pos += doc.page.width/cols;
@@ -95,17 +102,18 @@ export class PdfViewer extends React.Component<IViewerProps, IPdfViewerStates> {
                     
             }
             resetX()
-            doc.fontSize(25)
+            doc.fontSize(12)
             // no linebreak gives as complete control over advancing y
             // however
             doc.y +=30
+            doc.font('Helvetica-Bold')
             doc.text( section.querySelector('h3').innerText, x_pos, doc.y, {lineBreak: false} )
+
+            doc.font('Helvetica')
             doc.fontSize(12)
             for (let line of lines ) {
                 resetX()
-                doc.y += 15;
-                // if( line.querySelector('i[data-chord]') )
-                    doc.y +=9
+                doc.y += getLineHeight(line)
                 const chords = line.querySelectorAll('i')
                 for (let i=0; i<chords.length; i++ ) {
                     const chord = chords[i]
@@ -115,6 +123,14 @@ export class PdfViewer extends React.Component<IViewerProps, IPdfViewerStates> {
                 doc.text('')
             }
         }
+
+            function getLineHeight( line ) : number {
+                    if( line.querySelector('i[data-chord]') )
+                        return 25
+                    return 15
+            }
+
+
 
 
         // end and display the document in the iframe to the right

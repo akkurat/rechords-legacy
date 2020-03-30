@@ -94,12 +94,17 @@ export class ChordPdfJs extends ComfyPdfJs {
     chordFont = ['RoCo', 'bold', 9] 
     textFont = ['RoCo', 'normal', 12] 
     placeChord(text, chord) {
+        let wchord = 0
         if (chord) {
             this.setFont.apply(this, this.chordFont)
+            wchord = this.doc.getTextWidth(chord) + this.chordFont[2]/this.doc.internal.scaleFactor
             this.doc.text(chord, this.cursor.x, this.cursor.y - this.textFont[2]/this.doc.internal.scaleFactor)
         }
         this.setFont.apply(this, this.textFont)
-        this.textFragment(text)
+        // this.textFragment(text)
+        const wtext = this.doc.getTextWidth(text)
+        this.doc.text(text, this.cursor.x, this.cursor.y )
+        this.cursor.x += wtext > wchord ? wtext : wchord
 
     }
 

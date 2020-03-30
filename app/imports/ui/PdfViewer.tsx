@@ -158,7 +158,8 @@ export class PdfViewer extends React.Component<IViewerProps, PdfViewerStates> {
 
 
         return <div id="pdfViewer">
-            <button onClick={this.generatePdf}> Generate PDF </button>
+            {/* <button onClick={this.generatePdf}> Generate PDF </button> */}
+            <label>Spalten</label>
             <input type="number" min="1" max="5" onChange={this.handleColChange} value={this.state.numCols}/>
             <span>
             <input id="o-l" type="radio" name="orientation" value="l" checked={this.state.orientation == 'l'} onChange={this.handleOrientationChange} />
@@ -167,6 +168,7 @@ export class PdfViewer extends React.Component<IViewerProps, PdfViewerStates> {
             <label htmlFor="o-p">Hoch</label>
             </span>
 
+            <label>Sizes: </label>
             {fontSizeHandles}
             <PdfBlob pdfData={this.state.pdfData}></PdfBlob>
 

@@ -5,7 +5,7 @@ import * as fpath from 'path'
 export class Margins {
     top=10
     right= 10 
-    bottom= 20
+    bottom= 10
     left= 10
 
     tb = () => this.top + this.bottom
@@ -197,7 +197,7 @@ export class ChordPdfJs extends ComfyPdfJs {
             }
         }
 
-        const returnValue = { advance_y: intCursor.x-this.cursor.x, numlineBreaksInserted: br, intCursor: intCursor}
+        const returnValue = { advance_y: intCursor.y-this.cursor.y, numlineBreaksInserted: br, intCursor: intCursor}
         if(!simulate)
             Object.assign(this.cursor, intCursor)
 

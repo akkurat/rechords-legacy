@@ -3,7 +3,7 @@ import * as React from 'react'
 import { IViewerProps } from './Viewer'
 import { ChordPdfJs } from '../api/comfyPdfJs'
 
-
+const debug=false
 class PdfViewerStates {
     pdfBlobUrl: string = ''
     numCols = 3
@@ -93,7 +93,7 @@ export class PdfViewer extends React.Component<IViewerProps, PdfViewerStates> {
 
         function placeFooter() {
             cdoc.setFont('RoCo', 'bold', fos.chord )
-            doc.text(songTitle.textContent + ' - ' + songArtist.textContent, cdoc.margins.left + cdoc.mediaWidth()/2,  cdoc.maxY(), 'center' )
+            doc.text(songTitle.textContent + ' - ' + songArtist.textContent, cdoc.margins.left + cdoc.mediaWidth()/2,  cdoc.maxY(), {align: 'center', baseline: 'top'} )
         }
         placeFooter()
 
@@ -102,17 +102,23 @@ export class PdfViewer extends React.Component<IViewerProps, PdfViewerStates> {
             // by deselecting chords
 
 
-            const contentheight = placeSection(section, true) 
+            const simHeight = placeSection(section, true) 
+            if(debug) {
+                const y0 = cdoc.cursor.y
+                doc.setDrawColor('green')
+                doc.line(x0-1, y0, x0-1, y0+simHeight)
+            }
 
-            if(cdoc.cursor.y + contentheight  > cdoc.maxY()  )
+            if(cdoc.cursor.y + simHeight  > cdoc.maxY()  )
             {
                 const c = cdoc.cursor
                 const g = this.state.sizes.gap
                 x0 += colWidth + g;
                 cdoc.cursor.y = x0 > header.x ? cdoc.margins.top : header.y
-                // for debugging purposes
-                // doc.line(x0-g, c.y, x0-g, c.y+cdoc.mediaHeight())
-                // doc.line(x0, c.y, x0, c.y+cdoc.mediaHeight())
+                if(debug) {
+                    // doc.line(x0 - g, c.y, x0 - g, c.y + cdoc.mediaHeight())
+                    // doc.line(x0, c.y, x0, c.y + cdoc.mediaHeight())
+                }
                 if(x0> cdoc.maxX()){
                     doc.addPage()
                     x0 = cdoc.margins.left
@@ -122,6 +128,11 @@ export class PdfViewer extends React.Component<IViewerProps, PdfViewerStates> {
 
             }
 
+            if(debug) {
+                const y0 = cdoc.cursor.y
+                doc.setDrawColor('red')
+                doc.line(x0, y0, x0, y0 + simHeight)
+            }
             placeSection(section)
         }
 
@@ -134,13 +145,14 @@ export class PdfViewer extends React.Component<IViewerProps, PdfViewerStates> {
             const lines = section.querySelectorAll('span.line')
             resetX()
             const lineHeight = fos.section * 2 / doc.internal.scaleFactor
-            if(!cdoc.isTop())
+            if(!cdoc.isTop()) {
+                advance_y += lineHeight
                 if(!simulate)
                     cdoc.cursor.y += lineHeight // fonts are in point... 
-                    advance_y += lineHeight
+            }
 
             cdoc.setFont('RoCo', 'bold', fos.section)
-            advance_y = cdoc.textLine( section.querySelector('h3').innerText, simulate ).h
+            advance_y += cdoc.textLine( section.querySelector('h3').innerText, simulate ).h
 
             for (let line of lines ) {
                 resetX()
@@ -159,7 +171,7 @@ export class PdfViewer extends React.Component<IViewerProps, PdfViewerStates> {
             for( let i= 1; i<=total; i++) {
                 doc.setPage(i)
                 cdoc.setFont('RoCo', 'bold', fos.chord)
-                doc.text(i + ' / ' +total, cdoc.margins.left + cdoc.mediaWidth(), cdoc.maxY(), 'right')
+                doc.text(i + ' / ' +total, cdoc.margins.left + cdoc.mediaWidth(), cdoc.maxY(), {align: 'right', baseline: 'top'})
             }
         }
 
@@ -171,14 +183,8 @@ export class PdfViewer extends React.Component<IViewerProps, PdfViewerStates> {
         URL.revokeObjectURL(this.state.pdfBlobUrl) // freeing old url for memory
         this.setState({ pdfBlobUrl })
 
-        function getLineHeight( line ) : number {
-                if( line.querySelector('i[data-chord]') )
-                    return (fos.text * 1.2 +fos.chord )/ doc.internal.scaleFactor
-                return fos.text*1.3 / doc.internal.scaleFactor
-        }
         function resetX() {
            cdoc.cursor.x = x0 
-
         }
     }
 

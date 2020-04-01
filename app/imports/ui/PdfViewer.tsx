@@ -5,14 +5,15 @@ import { ChordPdfJs } from '../api/comfyPdfJs'
 
 
 class PdfViewerStates {
-    pdfData: ArrayBuffer = undefined
+    pdfBlobUrl: string = ''
     numCols = 3
     orientation: 'l' | 'p' = 'l'
-    fontSizes = {
+    sizes = {
         header: 50,
         section: 20,
         text: 16,
-        chord: 11
+        chord: 11,
+        gap: 3
     }
 }
 
@@ -29,7 +30,7 @@ export class PdfViewer extends React.Component<IViewerProps, PdfViewerStates> {
         if (this.props.song != oldProps.song || 
             this.state.numCols != oldState.numCols ||
             this.state.orientation != oldState.orientation ||
-            this.state.fontSizes != oldState.fontSizes
+            this.state.sizes != oldState.sizes
             ) {
             this.generatePdf()
         }
@@ -53,7 +54,8 @@ export class PdfViewer extends React.Component<IViewerProps, PdfViewerStates> {
             return;
 
         
-        const fos = this.state.fontSizes
+        /** font sizes  */
+        const fos = this.state.sizes
 
         const mdHtml = new DOMParser().parseFromString(vdom, "text/html");
 
@@ -64,6 +66,8 @@ export class PdfViewer extends React.Component<IViewerProps, PdfViewerStates> {
 
         const doc = cdoc.doc
         const cols = this.state.numCols
+        const colWidth = (cdoc.mediaWidth() - (cols - 1) * this.state.sizes.gap) / cols
+
         let x0 = cdoc.margins.left
 
         await Promise.all([
@@ -75,15 +79,23 @@ export class PdfViewer extends React.Component<IViewerProps, PdfViewerStates> {
         cdoc.chordFont = ['RoCo', 'bold', fos.chord]
         cdoc.textFont = ['RoCo', 'normal', fos.text]
 
+
         const songArtist = mdHtml.querySelector('.sd-header>h2')
-        cdoc.setFont('RoCo', 'bold', fos.section)
-        cdoc.textLine( songArtist.textContent )
+        cdoc.setFont('RoCo', 'normal', fos.section)
+        const dima = cdoc.textLine( songArtist.textContent )
         cdoc.cursor.y += fos.section / doc.internal.scaleFactor
 
         const songTitle = mdHtml.querySelector('.sd-header>h1')
         cdoc.setFont('RoCo', 'light', fos.header)
-        cdoc.textLine(songTitle.textContent)
+        const dimt = cdoc.textLine(songTitle.textContent)
 
+        const header = { y: cdoc.cursor.y, x: x0+Math.max(dima.w, dimt.w)}
+
+        function placeFooter() {
+            cdoc.setFont('RoCo', 'bold', fos.chord )
+            doc.text(songTitle.textContent + ' - ' + songArtist.textContent, cdoc.margins.left + cdoc.mediaWidth()/2,  cdoc.maxY(), 'center' )
+        }
+        placeFooter()
 
         for (const section of sections.values()) {
             // IDEA set Text without chords (not happeining now)
@@ -97,11 +109,18 @@ export class PdfViewer extends React.Component<IViewerProps, PdfViewerStates> {
 
             if(cdoc.cursor.y + contentheight + 5  > cdoc.maxY()  )
             {
-                x0 += cdoc.mediaWidth()/cols;
-                cdoc.cursor.y = cdoc.margins.top
+                const c = cdoc.cursor
+                const g = this.state.sizes.gap
+                x0 += colWidth + g;
+                cdoc.cursor.y = x0 > header.x ? cdoc.margins.top : header.y
+                // for debugging purposes
+                // doc.line(x0-g, c.y, x0-g, c.y+cdoc.mediaHeight())
+                // doc.line(x0, c.y, x0, c.y+cdoc.mediaHeight())
                 if(x0> cdoc.maxX()){
                     doc.addPage()
                     x0 = cdoc.margins.left
+                    header.y = cdoc.margins.top
+                    placeFooter()
                 }
 
             }
@@ -115,19 +134,38 @@ export class PdfViewer extends React.Component<IViewerProps, PdfViewerStates> {
 
             for (let line of lines ) {
                 resetX()
-                cdoc.cursor.y += getLineHeight(line)
+                // cdoc.cursor.y += getLineHeight(line)
                 const chords = line.querySelectorAll('i')
-                for (let i=0; i<chords.length; i++ ) {
-                    const chord = chords[i]
-                    cdoc.placeChord(chord.innerText, chord.dataset.chord)
-                    // console.log(chord.innerText, JSON.stringify(cdoc.cursor))
-                }
+                // for (let i=0; i<chords.length; i++ ) {
+                //     const chord = chords[i]
+                //     cdoc.placeChord(chord.innerText, chord.dataset.chord)
+                //     // console.log(chord.innerText, JSON.stringify(cdoc.cursor))
+                // }
+                const fragments = Array.from(chords).map( c => ({text: c.innerText, chord: c.dataset.chord}))
+                cdoc.placeChords(fragments,colWidth)
             }
         }
 
+        // Add page numbers
+        function placePageNumbers() {
+            
+            //@ts-ignore not yet added to types :( )
+            const total = doc.getNumberOfPages()
+
+            for( let i= 1; i<=total; i++) {
+                doc.setPage(i)
+                cdoc.setFont('RoCo', 'bold', fos.chord)
+                doc.text(i + ' / ' +total, cdoc.margins.left + cdoc.mediaWidth(), cdoc.maxY(), 'right')
+            }
+        }
+
+        placePageNumbers()
+
         // Save the Data
         const pdfData = doc.output('arraybuffer')
-        this.setState({ pdfData })
+        let pdfBlobUrl = window.URL.createObjectURL(new Blob([pdfData], { type: 'application/pdf' }));
+        URL.revokeObjectURL(this.state.pdfBlobUrl) // freeing old url for memory
+        this.setState({ pdfBlobUrl })
 
         function getLineHeight( line ) : number {
                 if( line.querySelector('i[data-chord]') )
@@ -146,11 +184,11 @@ export class PdfViewer extends React.Component<IViewerProps, PdfViewerStates> {
 
         const fontSizeHandles = []
 
-        for (const fs in this.state.fontSizes) {
-            if (Object.prototype.hasOwnProperty.call(this.state.fontSizes, fs)) {
+        for (const fs in this.state.sizes) {
+            if (Object.prototype.hasOwnProperty.call(this.state.sizes, fs)) {
                 fontSizeHandles.push(<span>
                     <label>{fs}</label>
-                    <input type="number" step=".5" min="1" max="200" value={this.state.fontSizes[fs]} onChange={ev => this.handleFontSize(fs, parseFloat(ev.currentTarget.value))} /> 
+                    <input type="number" step=".5" min="1" max="200" value={this.state.sizes[fs]} onChange={ev => this.handleFontSize(fs, parseFloat(ev.currentTarget.value))} /> 
                 </span>
                 )
             }
@@ -170,7 +208,7 @@ export class PdfViewer extends React.Component<IViewerProps, PdfViewerStates> {
 
             <label>Sizes: </label>
             {fontSizeHandles}
-            <PdfBlob pdfData={this.state.pdfData}></PdfBlob>
+            <PdfBlob url={this.state.pdfBlobUrl}></PdfBlob>
 
             {/* <pre>{this.props.song.getHtml()}</pre> */}
 
@@ -196,10 +234,10 @@ export class PdfViewer extends React.Component<IViewerProps, PdfViewerStates> {
 
 
         this.setState( state =>  {
-            const newFontSizes = state.fontSizes
+            const newFontSizes = state.sizes
             newFontSizes[name] = value
             // copying object in order not having to detect the state change in deep @componentDidUpdate
-            return {fontSizes: Object.assign({}, newFontSizes)}
+            return {sizes: Object.assign({}, newFontSizes)}
         })
         
     }
@@ -207,17 +245,16 @@ export class PdfViewer extends React.Component<IViewerProps, PdfViewerStates> {
 
 }
 
-const PdfBlob : React.FunctionComponent< React.PropsWithChildren<{pdfData: ArrayBuffer}>> = (props) => {
+const PdfBlob : React.FunctionComponent< React.PropsWithChildren<{url: string}>> = (props) => {
 
         let pdf = <></>
-        if (props.pdfData) {
-            let pdfBlobUrl = window.URL.createObjectURL(new Blob([props.pdfData], { type: 'application/pdf' }));
-            pdf = <><object data={pdfBlobUrl} width="100%" height="100%" type="application/pdf">
+        if (props.url) {
+            pdf = <><object data={props.url} width="100%" height="100%" type="application/pdf">
                 <p>It appears you don't have a PDF plugin for this browser.
-                No biggie... you can <a href="myfile.pdf">click here to
+                No biggie... you can <a href={props.url}>click here to
                 download the PDF file.</a></p>
             </object>
-            <a href={pdfBlobUrl}>Download PDF </a>
+            <a href={props.url}>Download PDF </a>
             </>
 
         }

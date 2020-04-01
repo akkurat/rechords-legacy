@@ -212,11 +212,11 @@ let Songs = new Mongo.Collection<Song>('songs', {
 export class RmdHelpers {
   static collectTags(dom) {
     let tags = [];
-    let uls = dom.getElementsByTagName("ul");
+    let uls = Array.from(dom.getElementsByTagName("ul"));
     for (let ul of uls) {
       if (ul.getAttribute("class") != "tags") continue;
 
-      let lis : Array<HTMLElement> = ul.getElementsByTagName("li");
+      let lis : Array<HTMLElement> = Array.from(ul.getElementsByTagName("li"));
       for (let li of lis) {
         let contents = Array.from(li.childNodes).map(child => child.textContent);
         tags.push( contents.join(':') );
@@ -230,7 +230,7 @@ export class RmdHelpers {
   static collectChordsDom(dom) {
     let chords = [];
 
-    let uls = dom.getElementsByTagName("i");
+    let uls = Array.from(dom.getElementsByTagName("i"));
     for (let chord_dom of uls) {
       if (chord_dom.hasAttribute(DATACHORD)) {
         var chord = chord_dom.getAttribute(DATACHORD);

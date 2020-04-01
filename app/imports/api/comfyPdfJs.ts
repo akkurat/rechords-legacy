@@ -51,6 +51,7 @@ export class ComfyPdfJs {
         const w = this.doc.getTextWidth(content)
         this.doc.text(content, this.cursor.x, this.cursor.y, {baseline: 'top'})
         this.cursor.y += dims.h
+        return dims
     }
 
     /**
@@ -108,4 +109,85 @@ export class ChordPdfJs extends ComfyPdfJs {
 
     }
 
+    
+
+    placeChords(fragments: {text: string, chord: string }[], width: number, simulate=false) : {w: number, numlineBreaksInserted: number} {
+        let w = 0, br = 0
+        
+        const tfs = this.textFont[2] / this.doc.internal.scaleFactor
+        const cfs = this.chordFont[2] / this.doc.internal.scaleFactor
+        const einzug = 1.5 * tfs
+
+        const chordMap = new Map<number, string>()
+        let charCnt = 0
+        let accText = ""
+        for( let {text, chord} of fragments ) {
+            if( chord ) {
+                chordMap.set(charCnt,chord)
+            }
+            accText += text
+            charCnt += text.length
+        }
+
+        
+
+        this.setFont.apply(this, this.textFont)
+        const lines_: string[] = this.doc.splitTextToSize(accText, width)
+        const notFirstLines = this.doc.splitTextToSize(lines_.slice(1).join(''), width-einzug)
+        const lines = lines_.length > 1 ? [lines_[0], ...notFirstLines] : lines_
+
+        br = lines.length - 1
+
+
+
+
+        const keys = Array.from(chordMap.keys() )
+
+        const chordLines: [string,[number,string][]][] = [] 
+
+        let minPos = 0, maxPos = 0
+        for( const line of lines ) {
+            maxPos = minPos + line.length 
+            const lineChords: [number,string][] = keys.filter( v => minPos <= v && maxPos > v )
+                                   .map( v => [v-minPos, chordMap.get(v)] )
+            minPos = maxPos
+            chordLines.push([line, lineChords])
+
+        }
+
+
+
+        let first = true
+        for( const [line, chords] of chordLines ) {
+            this.cursor.y += tfs * 1.2
+            if(chords.length)
+                this.cursor.y += cfs
+            this.setFont.apply(this, this.chordFont)
+            let xpos = this.cursor.x, lastidx = 0
+            let firstChord = true
+            for( let [idx,chord] of chords ) {
+                const text = line.substr(lastidx, idx-lastidx) || ''
+                this.setFont.apply(this, this.textFont)
+                const wtext = this.doc.getTextWidth(text)
+                this.setFont.apply(this, this.chordFont)
+                xpos += firstChord ? wtext : Math.max(wtext, this.doc.getTextWidth(chord) + 0.5*tfs ) 
+                if(!simulate)
+                    this.doc.text(chord, xpos, this.cursor.y - tfs) 
+                lastidx = idx
+                firstChord = false
+            }
+
+            this.setFont.apply(this, this.textFont)
+            if(!simulate)
+                this.doc.text(line, this.cursor.x, this.cursor.y) 
+            if(first) {
+                this.cursor.x += einzug
+                first = false
+            }
+        }
+
+    }
+
+    
 }
+

@@ -101,13 +101,10 @@ export class PdfViewer extends React.Component<IViewerProps, PdfViewerStates> {
             // IDEA set Text without chords (not happeining now)
             // by deselecting chords
 
-            const lines = section.querySelectorAll('span.line')
 
-            const contentheight =  Array.from(lines)
-                .map(getLineHeight)
-                .reduce((prev,curr) => prev + curr)
+            const contentheight = placeSection(section, true) 
 
-            if(cdoc.cursor.y + contentheight + 5  > cdoc.maxY()  )
+            if(cdoc.cursor.y + contentheight  > cdoc.maxY()  )
             {
                 const c = cdoc.cursor
                 const g = this.state.sizes.gap
@@ -124,29 +121,36 @@ export class PdfViewer extends React.Component<IViewerProps, PdfViewerStates> {
                 }
 
             }
+
+            placeSection(section)
+        }
+
+        // to think about: instead of simulation flag simulation cursor. that 
+        // would simplify everthingj
+        function placeSection(section: HTMLElement, simulate=false) : number {
+
+            let advance_y = 0
+
+            const lines = section.querySelectorAll('span.line')
             resetX()
+            const lineHeight = fos.section * 2 / doc.internal.scaleFactor
             if(!cdoc.isTop())
-                cdoc.cursor.y += fos.section * 2 / doc.internal.scaleFactor // fonts are in point... 
-            
+                if(!simulate)
+                    cdoc.cursor.y += lineHeight // fonts are in point... 
+                    advance_y += lineHeight
 
             cdoc.setFont('RoCo', 'bold', fos.section)
-            cdoc.textLine( section.querySelector('h3').innerText )
+            advance_y = cdoc.textLine( section.querySelector('h3').innerText, simulate ).h
 
             for (let line of lines ) {
                 resetX()
-                // cdoc.cursor.y += getLineHeight(line)
                 const chords = line.querySelectorAll('i')
-                // for (let i=0; i<chords.length; i++ ) {
-                //     const chord = chords[i]
-                //     cdoc.placeChord(chord.innerText, chord.dataset.chord)
-                //     // console.log(chord.innerText, JSON.stringify(cdoc.cursor))
-                // }
                 const fragments = Array.from(chords).map( c => ({text: c.innerText, chord: c.dataset.chord}))
-                cdoc.placeChords(fragments,colWidth)
+                advance_y += cdoc.placeChords(fragments, colWidth, simulate).advance_y
             }
+            return advance_y
         }
 
-        // Add page numbers
         function placePageNumbers() {
             
             //@ts-ignore not yet added to types :( )

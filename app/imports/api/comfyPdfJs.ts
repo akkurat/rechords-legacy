@@ -13,10 +13,8 @@ export class Margins {
 }
 
 export class Cursor {
-    x = 0
-    _y = 0
-    get y() {return this._y}
-    set y(val) {this._y = val; console.log("y set:", this._y)}
+    constructor(public x=0, public y=0) {
+    }
 }
 
 export class ComfyPdfJs {
@@ -45,12 +43,12 @@ export class ComfyPdfJs {
      * Advances the cursor in y-direction
      * @param content 
      */
-    textLine(content: string ) {
+    textLine(content: string, simulate=false ) : {w: number, h: number}{
         const dims = this.doc.getTextDimensions(content)
-        const lh = this.doc.getLineHeight()
-        const w = this.doc.getTextWidth(content)
-        this.doc.text(content, this.cursor.x, this.cursor.y, {baseline: 'top'})
-        this.cursor.y += dims.h
+        if(!simulate) {
+            this.doc.text(content, this.cursor.x, this.cursor.y, {baseline: 'top'})
+            this.cursor.y += dims.h
+        }
         return dims
     }
 
@@ -58,10 +56,13 @@ export class ComfyPdfJs {
      * Advances the cursor in x-direction
      * @param content 
      */
-    textFragment(content: string ) {
+    textFragment(content: string, simulate=false ) : {w: number, h: number} {
         const dims = this.doc.getTextDimensions(content)
-        this.doc.text(content, this.cursor.x, this.cursor.y )
-        this.cursor.x += dims.w
+        if(!simulate) {
+            this.doc.text(content, this.cursor.x, this.cursor.y)
+            this.cursor.x += dims.w
+        }
+        return dims
     }
     pageHeight = () => this.doc.internal.pageSize.getHeight()
     pageWidth = () => this.doc.internal.pageSize.getWidth()
@@ -111,8 +112,18 @@ export class ChordPdfJs extends ComfyPdfJs {
 
     
 
-    placeChords(fragments: {text: string, chord: string }[], width: number, simulate=false) : {w: number, numlineBreaksInserted: number} {
+    /**
+     * 
+     * @param fragments 
+     * @param width 
+     * @param simulate if true, cursor will not be modified
+     * 
+     * @returns distance moved in y direction // tbd internal cursor?
+     */
+    placeChords(fragments: {text: string, chord: string }[], width: number, simulate=false) : {advance_y: number, numlineBreaksInserted: number, intCursor: Cursor} {
         let w = 0, br = 0
+
+        let intCursor = new Cursor(this.cursor.x, this.cursor.y)
         
         const tfs = this.textFont[2] / this.doc.internal.scaleFactor
         const cfs = this.chordFont[2] / this.doc.internal.scaleFactor
@@ -159,11 +170,11 @@ export class ChordPdfJs extends ComfyPdfJs {
 
         let first = true
         for( const [line, chords] of chordLines ) {
-            this.cursor.y += tfs * 1.2
+            intCursor.y += tfs * 1.2
             if(chords.length)
-                this.cursor.y += cfs
+                intCursor.y += cfs
             this.setFont.apply(this, this.chordFont)
-            let xpos = this.cursor.x, lastidx = 0
+            let xpos = intCursor.x, lastidx = 0
             let firstChord = true
             for( let [idx,chord] of chords ) {
                 const text = line.substr(lastidx, idx-lastidx) || ''
@@ -172,19 +183,25 @@ export class ChordPdfJs extends ComfyPdfJs {
                 this.setFont.apply(this, this.chordFont)
                 xpos += firstChord ? wtext : Math.max(wtext, this.doc.getTextWidth(chord) + 0.5*tfs ) 
                 if(!simulate)
-                    this.doc.text(chord, xpos, this.cursor.y - tfs) 
+                    this.doc.text(chord, xpos, intCursor.y - tfs) 
                 lastidx = idx
                 firstChord = false
             }
 
             this.setFont.apply(this, this.textFont)
             if(!simulate)
-                this.doc.text(line, this.cursor.x, this.cursor.y) 
+                this.doc.text(line, intCursor.x, intCursor.y) 
             if(first) {
-                this.cursor.x += einzug
+                intCursor.x += einzug
                 first = false
             }
         }
+
+        const returnValue = { advance_y: intCursor.x-this.cursor.x, numlineBreaksInserted: br, intCursor: intCursor}
+        if(!simulate)
+            Object.assign(this.cursor, intCursor)
+
+        return returnValue
 
     }
 

@@ -9,6 +9,7 @@
 		"preserveConstEnums": true,
 		"sourceMap": true,
 		"downlevelIteration": true,
+		"moduleResolution": "node",
 							    
 		"plugins": [
 			{

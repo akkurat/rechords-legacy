@@ -4,8 +4,7 @@ import { increaseHeaderSpan, expandColumns } from '../api/expandColumns';
 import './ColumnGridStyle.less'
 import { DefaultSettingsStorage } from '../api/localStorageDefs';
 
-import AwesomeDebouncePromise from 'awesome-debounce-promise';
-
+import { debounce } from 'underscore';
 
 const defaultColumnWidth = 480 // px
 
@@ -90,7 +89,7 @@ export class ColumnExpander extends React.Component<ColumnExpanderProps, ColumnE
         this.setStateFromStorage(songId);
    }
 
-   debouncedHandleWindowResize = AwesomeDebouncePromise( (ev) => {
+   debouncedHandleWindowResize = debounce( (ev) => {
        console.log('called?');
        this.childupdate++;
        this.setState({height: window.innerHeight})   }, 100) 

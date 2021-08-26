@@ -23,7 +23,7 @@ import TrackingDocumentTitle from './TrackingDocumentTitle';
 import { MobileMenu } from './MobileMenu'
 import { EditorAdvanced, getEditorModule } from './AdvancedEditor/EditorAdvanced';
 import { DynamicModuleLoader } from 'redux-dynamic-modules';
-import { PdfViewer } from './PdfViewer';
+import { PdfViewer } from './PdfViewer/PdfViewer';
 
 const empty_song = {
     title: "Neues Lied",
@@ -288,6 +288,7 @@ class App extends React.Component<AppProps, AppStates> {
                             <>
                                 <TrackingDocumentTitle title={"Hölibu | " + song.author + ": " + song.title}/>
                                 {/* Lift state of transpose after all? Make it fully controlled */}
+                                <HideSongList handle={this.hideSongList}/>
                                 <PdfViewer song={song} songs={this.props.songs} ref={this.viewerRef} 
                                 {...routerProps} />
                             </>

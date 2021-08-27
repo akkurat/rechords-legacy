@@ -7,6 +7,17 @@
 
 .pdfSettings {
 
+    button {
+        width: 30px;
+        height: 20px;
+        background-color: var(--accent-flat);
+        border-color: var(--accent-flat);
+        border-width: 5px;
+        border-radius: 5px;
+        padding: 0  5px;
+        margin: 5px;
+    }
+
     input::-webkit-outer-spin-button,
     input::-webkit-inner-spin-button {
         /* display: none; <- Crashes Chrome on hover */
@@ -17,10 +28,12 @@
 
     margin-top: 2rem;
 
-    input[type='radio'],
+    input[type='radio'] {
+        visibility: hidden;
+    }
     input[type='number'] {
-        -moz-appearance   : none;
-        -webkit-appearance: none;
+        -moz-appearance   : textfield;
+        -webkit-appearance: textfield;
 
         &:checked+label {
             filter: drop-shadow(0 0 0.6rem var(--text-rev))
@@ -35,12 +48,12 @@
 
             >input[type='number'] {
                 display     : table-cell;
-                width       : 50px;
-                text-align  : right;
-                margin-right: 5px;
+                width       : 30px;
+                text-align  : center;
+                margin: 2px 5px;
             }
 
-            >label {
+            >label, >button {
                 display: table-cell;
             }
         }

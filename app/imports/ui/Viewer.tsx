@@ -8,7 +8,7 @@ import { Abcjs } from './Abcjs'
 import { ColumnExpander } from "./ColumnGrid.js";
 import Kord from "./Kord.js";
 
-import { LayoutH, LayoutV, Day, Night, Sharp, Flat, Conveyor } from './Icons.jsx';
+import { LayoutH, LayoutV, Day, Night, Sharp, Flat, Conveyor, PDF } from './Icons.jsx';
 
 import parse, { domToReact }  from 'html-react-parser';
 
@@ -265,8 +265,8 @@ export default class Viewer extends React.Component<RouteComponentProps & IViewe
         <div onClick={this.toggleColumns} id={'layout-toggler'} >
           {this.state.columns ? <LayoutH /> : <LayoutV />}
         </div>
-        <div>
-          <NavLink to={`/pdf/${this.props.song.author_}/${this.props.song.title_}`}>PDF</NavLink>
+        <div id="pdfLink">
+          <NavLink to={`/pdf/${this.props.song.author_}/${this.props.song.title_}`}><PDF /></NavLink>
         </div>
       </aside>
     

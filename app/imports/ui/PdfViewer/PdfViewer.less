@@ -4,21 +4,52 @@
     margin: 0;
 }
 
+@qb : 2px;
+@qh : 30px;
+
 
 .pdfSettings {
 
-    width: 200px;
 
-    button.up,
-    button.down {
-        width         : 30px;
-        height        : 20px;
-        background    : var(--accent-flat);
-        margin        : 5px;
-        padding       : 8px 5px 8px 5px;
-        display       : inline-block;
-        vertical-align: middle;
-        text-align    : center;
+    svg {
+        stroke: var(--accent-flat);
+        fill: none;
+
+        .fine {
+            stroke-width: 1px;
+        }
+
+        .medium {
+            stroke-width: 2px;
+        }
+        .bold {
+            stroke-width: 4px;
+        }
+    }
+
+    box-sizing: border-box;
+
+    * {
+        box-sizing: border-box;
+    }
+
+    button {
+        width: 170px;
+
+        &.ud {
+            width      : 15px;
+            font-weight: bold;
+            color      : var(--accent-flat)
+        }
+
+        border-radius  : 3px;
+        height         : @qh;
+        border         : var(--accent-flat) solid @qb;
+        margin         : 0 10px;
+        display        : flex;
+        justify-content: center;
+        align-items    : center;
+        font-size      : 14px;
     }
 
     input::-webkit-outer-spin-button,
@@ -32,32 +63,70 @@
     margin-top: 2rem;
 
     input[type='radio'] {
-        visibility: hidden;
+        display: none;
+
+        &:checked+label {
+            // filter: drop-shadow(2px 2px 0.1rem var(--text-rev));
+            svg {stroke: var(--text-rev) }
+        }
     }
 
     input[type='number'] {
         -moz-appearance   : textfield;
         -webkit-appearance: textfield;
 
-        &:checked+label {
-            filter: drop-shadow(0 0 0.6rem var(--text-rev))
+    }
+
+    .grid {
+        display: grid;
+        width: 100%;
+        grid-template-columns: repeat(2,1fr);
+        grid-auto-flow: row;
+        column-gap: 5px;
+
+        .orientations {
+            display: contents;
+            label {
+                justify-self: center;
+                align-self: center;
+            }
+        }
+
+        .columns {
+            display: contents;
+            label {
+                justify-self: center;
+                align-self: center;
+
+
+            }
+        }
+    }
+
+    .fontsize {
+        display       : flex;
+        flex-wrap     : nowrap;
+        text-transform: uppercase;
+        font-weight   : 600;
+        font-size     : 12px;
+        justify-content: space-between;
+
+        >* {
+            flex: 0.5
         }
 
     }
-
-
-
-
-
-
-
 }
 
 .quickinput {
+    display    : flex;
+    flex-wrap  : nowrap;
+    align-items: flex-end;
+}
 
-    @qh       : 20px;
-    @qw       : 30px;
-    @qb       : 2px;
+.framed {
+
+    @qw       : 40px;
     box-sizing: border-box;
 
     * {

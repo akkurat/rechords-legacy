@@ -9,5 +9,6 @@ import Flat from '../../private/flat.svg'
 import Ok from '../../private/ok2.svg'
 import Cancel from '../../private/cancel3.svg'
 import Conveyor from '../../private/conveyor0.svg'
+import PDF from '../../private/pdf.svg'
 
-export { LayoutH, LayoutV, Header, Day, Night, Menu, Sharp, Flat, Ok, Cancel, Conveyor};
+export { LayoutH, LayoutV, Header, Day, Night, Menu, Sharp, Flat, Ok, Cancel, Conveyor, PDF};

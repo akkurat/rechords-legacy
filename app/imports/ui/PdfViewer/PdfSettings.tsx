@@ -3,7 +3,7 @@ import * as React from 'react'
 import { useEffect } from 'react'
 import { FunctionComponent, ReactElement, useState } from 'react'
 import { QuickInput } from './QuickInput'
-import { Landscape, Portrait } from './SettingIcons'
+import { Columns, Landscape, Portrait } from './SettingIcons'
 
 // TODO: save settings like liked songs in user db
 
@@ -92,18 +92,18 @@ export const PdfSettings: FunctionComponent<{ songId: string, consumer: (s: IPdf
 
   for (const fs in state.sizes) {
     if (Object.prototype.hasOwnProperty.call(state.sizes, fs)) {
-      fontSizeHandles.push(<div>
-        
-        <label htmlFor={'font'+fs}>{fs}: </label>
+      fontSizeHandles.push(<div className="fontsize">
+        <label htmlFor={'font'+fs}>{fs}</label>
         <QuickInput id={'font'+fs} value={state.sizes[fs]} onChange={size => handleFontSize(fs, size)} />
       </div>
       )
     }
   }
 
+
   return <div className="pdfSettings">
-    <div className="table">
-      <div>{
+    <div className="grid">
+      <div className="orientations">{
         orientations.map(([value, icon], idx ) => (
           <>
             <input id={'or'+value}type="radio" name="orientation" value={value} checked={state.orientation == value} onChange={handleOrientationChange} />
@@ -111,13 +111,19 @@ export const PdfSettings: FunctionComponent<{ songId: string, consumer: (s: IPdf
           </>
         ))}
       </div>
-      <div>
-        <input id="numColumns" type="number" min="1" max="5" onChange={handleColChange} value={state.numCols} />
-        <label htmlFor="numColumns">Spalten </label>
-      </div>
+      <div className="columns">
+          {[...new Array(4).keys()].map(idx => <> 
+          <input
+            onChange={handleColChange}
+            checked={idx+1 === state.numCols} type="radio" id={`numColumns${idx}`} name="numColumns" value={idx+1} />
+        <label htmlFor={'numColumns'+idx}>
+          <Columns numCols={idx+1} colWidth={10} gap={2} />
+          </label>
+           </>)} 
+          </div>
     </div>
 
-    <h5>Font Sizes </h5>
+    {/* <h5>Font Sizes </h5> */}
     <div className="table">
       {fontSizeHandles}
     </div>

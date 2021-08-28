@@ -73,15 +73,15 @@ export const QuickInput: FunctionComponent<{id: string, value: number, onChange:
   }
 
   const [u,d] = mod[4]
-  return <>
-    <button onClick={ev => up(ev)} >{u}</button>
-    <div className="quickinput"> <span>
-    <input type="number" min="1" max="200"
-      onKeyDown={handleKey} id={id}
-      value={value} onChange={ev => onChange( parseFloat(ev.currentTarget.value))} />
-      </span></div>
-    <button onClick={ev => down(ev)} >{d}</button>
-  </>
+  return <div className="quickinput">
+    <button className="ud" onClick={ev => down(ev)} ><span>{d}</span></button>
+    <div className="framed"> <span>
+      <input type="number" min="1" max="200"
+        onKeyDown={handleKey} id={id}
+        value={value} onChange={ev => onChange( parseFloat(ev.currentTarget.value))} />
+    </span></div>
+    <button className="ud" onClick={ev => up(ev)} ><span>{u}</span></button>
+  </div>
 }
 
 function inc0(keyEvent: keysEvent) {

@@ -32,7 +32,7 @@ export class PdfViewer extends React.Component<IViewerProps, { pdfBlobUrl: strin
       )
     }
 
-    setSettings = debounce((a: IPdfViewerSettings) => this.generatePdf(a), 500)
+    setSettings = debounce((a: IPdfViewerSettings) => this.generatePdf(a), 2500)
 
 
 
@@ -45,7 +45,7 @@ export class PdfViewer extends React.Component<IViewerProps, { pdfBlobUrl: strin
 
       return <>
         <Drawer open={true} id="pdfsettings" className="revision-colors" >
-          <NavLink to={`/view/${s.author_}/${s.title_}`} >Back to Viewer</NavLink>
+          <NavLink to={`/view/${s.author_}/${s.title_}`} >x</NavLink>
           <PdfSettings consumer={this.setSettings} songId={this.props.song._id} />
         </Drawer>
         <div className="content">

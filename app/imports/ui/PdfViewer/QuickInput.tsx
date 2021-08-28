@@ -4,40 +4,63 @@ import { useEffect } from 'react'
 import { FunctionComponent } from 'react'
 
 export type keysEvent = React.MouseEvent<Element, MouseEvent> | React.KeyboardEvent<HTMLInputElement> | KeyboardEvent
-type dec = [(e: keysEvent)=> boolean, string, string, number]
+
+
+export const useListener = (target: EventTarget, type: keyof GlobalEventHandlersEventMap, listener, options? ): () => void => {
+  target.addEventListener(type, listener, options)
+  // returning deregistering lambda (consistent with useEffect)
+  return () => {target.removeEventListener(type, listener )}
+}
+type dec = [(e: keysEvent)=> boolean, string, string, number, [string,string]]
+const arrowIcons:[string,string][] = [
+  ['⇡', '⇣'],
+  ['↑','↓'],
+  ['⬆︎','⬇'],
+  ['⇈', '⇊'],
+] 
+// const arrowIcons:[string,string][] = [
+//   ['u', 'd'],
+//   ['uu','dd'],
+//   ['U︎','D'],
+//   ['UU', 'DD'],
+// ] 
 const updowns: dec[] =[
-  [mult1,'*','/',1.2],
-  [mult2, '*','/',2],
-  [inc0, '+','-',0.1],
-  [()=>true,'+','-',1]
+  [mult1,'*','/',1.2,arrowIcons[2]],
+  [mult2, '*','/',2,arrowIcons[3]],
+  [inc0, '+','-',0.1,arrowIcons[0]],
+  [()=>true,'+','-',1,arrowIcons[1]]
 ]
 
-
-
 export const QuickInput: FunctionComponent<{id: string, value: number, onChange: (a: number) => void}> = ({onChange, value,id}) => {
-
 
   const [mod, setMod] = useState(updowns[3])
 
   useEffect(() => {
-    document.addEventListener('keydown', e => {
-      setMod(decider(e))
-    })
-    document.addEventListener('keyup', e => {
-      setMod(decider(e))
-    })
+    const abc = new AbortController()
+    const opt = {signal: abc.signal}
+
+    const listener: any = e => { setMod(decider(e)) }
+    const deregisters = [
+      useListener(document, 'keydown', listener, opt),
+      useListener(document, 'keyup', listener, opt),
+      useListener(window, 'blur', listener, opt)
+    ]
+
+    // Alternatively 
+    // deregisters.forEach(d => d())
+    return () => { abc.abort() }
   })
 
   const up = (e: keysEvent) => {
     e.preventDefault()
     const op = decider(e)
-    onChange(eval(value+op[1]+op[3]))
+    onChange(eval(value+op[1]+op[3]).toFixed(1))
   }
 
   const down = (e: keysEvent) => {
     e.preventDefault()
     const op = decider(e)
-    onChange(eval(value+op[2]+op[3]))
+    onChange(Math.round(eval(value+op[2]+op[3])*10)/10)
   }
 
   const handleKey = (keyEvent: React.KeyboardEvent<HTMLInputElement>) => {
@@ -49,28 +72,15 @@ export const QuickInput: FunctionComponent<{id: string, value: number, onChange:
     }
   }
 
-  const [,u,d,inc] = mod
+  const [u,d] = mod[4]
   return <>
+    <button onClick={ev => up(ev)} >{u}</button>
+    <div className="quickinput"> <span>
     <input type="number" min="1" max="200"
       onKeyDown={handleKey} id={id}
       value={value} onChange={ev => onChange( parseFloat(ev.currentTarget.value))} />
-
-    <svg height="20" width="35">
-      <g onClick={ev => up(ev)}>
-        <polygon points="0,0 0,20 20,0"className="triangle" >
-        </polygon>
-        <text x="7" y="50%" textAnchor="middle" alignmentBaseline="central">{u}</text>
-      </g>
-      <g transform="translate(15,0)" onClick={ev => down(ev)} >
-        <polygon points="20,20 0,20 20,0"className="triangle">
-        </polygon>
-        <text x="14" y="50%" textAnchor="middle" alignmentBaseline="central">{d}</text>
-      </g>
-    </svg>
-
-
-    {inc}
-
+      </span></div>
+    <button onClick={ev => down(ev)} >{d}</button>
   </>
 }
 

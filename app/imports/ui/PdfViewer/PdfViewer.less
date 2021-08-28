@@ -48,28 +48,67 @@
         &:checked+label {
             filter: drop-shadow(0 0 0.6rem var(--text-rev))
         }
+
     }
 
-    .table {
-        display: table;
 
-        >div {
-            display: table-row;
 
-            >input[type='number'] {
-                display   : table-cell;
-                width     : 30px;
-                text-align: center;
-                margin    : 2px 5px;
-            }
 
-            >label,
-            >button {
-                display: table-cell;
-            }
+
+
+
+}
+
+.quickinput {
+    box-sizing: border-box;
+
+    * {
+        box-sizing: border-box;
+    }
+
+    display        : flex;
+    width          : 30px;
+    height         : 20px;
+    justify-content: center;
+    align-items    : center;
+    position       : relative;
+    z-index        : 2;
+    border         : var(--accent-flat) solid 1.5px;
+
+    input[type='number'] {
+        width     : 30px;
+        height    : 20px;
+        text-align: center;
+        margin    : 0px;
+        outline   : none;
+    }
+
+    &::before,
+    &::after {
+        position        : absolute;
+        background-color: var(--bg-rev);
+        z-index         : -1;
+        transition      : 1s;
+        content         : '';
+    }
+
+    &::before {
+        width : 30px;
+        height: 13px;
+    }
+
+    &::after {
+        width : 22px;
+        height: 20px;
+    }
+
+    &&:focus-within {
+        &::before {
+            height: 0;
+        }
+
+        &::after {
+            width: 0;
         }
     }
-
-
-
 }

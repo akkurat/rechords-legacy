@@ -7,15 +7,24 @@
 
 .pdfSettings {
 
-    button {
-        width: 30px;
-        height: 20px;
-        background-color: var(--accent-flat);
-        border-color: var(--accent-flat);
-        border-width: 5px;
-        border-radius: 5px;
-        padding: 0  5px;
-        margin: 5px;
+    .triangle {
+        fill: var(--accent-flat);
+    }
+
+    text {
+        fill: var(--text-rev)
+    }
+
+    button.up,
+    button.down {
+        width         : 30px;
+        height        : 20px;
+        background    : var(--accent-flat);
+        margin        : 5px;
+        padding       : 8px 5px 8px 5px;
+        display       : inline-block;
+        vertical-align: middle;
+        text-align    : center;
     }
 
     input::-webkit-outer-spin-button,
@@ -31,6 +40,7 @@
     input[type='radio'] {
         visibility: hidden;
     }
+
     input[type='number'] {
         -moz-appearance   : textfield;
         -webkit-appearance: textfield;
@@ -47,13 +57,14 @@
             display: table-row;
 
             >input[type='number'] {
-                display     : table-cell;
-                width       : 30px;
-                text-align  : center;
-                margin: 2px 5px;
+                display   : table-cell;
+                width     : 30px;
+                text-align: center;
+                margin    : 2px 5px;
             }
 
-            >label, >button {
+            >label,
+            >button {
                 display: table-cell;
             }
         }

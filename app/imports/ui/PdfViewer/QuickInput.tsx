@@ -1,9 +1,9 @@
 import * as React from 'react'
 import { useState } from 'react'
 import { useEffect } from 'react'
-import { FormEvent, FunctionComponent } from 'react'
+import { FunctionComponent } from 'react'
 
-export type keysEvent = React.MouseEvent<HTMLButtonElement, MouseEvent> | React.KeyboardEvent<HTMLInputElement> | KeyboardEvent
+export type keysEvent = React.MouseEvent<Element, MouseEvent> | React.KeyboardEvent<HTMLInputElement> | KeyboardEvent
 type dec = [(e: keysEvent)=> boolean, string, string, number]
 const updowns: dec[] =[
   [mult1,'*','/',1.2],
@@ -51,11 +51,24 @@ export const QuickInput: FunctionComponent<{id: string, value: number, onChange:
 
   const [,u,d,inc] = mod
   return <>
-    <button onClick={ev => down(ev)}>{d}</button>
-    <input type="number" step="1" min="1" max="200"
-    onKeyDown={handleKey} id={id}
-    value={value} onChange={ev => onChange( parseFloat(ev.currentTarget.value))} />
-  <button onClick={ev => up(ev)}>{u}</button>
+    <input type="number" min="1" max="200"
+      onKeyDown={handleKey} id={id}
+      value={value} onChange={ev => onChange( parseFloat(ev.currentTarget.value))} />
+
+    <svg height="20" width="35">
+      <g onClick={ev => up(ev)}>
+        <polygon points="0,0 0,20 20,0"className="triangle" >
+        </polygon>
+        <text x="7" y="50%" textAnchor="middle" alignmentBaseline="central">{u}</text>
+      </g>
+      <g transform="translate(15,0)" onClick={ev => down(ev)} >
+        <polygon points="20,20 0,20 20,0"className="triangle">
+        </polygon>
+        <text x="14" y="50%" textAnchor="middle" alignmentBaseline="central">{d}</text>
+      </g>
+    </svg>
+
+
     {inc}
 
   </>

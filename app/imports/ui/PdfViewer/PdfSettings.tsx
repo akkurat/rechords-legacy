@@ -1,3 +1,4 @@
+import { useTracker } from 'meteor/react-meteor-data'
 import * as React from 'react'
 import { useEffect } from 'react'
 import { FunctionComponent, ReactElement, useState } from 'react'
@@ -5,6 +6,9 @@ import { LayoutH, LayoutV } from '../Icons.jsx'
 import { QuickInput } from './QuickInput.js'
 
 // TODO: save settings like liked songs in user db
+
+
+
 export class PdfViewerStates implements IPdfViewerSettings {
     numCols = 3
     orientation: 'l' | 'p' = 'l'
@@ -31,9 +35,25 @@ export interface ITextSizes {
     gap: number
 }
 
-export const PdfSettings: FunctionComponent<{ consumer: (s: IPdfViewerSettings) => void }> = ({consumer}) => {
+export const PdfSettings: FunctionComponent<{ songId: string, consumer: (s: IPdfViewerSettings) => void }> = ({songId, consumer}) => {
 
-  const [state, setState] = useState(new PdfViewerStates())
+  const {user} = useTracker(() => ({user: Meteor.user()}))
+
+
+  const initialState: IPdfViewerSettings = user?.profile?.pdfSettings?.[songId] || user?.profile?.pdfSettings?.___ || new PdfViewerStates() 
+
+
+  const [state, setState] = useState(initialState)
+
+  const saveSettings = (_songId) => {
+    const pdfSettings: {[k: string]: IPdfViewerSettings } = user?.profile?.pdfSettings || {}
+
+    pdfSettings[_songId] = JSON.parse(JSON.stringify(state))
+
+    Meteor.call('saveUser', user, (error) => console.log(error))
+  }
+
+
   const set = ( a: IPdfViewerSettings ) => {
     setState(a)
     consumer(a)
@@ -80,25 +100,33 @@ export const PdfSettings: FunctionComponent<{ consumer: (s: IPdfViewerSettings) 
   }
 
   return <div className="pdfSettings">
-      <div className="table">
-    <div>{
-      orientations.map(([value, icon], idx ) => (
-        <>
-          <input id={'or'+value}type="radio" name="orientation" value={value} checked={state.orientation == value} onChange={handleOrientationChange} />
-          <label htmlFor={'or'+value} key={idx}>{icon} </label>
-        </>
-      ))}
-    </div>
-    <div>
-      <input id="numColumns" type="number" min="1" max="5" onChange={handleColChange} value={state.numCols} />
-      <label htmlFor="numColumns">Spalten </label>
-    </div>
+    <div className="table">
+      <div>{
+        orientations.map(([value, icon], idx ) => (
+          <>
+            <input id={'or'+value}type="radio" name="orientation" value={value} checked={state.orientation == value} onChange={handleOrientationChange} />
+            <label htmlFor={'or'+value} key={idx}>{icon} </label>
+          </>
+        ))}
+      </div>
+      <div>
+        <input id="numColumns" type="number" min="1" max="5" onChange={handleColChange} value={state.numCols} />
+        <label htmlFor="numColumns">Spalten </label>
+      </div>
     </div>
 
     <h5>Font Sizes </h5>
     <div className="table">
-    {fontSizeHandles}
+      {fontSizeHandles}
+    </div>
+
+    <div>
+      <button onClick={()=>saveSettings(songId)}>Save for this Song</button>
+    </div>
+    <div>
+      <button onClick={()=>saveSettings('___')}>Save as Default</button>
     </div>
   </div>
+
 
 }

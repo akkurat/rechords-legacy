@@ -46,7 +46,7 @@ export class PdfViewer extends React.Component<IViewerProps, { pdfBlobUrl: strin
       return <>
         <Drawer open={true} id="pdfsettings" className="revision-colors" >
           <NavLink to={`/view/${s.author_}/${s.title_}`} >Back to Viewer</NavLink>
-          <PdfSettings consumer={this.setSettings} />
+          <PdfSettings consumer={this.setSettings} songId={this.props.song._id} />
         </Drawer>
         <div className="content">
           <PdfBlob url={this.state.pdfBlobUrl}></PdfBlob>

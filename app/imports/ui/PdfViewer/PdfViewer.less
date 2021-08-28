@@ -7,13 +7,7 @@
 
 .pdfSettings {
 
-    .triangle {
-        fill: var(--accent-flat);
-    }
-
-    text {
-        fill: var(--text-rev)
-    }
+    width: 200px;
 
     button.up,
     button.down {
@@ -60,6 +54,10 @@
 }
 
 .quickinput {
+
+    @qh       : 20px;
+    @qw       : 30px;
+    @qb       : 2px;
     box-sizing: border-box;
 
     * {
@@ -67,20 +65,25 @@
     }
 
     display        : flex;
-    width          : 30px;
-    height         : 20px;
+    width          : @qw;
+    height         : @qh;
     justify-content: center;
-    align-items    : center;
+    align-items    : flex-start;
     position       : relative;
     z-index        : 2;
-    border         : var(--accent-flat) solid 1.5px;
+    border         : var(--accent-flat) solid @qb;
 
     input[type='number'] {
-        width     : 30px;
-        height    : 20px;
+        width     : @qw;
+        height    : @qh;
         text-align: center;
         margin    : 0px;
+        margin-top: -2*@qb;
         outline   : none;
+    }
+
+    >span {
+        display: contents;
     }
 
     &::before,
@@ -88,27 +91,33 @@
         position        : absolute;
         background-color: var(--bg-rev);
         z-index         : -1;
-        transition      : 1s;
         content         : '';
+        margin-top      : -@qb;
     }
 
+    @duration: 0.3s;
+
     &::before {
-        width : 30px;
-        height: 13px;
+        width     : @qw;
+        height    : @qh - @qb;
+        transition: height @duration ease @duration;
     }
 
     &::after {
-        width : 22px;
-        height: 20px;
+        width     : @qw - 2*@qb;
+        height    : @qh - @qb;
+        transition: width @duration;
     }
 
     &&:focus-within {
         &::before {
-            height: 0;
+            height    : 0;
+            transition: height @duration;
         }
 
         &::after {
-            width: 0;
+            width     : 0;
+            transition: width @duration ease @duration;
         }
     }
 }

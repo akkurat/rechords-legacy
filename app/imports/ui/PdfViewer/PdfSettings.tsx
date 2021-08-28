@@ -2,8 +2,8 @@ import { useTracker } from 'meteor/react-meteor-data'
 import * as React from 'react'
 import { useEffect } from 'react'
 import { FunctionComponent, ReactElement, useState } from 'react'
-import { LayoutH, LayoutV } from '../Icons.jsx'
-import { QuickInput } from './QuickInput.js'
+import { QuickInput } from './QuickInput'
+import { Landscape, Portrait } from './SettingIcons'
 
 // TODO: save settings like liked songs in user db
 
@@ -48,6 +48,8 @@ export const PdfSettings: FunctionComponent<{ songId: string, consumer: (s: IPdf
   const saveSettings = (_songId) => {
     const pdfSettings: {[k: string]: IPdfViewerSettings } = user?.profile?.pdfSettings || {}
 
+    user.profile.pdfSettings = pdfSettings
+
     pdfSettings[_songId] = JSON.parse(JSON.stringify(state))
 
     Meteor.call('saveUser', user, (error) => console.log(error))
@@ -84,7 +86,7 @@ export const PdfSettings: FunctionComponent<{ songId: string, consumer: (s: IPdf
 
   const orientations: [string,ReactElement][] = [
     // eslint-disable-next-line react/jsx-key
-    ['p', <LayoutV />], ['l', <LayoutH />]
+    ['p', Portrait ], ['l', Landscape]
   ]
   const fontSizeHandles = []
 

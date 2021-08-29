@@ -67,34 +67,9 @@ export const QuickInput: FunctionComponent<{id: string, value: number, onChange:
     }
   }
 
-  /**
-   * Used by Wheel Capture
-   */
-  let wheelbuffer = 0;
-  const changeValueThrottled = throttle( () => {
-    onChange(Math.round((value+wheelbuffer)*10)/10)
-    wheelbuffer=0;
-   }, 100 )
-
-  const ref: Ref<HTMLDivElement> = useRef()
-
-  const handleWheel = (ev: WheelEvent) => {
-    ev.preventDefault()
-    ev.stopPropagation()
-    wheelbuffer = wheelbuffer + ev.deltaY/100;
-    changeValueThrottled()
-  }
-  // Avoiding Propagation works only using native addEventListener()
-  // https://github.com/facebook/react/issues/5845
-  useEffect( () => {
-    ref?.current.addEventListener('wheel',handleWheel)
-    return () => {
-      ref?.current.removeEventListener('wheel',handleWheel )
-    }
-  }, [])
 
   const intensity = 1.2;
-  return <div className="quickinput" ref={ref} >
+  return <div className="quickinput">
     <svg width="120px" height="40px" overflow="visible">
       <g transform="translate(0,20)">
       <polyline points="-100,0, 40,0" />

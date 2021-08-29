@@ -216,6 +216,10 @@ aside.drawer#list {
         overflow: hidden;
       }
 
+      &.pdf {
+        display: none;
+      }
+
       .author {
         display: none;
         flex: 1 0 0;
@@ -269,17 +273,6 @@ aside.drawer#list {
         }
       }
 
-      &:hover {
-        .title {
-          flex: 1 0 0;
-        }
-
-        .author {
-          display: inline-block;
-          flex: 0 0 auto;
-          color: var(--accent);
-        }
-      }
 
       &.selected {
         color: var(--text-inverted);
@@ -290,6 +283,26 @@ aside.drawer#list {
         }
       }
 
+    }
+
+    &:hover {
+      .title {
+        flex: 1 0 0;
+      }
+
+      // Because the lists are nested
+      // it must be the immediate child of the li
+      >a .author {
+        display: inline-block;
+        flex: 0 0 auto;
+        color: var(--accent);
+      }
+      >a.selected:not(.pdf) {
+        display: none;
+      }
+      >a.pdf {
+        display: flex;
+      }
     }
   }
 

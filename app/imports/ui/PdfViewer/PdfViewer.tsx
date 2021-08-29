@@ -8,10 +8,12 @@ import { debounce } from 'underscore'
 import Drawer from '../Drawer'
 import { NavLink } from 'react-router-dom'
 import './PdfViewer.less'
+import { search } from 'core-js/fn/symbol'
 
 const debug = true
 
 export class PdfViewer extends React.Component<IViewerProps, { pdfBlobUrl: string }> {
+  first: boolean
   constructor(props: IViewerProps) {
     super(props)
     this.state = { pdfBlobUrl: '' }
@@ -19,6 +21,7 @@ export class PdfViewer extends React.Component<IViewerProps, { pdfBlobUrl: strin
 
 
     componentDidMount = () => {
+      this.first = true;
     }
 
     generatePdf = async (settings: IPdfViewerSettings) => {
@@ -32,7 +35,12 @@ export class PdfViewer extends React.Component<IViewerProps, { pdfBlobUrl: strin
       )
     }
 
-    setSettings = debounce((a: IPdfViewerSettings) => this.generatePdf(a), 2500)
+    _setSettings = debounce((a: IPdfViewerSettings) => this.generatePdf(a), 1500)
+
+    setSettings = (settings: IPdfViewerSettings) =>  {
+      if( this.first ) { this.first = false; this.generatePdf(settings)}
+      else { this._setSettings(settings) }
+    }
 
 
 
@@ -44,7 +52,7 @@ export class PdfViewer extends React.Component<IViewerProps, { pdfBlobUrl: strin
       const s = this.props.song
 
       return <>
-        <Drawer open={true} id="pdfsettings" className="revision-colors" >
+        <Drawer open={true} id="pdfsettings">
           <NavLink to={`/view/${s.author_}/${s.title_}`} >x</NavLink>
           <PdfSettings consumer={this.setSettings} songId={this.props.song._id} />
         </Drawer>

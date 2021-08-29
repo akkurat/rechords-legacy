@@ -7,13 +7,23 @@
 @qb : 2px;
 @qh : 30px;
 
+#pdfsettings {
+    background-color: var(--bg-list);
+}
+
 
 .pdfSettings {
-
-
+    .quickinput svg {
+        stroke-width: 2px;
+        fill  : var(--text-sidebar);
+        polygon:hover {
+        fill  : var(--accent);
+        }
+    }
     svg {
-        stroke: var(--accent-flat);
-        fill: none;
+        stroke: var(--text-sidebar);
+        fill  : none;
+        
 
         .fine {
             stroke-width: 1px;
@@ -22,6 +32,7 @@
         .medium {
             stroke-width: 2px;
         }
+
         .bold {
             stroke-width: 4px;
         }
@@ -39,18 +50,36 @@
         &.ud {
             width      : 15px;
             font-weight: bold;
-            color      : var(--accent-flat)
+            color      : var(--accent)
         }
 
-        border-radius  : 3px;
-        height         : @qh;
-        border         : var(--accent-flat) solid @qb;
+        border-radius : 3px;
+        height        : @qh;
+        border        : var(--text-sidebar) solid @qb;
+
+        &:hover {
+            border: var(--accent) solid @qb;
+            color : var(--accent);
+        }
+
         margin         : 0 10px;
         display        : flex;
         justify-content: center;
         align-items    : center;
         font-size      : 14px;
     }
+
+    input[type='radio'] {
+        display: none;
+
+        &:checked+label {
+            svg {
+                stroke: var(--accent)
+            }
+        }
+    }
+
+    // --- NUMBER INPUTS --- //
 
     input::-webkit-outer-spin-button,
     input::-webkit-inner-spin-button {
@@ -60,55 +89,57 @@
         /* <-- Apparently some margin are still there even though it's hidden */
     }
 
-    margin-top: 2rem;
-
-    input[type='radio'] {
-        display: none;
-
-        &:checked+label {
-            // filter: drop-shadow(2px 2px 0.1rem var(--text-rev));
-            svg {stroke: var(--text-rev) }
-        }
-    }
-
     input[type='number'] {
         -moz-appearance   : textfield;
         -webkit-appearance: textfield;
+    }
 
+    .settingTitle {
+        text-transform: uppercase;
+        font-weight   : 600;
+        font-size     : 12px;
+        margin-top    : 10px;
+        color         : var(--text-sidebar)
     }
 
     .grid {
-        display: grid;
-        width: 100%;
-        grid-template-columns: repeat(2,1fr);
-        grid-auto-flow: row;
-        column-gap: 5px;
+        display  : flex;
+        flex-flow: column nowrap;
 
-        .orientations {
-            display: contents;
-            label {
-                justify-self: center;
-                align-self: center;
-            }
+        .title {
+            .settingTitle();
         }
 
-        .columns {
-            display: contents;
-            label {
-                justify-self: center;
-                align-self: center;
+        .setting {
+            border         : var(--text-sidebar) solid 2px;
+            border-radius  : 4px;
+            display        : flex;
+            flex-flow      : row wrap;
+            justify-content: space-evenly;
+            padding        : 10px;
+            margin-bottom  : 10px;
 
+            &.orientations {
+                align-items: center;
+            }
 
+            &.columns {
+                align-items: flex-start;
+            }
+
+            &.buttons {
+                gap: 10px;
             }
         }
     }
 
     .fontsize {
-        display       : flex;
-        flex-wrap     : nowrap;
-        text-transform: uppercase;
-        font-weight   : 600;
-        font-size     : 12px;
+        .settingTitle();
+
+        margin: 0;
+
+        display        : flex;
+        flex-wrap      : nowrap;
         justify-content: space-between;
 
         >* {
@@ -122,71 +153,6 @@
     display    : flex;
     flex-wrap  : nowrap;
     align-items: flex-end;
-}
 
-.framed {
 
-    @qw       : 40px;
-    box-sizing: border-box;
-
-    * {
-        box-sizing: border-box;
-    }
-
-    display        : flex;
-    width          : @qw;
-    height         : @qh;
-    justify-content: center;
-    align-items    : flex-start;
-    position       : relative;
-    z-index        : 2;
-    border         : var(--accent-flat) solid @qb;
-
-    input[type='number'] {
-        width     : @qw;
-        height    : @qh;
-        text-align: center;
-        margin    : 0px;
-        margin-top: -2*@qb;
-        outline   : none;
-    }
-
-    >span {
-        display: contents;
-    }
-
-    &::before,
-    &::after {
-        position        : absolute;
-        background-color: var(--bg-rev);
-        z-index         : -1;
-        content         : '';
-        margin-top      : -@qb;
-    }
-
-    @duration: 0.3s;
-
-    &::before {
-        width     : @qw;
-        height    : @qh - @qb;
-        transition: height @duration ease @duration;
-    }
-
-    &::after {
-        width     : @qw - 2*@qb;
-        height    : @qh - @qb;
-        transition: width @duration;
-    }
-
-    &&:focus-within {
-        &::before {
-            height    : 0;
-            transition: height @duration;
-        }
-
-        &::after {
-            width     : 0;
-            transition: width @duration ease @duration;
-        }
-    }
 }

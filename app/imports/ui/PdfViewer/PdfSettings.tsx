@@ -39,30 +39,27 @@ export const PdfSettings: FunctionComponent<{ songId: string, consumer: (s: IPdf
 
   const {user} = useTracker(() => ({user: Meteor.user()}))
 
+  const getInitialState: () => IPdfViewerSettings = () =>  user?.profile?.pdfSettings?.[songId] || user?.profile?.pdfSettings?.___ || new PdfViewerStates() 
 
-  const initialState: IPdfViewerSettings = user?.profile?.pdfSettings?.[songId] || user?.profile?.pdfSettings?.___ || new PdfViewerStates() 
-
-
-  const [state, setState] = useState(initialState)
+  const [state, setState] = useState(getInitialState())
 
   const saveSettings = (_songId) => {
     const pdfSettings: {[k: string]: IPdfViewerSettings } = user?.profile?.pdfSettings || {}
-
     user.profile.pdfSettings = pdfSettings
-
     pdfSettings[_songId] = JSON.parse(JSON.stringify(state))
-
     Meteor.call('saveUser', user, (error) => console.log(error))
   }
 
+  const loadSongDefaults = () => { set(getInitialState()) }
+  const loadUserDefaults = () => {
+    const settings = user?.profile?.pdfSettings?.___ || new PdfViewerStates()
+    set(settings)
+  }
+  const loadStaticDefaults = () => { set(new PdfViewerStates()) }
 
-  const set = ( a: IPdfViewerSettings ) => {
-    setState(a)
-    consumer(a)
-  } 
+  const set = ( a: IPdfViewerSettings ) => { setState(a); consumer(a) } 
 
   useEffect( () => set(state), [])
-
 
   const handleColChange = (ev: React.ChangeEvent<HTMLInputElement>) => {
     set({ ...state, numCols: parseInt(ev.currentTarget.value) })
@@ -84,9 +81,9 @@ export const PdfSettings: FunctionComponent<{ songId: string, consumer: (s: IPdf
 
   }
 
-  const orientations: [string,ReactElement][] = [
+  const orientations: [string,ReactElement, string][] = [
     // eslint-disable-next-line react/jsx-key
-    ['p', Portrait ], ['l', Landscape]
+    ['p', Portrait, 'Portrait: 210mm x 297mm' ], ['l', Landscape, 'Landscape: 297mm x 210mm']
   ]
   const fontSizeHandles = []
 
@@ -103,36 +100,39 @@ export const PdfSettings: FunctionComponent<{ songId: string, consumer: (s: IPdf
 
   return <div className="pdfSettings">
     <div className="grid">
-      <div className="orientations">{
-        orientations.map(([value, icon], idx ) => (
+      <div className="title">Orientation</div>
+      <div className="setting orientations">{
+        orientations.map(([value, icon, help], idx ) => (
           <>
-            <input id={'or'+value}type="radio" name="orientation" value={value} checked={state.orientation == value} onChange={handleOrientationChange} />
-            <label htmlFor={'or'+value} key={idx}>{icon} </label>
+            <input alt={help} id={'or'+value}type="radio" name="orientation" value={value} checked={state.orientation == value} onChange={handleOrientationChange} />
+            <label title={help} htmlFor={'or'+value} key={idx}>{icon} </label>
           </>
         ))}
       </div>
-      <div className="columns">
+      <div className="title">Columns</div>
+      <div className="setting columns">
           {[...new Array(4).keys()].map(idx => <> 
           <input
             onChange={handleColChange}
             checked={idx+1 === state.numCols} type="radio" id={`numColumns${idx}`} name="numColumns" value={idx+1} />
-        <label htmlFor={'numColumns'+idx}>
+        <label htmlFor={'numColumns'+idx} title={`${idx+1}`}>
           <Columns numCols={idx+1} colWidth={10} gap={2} />
           </label>
            </>)} 
           </div>
-    </div>
 
-    {/* <h5>Font Sizes </h5> */}
     <div className="table">
       {fontSizeHandles}
     </div>
 
-    <div>
+    <div className="title">Save / Restore</div>
+    <div className="setting buttons">
       <button onClick={()=>saveSettings(songId)}>Save for this Song</button>
+      <button onClick={loadSongDefaults}>Load Saved for this Song</button>
+      <button onClick={()=>saveSettings('___')}>Save as User Default</button>
+      <button onClick={loadUserDefaults}>Load User Defaults</button>
+      <button onClick={loadStaticDefaults}>Load Defaults</button>
     </div>
-    <div>
-      <button onClick={()=>saveSettings('___')}>Save as Default</button>
     </div>
   </div>
 

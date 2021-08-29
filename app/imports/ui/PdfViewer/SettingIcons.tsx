@@ -39,7 +39,7 @@ export const Columns: FunctionComponent<ColumnProps> = memo(({numCols=2, height=
   </svg>
 })
 
-const height = 55; const width = 35;
+const height = 50; const width = 35;
 
 export const Landscape = <svg height={width} width={height}>
   <rect x={0} y={0} width={height} height={width} className="bold" />

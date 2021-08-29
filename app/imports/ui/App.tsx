@@ -24,6 +24,7 @@ import { MobileMenu } from './MobileMenu'
 import { EditorAdvanced, getEditorModule } from './AdvancedEditor/EditorAdvanced';
 import { DynamicModuleLoader } from 'redux-dynamic-modules';
 import { PdfViewer } from './PdfViewer/PdfViewer';
+import Printer from './Printer';
 
 const empty_song = {
     title: "Neues Lied",
@@ -187,6 +188,27 @@ class App extends React.Component<AppProps, AppStates> {
                     )} />
 
 
+                    <Route path='/print/:author/:title' render={(routerProps) => {
+                        let song = getSong(routerProps.match.params);
+
+                        if (song === undefined) {
+                            return nA404;
+                        }
+
+                        return (
+                            <>
+                                <TrackingDocumentTitle title={"Hölibu | " + song.author + ": " + song.title}/>
+                                <Printer
+                                    song={song}
+                                    toggleTheme={this.toggleTheme}
+                                    themeDark={theme.includes('dark')}
+                                    {...routerProps}
+                                />
+                            </>
+                        )
+                    }} />
+
+
                     <Route path='/view/:author/:title' render={(routerProps) => {
                         let song = getSong(routerProps.match.params);
 
@@ -216,9 +238,9 @@ class App extends React.Component<AppProps, AppStates> {
 
                         // In any case, the editor is rendered. However, a re-render is triggered after the song's
                         // revisions have been loaded.
-                        let editor; 
+                        let editor;
                         if( Meteor.settings.public.isAdvancedEditor ) {
-                            editor= this.props.revisionsLoading ? 
+                            editor= this.props.revisionsLoading ?
         <DynamicModuleLoader modules={[getEditorModule()]}> <EditorAdvanced song={song} /></DynamicModuleLoader> :
          <DynamicModuleLoader modules={[getEditorModule()]}> <EditorAdvanced song={song} /></DynamicModuleLoader>; } else {
                             editor= this.props.revisionsLoading ? <Editor song={song} /> : <Editor song={song} />;
@@ -301,7 +323,7 @@ class App extends React.Component<AppProps, AppStates> {
                 </Switch>
                 </div>
             </div>
-            </Provider> 
+            </Provider>
             </BrowserRouter>
         );
     }

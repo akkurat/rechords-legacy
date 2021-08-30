@@ -1,7 +1,70 @@
 .pdfgrid {
-    width : 100%;
-    height: 100%;
-    margin: 0;
+    width                : 100%;
+    height               : 100%;
+    margin               : 0;
+    display              : grid;
+    grid-template-columns: 1fr;
+    grid-template-rows   : 1fr;
+
+    >* {
+        grid-column : ~"1 / 1";
+        grid-row    : ~"1 / 1";
+        align-self  : center;
+        justify-self: center;
+    }
+
+    object {
+        z-index: 1;
+    }
+    div { 
+        opacity: 0;
+        transition: opacity 1s;
+        &.loading{
+            width           : 100%;
+            height          : 100%;
+            background-color: black;
+            z-index         : 2;
+        }
+    }
+
+    &.loading {
+
+        div {
+            transition: opacity 1s 0.5s;
+        }
+        .loading {
+            opacity: 1;
+            background-color: var(--bg-list);
+        }
+
+        .spinner {
+            opacity: 1;
+            width  : 10%;
+            height : 10%;
+            z-index: 3;
+
+            svg {
+                fill: var(--accent);
+                stroke: none;
+            }
+
+            animation: lds-dual-ring 2s ease-in-out infinite;
+        }
+    }
+}
+
+@keyframes lds-dual-ring {
+    0% {
+        transform: scale(0.01)
+    }
+
+    70% {
+        transform: scale(2);
+    }
+    100% {
+        transform: scale(0.01)
+    }
+    
 }
 
 @qb : 2px;
@@ -15,15 +78,17 @@
 .pdfSettings {
     .quickinput svg {
         stroke-width: 2px;
-        fill  : var(--text-sidebar);
+        fill        : var(--text-sidebar);
+
         polygon:hover {
-        fill  : var(--accent);
+            fill: var(--accent);
         }
     }
+
     svg {
         stroke: var(--text-sidebar);
         fill  : none;
-        
+
 
         .fine {
             stroke-width: 1px;
@@ -75,6 +140,12 @@
         &:checked+label {
             svg {
                 stroke: var(--accent)
+            }
+        }
+
+        +label:hover {
+            svg {
+                stroke: var(--accent-flat)
             }
         }
     }

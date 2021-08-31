@@ -9,17 +9,16 @@ import Drawer from '../Drawer'
 import { NavLink } from 'react-router-dom'
 import './PdfViewer.less'
 import classNames from 'classnames'
-import { clef } from './SettingIcons'
-import { PDF } from '../Icons.jsx'
+import { PDF, Clef } from '../Icons'
 import { useState } from 'react'
 
 const debug = true
 
-export class PdfViewer extends React.Component<IViewerProps, { pdfBlobUrl: string, loading: boolean }> {
+export class PdfViewer extends React.Component<IViewerProps, { loading: boolean, urls:string[] }> {
   first: boolean
   constructor(props: IViewerProps) {
     super(props)
-    this.state = { pdfBlobUrl: '', loading: true }
+    this.state = { loading: true, urls:[] }
   }
 
 
@@ -30,13 +29,18 @@ export class PdfViewer extends React.Component<IViewerProps, { pdfBlobUrl: strin
     generatePdf = async (settings: IPdfViewerSettings) => {
       const vdom = this.props.song.getHtml()
       const pdfBlobUrl = await jsPdfGenerator(vdom, settings)
-      this.setState(
-        os => {
-          setTimeout(() => URL.revokeObjectURL(os.pdfBlobUrl), 10e3) // freeing old url for memory
-          setTimeout(() => this.setState({loading: false}), 2e3 )
-          return { pdfBlobUrl }
+      this.setState( s => {s.urls.push(pdfBlobUrl); console.log(s.urls); return {urls:s.urls}})
+      console.log('pushed')
+      
+      setTimeout(() => {
+        if( this.state.urls.length > 1 ) {
+        const url = this.state.urls.shift();
+         URL.revokeObjectURL(url)
         }
-      )
+      this.setState( { loading:false } )
+      }
+         , 2e3) // freeing old url for memory
+      
     }
 
     _setSettings = debounce((a: IPdfViewerSettings) => this.generatePdf(a), 500)
@@ -52,6 +56,7 @@ export class PdfViewer extends React.Component<IViewerProps, { pdfBlobUrl: strin
       // let pdfBlob = 
 
 
+      console.log('render')
 
       const s = this.props.song
 
@@ -62,9 +67,8 @@ export class PdfViewer extends React.Component<IViewerProps, { pdfBlobUrl: strin
           <PdfSettings consumer={this.setSettings} songId={this.props.song._id} />
         </Drawer>
         <div className={classNames({pdfgrid: true, loading: this.state.loading})} >
-          <div className="loading"></div>
+          {this.state.urls.map( u => <PdfObject key={u} url={u}></PdfObject> )}
           <PdfSpinner />
-          <PdfObject url={this.state.pdfBlobUrl}></PdfObject>
         </div>
       </>
 
@@ -80,7 +84,7 @@ export class PdfViewer extends React.Component<IViewerProps, { pdfBlobUrl: strin
 
 
 
-const icons = [<PDF />, clef]
+const icons = [<PDF />, <Clef />]
 const PdfSpinner: React.FunctionComponent<{}> = () => {
 
   const [idx, setIdx] = useState(0)

@@ -5,6 +5,7 @@
     display              : grid;
     grid-template-columns: 1fr;
     grid-template-rows   : 1fr;
+    grid-auto-flow       : row;
 
     >* {
         grid-column : ~"1 / 1";
@@ -14,43 +15,43 @@
     }
 
     object {
-        z-index: 1;
+        opacity  : 0;
+        animation: fadein 0.3s linear 1.2s forwards;
     }
-    div { 
-        opacity: 0;
-        transition: opacity 1s;
-        &.loading{
-            width           : 100%;
-            height          : 100%;
-            background-color: black;
-            z-index         : 2;
+
+    .spinner {
+        opacity   : 0;
+        transition: opacity 2s, transform cubic-bezier(0.075, 0.82, 0.165, 1) 2s;
+        width     : 10%;
+        height    : 10%;
+        transform: scale(0.01);
+
+        svg {
+            fill  : var(--accent);
+            stroke: none;
         }
     }
 
     &.loading {
 
-        div {
-            transition: opacity 1s 0.5s;
-        }
-        .loading {
-            opacity: 1;
-            background-color: var(--bg-list);
-        }
-
         .spinner {
-            opacity: 1;
-            width  : 10%;
-            height : 10%;
-            z-index: 3;
-
-            svg {
-                fill: var(--accent);
-                stroke: none;
-            }
-
-            animation: lds-dual-ring 2s ease-in-out infinite;
+            transform: scale(1);
+            opacity   : 1;
+            transition: opacity 3s, transform 3s ;
+            animation: lds-dual-ring 2s ease-in-out infinite both;
         }
     }
+}
+
+@keyframes fadein {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+
 }
 
 @keyframes lds-dual-ring {
@@ -59,12 +60,12 @@
     }
 
     70% {
-        transform: scale(2);
+        transform: scale(3);
     }
+
     100% {
         transform: scale(0.01)
     }
-    
 }
 
 @qb : 2px;

@@ -2,6 +2,7 @@ import { useTracker } from 'meteor/react-meteor-data'
 import * as React from 'react'
 import { useEffect } from 'react'
 import { FunctionComponent, ReactElement, useState } from 'react'
+import { useClickIndicator } from './ClickIndicator'
 import { QuickInput } from './QuickInput'
 import { Columns, Landscape, Portrait } from './SettingIcons'
 
@@ -98,41 +99,43 @@ export const PdfSettings: FunctionComponent<{ songId: string, consumer: (s: IPdf
   }
 
 
+  const [listener, Outlet] = useClickIndicator()
   return <div className="pdfSettings">
     <div className="grid">
       <div className="title">Orientation</div>
       <div className="setting orientations">{
         orientations.map(([value, icon, help], idx ) => (
           <>
-            <input alt={help} id={'or'+value}type="radio" name="orientation" value={value} checked={state.orientation == value} onChange={handleOrientationChange} />
-            <label title={help} htmlFor={'or'+value} key={idx}>{icon} </label>
+            <input onClick={listener} alt={help} id={'or'+value}type="radio" name="orientation" value={value} checked={state.orientation == value} onChange={handleOrientationChange} />
+            <label title={help} htmlFor={'or'+value} key={idx}>{icon}</label>
+            <Outlet />
           </>
         ))}
       </div>
       <div className="title">Columns</div>
       <div className="setting columns">
-          {[...new Array(4).keys()].map(idx => <> 
+        {[...new Array(4).keys()].map(idx => <> 
           <input
             onChange={handleColChange}
             checked={idx+1 === state.numCols} type="radio" id={`numColumns${idx}`} name="numColumns" value={idx+1} />
-        <label htmlFor={'numColumns'+idx} title={`${idx+1}`}>
-          <Columns numCols={idx+1} colWidth={10} gap={2} />
+          <label htmlFor={'numColumns'+idx} title={`${idx+1}`}>
+            <Columns numCols={idx+1} colWidth={10} gap={2} />
           </label>
-           </>)} 
-          </div>
+        </>)} 
+      </div>
 
-    <div className="table">
-      {fontSizeHandles}
-    </div>
+      <div className="table">
+        {fontSizeHandles}
+      </div>
 
-    <div className="title">Save / Restore</div>
-    <div className="setting buttons">
-      <button onClick={()=>saveSettings(songId)}>Save for this Song</button>
-      <button onClick={loadSongDefaults}>Load Saved for this Song</button>
-      <button onClick={()=>saveSettings('___')}>Save as User Default</button>
-      <button onClick={loadUserDefaults}>Load User Defaults</button>
-      <button onClick={loadStaticDefaults}>Load Defaults</button>
-    </div>
+      <div className="title">Save / Restore</div>
+      <div className="setting buttons">
+        <button onClick={()=>saveSettings(songId)}>Save for this Song</button>
+        <button onClick={loadSongDefaults}>Load Saved for this Song</button>
+        <button onClick={()=>saveSettings('___')}>Save as User Default</button>
+        <button onClick={loadUserDefaults}>Load User Defaults</button>
+        <button onClick={loadStaticDefaults}>Load Defaults</button>
+      </div>
     </div>
   </div>
 

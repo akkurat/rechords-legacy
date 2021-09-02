@@ -1,10 +1,12 @@
 import { useTracker } from 'meteor/react-meteor-data'
+import Slider from 'rc-slider'
 import * as React from 'react'
 import { useEffect } from 'react'
 import { FunctionComponent, ReactElement, useState } from 'react'
 import { useClickIndicator } from './ClickIndicator'
 import { QuickInput } from './QuickInput'
 import { Columns, Landscape, Portrait } from './SettingIcons'
+import * as I from '../Icons.jsx'
 
 // TODO: save settings like liked songs in user db
 
@@ -28,7 +30,7 @@ export interface IPdfViewerSettings {
     orientation: 'l' | 'p'
     sizes: ITextSizes
 }
-export interface ITextSizes {
+export interface ITextSizes extends Record<string,number> {
     header: number
     section: number
     text: number
@@ -40,7 +42,10 @@ export const PdfSettings: FunctionComponent<{ songId: string, consumer: (s: IPdf
 
   const {user} = useTracker(() => ({user: Meteor.user()}))
 
-  const getInitialState: () => IPdfViewerSettings = () =>  user?.profile?.pdfSettings?.[songId] || user?.profile?.pdfSettings?.___ || new PdfViewerStates() 
+  type sug = 's' | 'u' | 'g'
+
+  const settings: Record<sug, IPdfViewerSettings> = {s: user?.profile?.pdfSettings?.[songId], u: user?.profile?.pdfSettings?.___, g: new PdfViewerStates() }
+  const getInitialState: () => IPdfViewerSettings = () =>  settings.s || settings.u || settings.g
 
   const [state, setState] = useState(getInitialState())
 
@@ -52,10 +57,7 @@ export const PdfSettings: FunctionComponent<{ songId: string, consumer: (s: IPdf
   }
 
   const loadSongDefaults = () => { set(getInitialState()) }
-  const loadUserDefaults = () => {
-    const settings = user?.profile?.pdfSettings?.___ || new PdfViewerStates()
-    set(settings)
-  }
+  const loadUserDefaults = () => { set(settings.u || settings.g) }
   const loadStaticDefaults = () => { set(new PdfViewerStates()) }
 
   const set = ( a: IPdfViewerSettings ) => { setState(a); consumer(a) } 
@@ -86,12 +88,30 @@ export const PdfSettings: FunctionComponent<{ songId: string, consumer: (s: IPdf
     // eslint-disable-next-line react/jsx-key
     ['p', Portrait, 'Portrait: 210mm x 297mm' ], ['l', Landscape, 'Landscape: 297mm x 210mm']
   ]
+
+  
   const fontSizeHandles = []
 
   for (const fs in state.sizes) {
     if (Object.prototype.hasOwnProperty.call(state.sizes, fs)) {
+
+
+      // const marks = {}
+      // for( const k of Object.keys(settings) ) {
+      //   if( settings[k]?.sizes ) { 
+      //     const sizes = settings[k as sug].sizes
+      //     const size = sizes[fs]
+      //     marks[size]= k 
+      //   }
+      // }
+
+
       fontSizeHandles.push(<div className="fontsize">
         <label htmlFor={'font'+fs}>{fs}</label>
+        <Slider 
+          min={1} max={settings.g.sizes[fs]*2-1} value={state.sizes[fs]} onChange={s => handleFontSize(fs, s)}
+          // marks={marks}
+        />
         <QuickInput id={'font'+fs} value={state.sizes[fs]} onChange={size => handleFontSize(fs, size)} />
       </div>
       )
@@ -128,13 +148,25 @@ export const PdfSettings: FunctionComponent<{ songId: string, consumer: (s: IPdf
         {fontSizeHandles}
       </div>
 
-      <div className="title">Save / Restore</div>
-      <div className="setting buttons">
-        <button onClick={()=>saveSettings(songId)}>Save for this Song</button>
-        <button onClick={loadSongDefaults}>Load Saved for this Song</button>
-        <button onClick={()=>saveSettings('___')}>Save as User Default</button>
-        <button onClick={loadUserDefaults}>Load User Defaults</button>
-        <button onClick={loadStaticDefaults}>Load Defaults</button>
+      <div className="save-row">
+        <div className="icon"><I.Note /></div>
+        <div className="buttons">
+          <button onClick={()=>saveSettings(songId)} className="icon"><I.Ok /></button>
+          <button onClick={loadSongDefaults} className="icon"><I.Cancel /></button>
+        </div>
+      </div>
+      <div className="save-row">
+        <div className="icon"><I.User /></div>
+        <div className="buttons">
+          <button onClick={()=>saveSettings('___')} className="icon"><I.Ok /></button>
+          <button onClick={loadUserDefaults} className="icon"><I.Cancel /></button>
+        </div>
+      </div>
+      <div className="save-row">
+        <div className="icon"><I.Globe /></div>
+        <div className="buttons">
+          <button onClick={loadStaticDefaults} className="icon"><I.Cancel /></button>
+        </div>
       </div>
     </div>
   </div>

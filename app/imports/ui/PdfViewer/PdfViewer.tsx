@@ -35,11 +35,11 @@ export class PdfViewer extends React.Component<IViewerProps, { loading: boolean,
       setTimeout(() => {
         if( this.state.urls.length > 1 ) {
         const url = this.state.urls.shift();
-         URL.revokeObjectURL(url)
+         URL.revokeObjectURL(url)// freeing old url for memory
         }
       this.setState( { loading:false } )
       }
-         , 2e3) // freeing old url for memory
+         , 2e3) 
       
     }
 

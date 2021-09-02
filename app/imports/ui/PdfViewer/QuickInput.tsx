@@ -69,27 +69,10 @@ export const QuickInput: FunctionComponent<{id: string, value: number, onChange:
 
 
   const intensity = 1.2;
-  return <div className="quickinput">
-    <svg width="120px" height="40px" overflow="visible">
-      <g transform="translate(0,20)">
-      <polyline points="-100,0, 40,0" />
-      <polygon onClick={down} points={`40,0 50,${intensity*10} 60,0`} />
-      <polyline points="60,0 100,0" />
-      <polygon onClick={up} points={`100,0 110,${-10*intensity} 120,0`} />
-      </g>
-      <foreignObject x="65px" y="0px" height="20px" width="30px">
-      <input type="number" min="1" max="200" style={{ width: "30px", height: "20px", textAlign: 'center'}}
+  return <input type="number" min="1" max="200" 
         onKeyDown={handleKey} id={id} onFocus={ev => ev.target.select()}
         value={value} 
         onChange={ev => onChange( parseFloat(ev.currentTarget.value))} />
-      </foreignObject>
-      {/* <text x="50%" y="50%" textAnchor="middle" alignmentBaseline="middle">
-        Gagi
-      </text> */}
-    </svg>
-
-
-  </div>
 }
 
 function inc0(keyEvent: keysEvent) {

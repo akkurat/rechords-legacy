@@ -20,13 +20,13 @@
     }
 
     .spinner {
-        pointer-events: none;
-        opacity   : 0;
-        width     : 10%;
-        height    : 10%;
-        display: flex;
+        pointer-events : none;
+        opacity        : 0;
+        width          : 10%;
+        height         : 10%;
+        display        : flex;
         justify-content: center;
-        align-items: center;
+        align-items    : center;
 
         svg {
             fill  : var(--accent);
@@ -38,7 +38,7 @@
 
         .spinner {
             transform: scale(1);
-            opacity   : 1;
+            opacity  : 1;
             animation: scale-up 0.7s ease-in-out forwards;
         }
     }
@@ -61,7 +61,7 @@
     }
 
     100% {
-        opacity: 0;
+        opacity  : 0;
         transform: scale(200);
     }
 }
@@ -108,25 +108,42 @@
         box-sizing: border-box;
     }
 
-    button {
-        width: 170px;
+    .icon {
+        width      : 40px;
+        height     : 40px;
+        font-weight: bold;
+        color      : var(--accent);
 
-        &.ud {
-            width      : 15px;
-            font-weight: bold;
-            color      : var(--accent)
+        svg {
+            width : inherit;
+            height: inherit;
+            fill  : var(--gray);
+            stroke: none;
         }
+    }
 
-        border-radius : 3px;
-        height        : @qh;
-        border        : var(--text-sidebar) solid @qb;
+    .save-row {
+        display        : flex;
+        display        : flex;
+        justify-content: center;
+        align-items    : center;
+        padding        : 5px;
+        margin         : 10px
+    }
 
-        &:hover {
-            border: var(--accent) solid @qb;
-            color : var(--accent);
+    .buttons {
+
+        flex: 1;
+
+        border-radius: 3px;
+        border       : var(--text-sidebar) solid @qb;
+
+        .icon :hover {
+            fill: var(--accent);
         }
 
         margin         : 0 10px;
+        padding        : 2px;
         display        : flex;
         justify-content: center;
         align-items    : center;
@@ -211,15 +228,48 @@
         display        : flex;
         flex-wrap      : nowrap;
         justify-content: space-between;
+        gap            : 5px;
 
-        >* {
-            flex: 0.5
+
+        label {
+            flex: 0 0 50px
+        }
+
+
+        div.rc-slider {
+            width: 50px;
+            flex : 1 0 auto;
+
+            .rc-slider-rail {
+                background-color: var(--gray-light);
+            }
+
+            .rc-slider-track {
+                background-color: var(--gray-dark);
+            }
+
+            .rc-slider-handle {
+                border-color    : var(--gray-dark);
+                background-color: var(--text-inverted);
+            }
+        }
+
+
+        input[type='number'] {
+            flex      : 0 0 20px;
+            width     : 0px;
+            text-align: right;
         }
 
     }
 }
 
 .quickinput {
+    input {
+        width : 30px;
+        height: 20px;
+    }
+
     display    : flex;
     flex-wrap  : nowrap;
     align-items: flex-end;

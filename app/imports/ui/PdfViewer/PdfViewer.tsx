@@ -2,7 +2,7 @@ import * as React from 'react'
 
 import { IViewerProps } from '../Viewer'
 import { PdfObject } from './PdfObject'
-import { IPdfViewerSettings, PdfSettings, PdfViewerStates } from './PdfSettings'
+import { IPdfViewerSettings, PdfSettings } from './PdfSettings'
 import { jsPdfGenerator } from './PdfRenderer'
 import { debounce } from 'underscore'
 import Drawer from '../Drawer'
@@ -35,7 +35,7 @@ export class PdfViewer extends React.Component<IViewerProps, { loading: boolean,
       setTimeout(() => {
         if( this.state.urls.length > 1 ) {
         const url = this.state.urls.shift();
-         URL.revokeObjectURL(url)// freeing old url for memory
+         URL.revokeObjectURL(url)// freeing old url from memory
         }
       this.setState( { loading:false } )
       }

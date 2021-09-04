@@ -1,10 +1,10 @@
 import * as React from 'react';
 import parse, { domToReact } from 'html-react-parser';
-import ChrodLib from "../api/libchrod";
-import { Song } from '../api/collections';
+import ChrodLib from '@/api/libchrod';
+import { Song } from '@/api/collections';
 import { Abcjs } from './Abcjs'
 import Kord from "./Kord.js";
-import { userMayWrite } from '../api/helpers';
+import { isRefId, userMayWrite } from '../api/helpers';
 import { Element } from 'domhandler/lib/node';
 
 type SheetProps = {
@@ -27,7 +27,7 @@ const Sheet = ({ song, transpose, hideChords, processVdom, style }: SheetProps) 
             let elem = vdom[i];
             if (elem.props) {
                 let id = elem.props.id;
-                if (id && id.startsWith('sd-ref')) {
+                if (isRefId(id)) {
                     sections_dict.set(id, elem);  // add section to dictionary
                 }
             }

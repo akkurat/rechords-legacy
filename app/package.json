@@ -3,9 +3,8 @@
   "private": true,
   "scripts": {
     "start": "meteor run",
+    "preinstall": "cd ../showdown-rechords && npm run prepare",
     "debug": "meteor run --inspect",
-    "preinstall": "grunt --gruntfile ../showdown-rechords/Gruntfile.js prep-release --force",
-    "postinstall-ignore": "rm -f node_modules/showdown-rechords && cp -R ../showdown-rechords node_modules/",
     "lint": "eslint imports/**"
   },
   "dependencies": {
@@ -65,6 +64,8 @@
     "@types/react-svg-inline": "^2.1.2",
     "@types/react-table": "^7.0.6",
     "@types/requirejs": "^2.1.32",
+    "@types/showdown": "^1.9.4",
+    "@types/xmldom": "^0.1.31",
     "@typescript-eslint/eslint-plugin": "^4.29.2",
     "@typescript-eslint/parser": "^4.29.2",
     "babel-plugin-inline-react-svg": "^1.1.2",

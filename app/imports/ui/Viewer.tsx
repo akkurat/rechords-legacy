@@ -4,9 +4,7 @@ import TranposeSetter from "./TransposeSetter.jsx";
 import ChrodLib from "../api/libchrod";
 import { Song } from '../api/collections';
 import Drawer from './Drawer';
-import { Abcjs } from './Abcjs'
 import { ColumnExpander } from "./ColumnGrid.js";
-import Kord from "./Kord.js";
 import {userMayWrite} from '../api/helpers';
 import Sheet from './Sheet';
 
@@ -24,7 +22,6 @@ interface ViewerStates {
   relTranspose: number,
   inlineReferences: boolean,
   showChords: boolean,
-  columns: boolean,
   autoscroll: any
 }
 export default class Viewer extends React.Component<RouteComponentProps & IViewerProps, ViewerStates> implements ITransposeHandler {
@@ -35,7 +32,6 @@ export default class Viewer extends React.Component<RouteComponentProps & IViewe
       relTranspose: this.getInitialTranspose(),
       inlineReferences: false,
       showChords: true,
-      columns: false,
       autoscroll: undefined
     };
 
@@ -125,10 +121,6 @@ export default class Viewer extends React.Component<RouteComponentProps & IViewe
     this.setState( state => ({ showChords: !state.showChords }));
   };
 
-  toggleColumns = () => {
-    this.setState( state => ({ columns: !state.columns }));
-  };
-
   toggleInlineReferences = () => {
     this.setState(state => ({ inlineReferences: !state.inlineReferences }))
   };
@@ -158,9 +150,6 @@ export default class Viewer extends React.Component<RouteComponentProps & IViewe
         </div>
         <div onClick={this.props.toggleTheme} id={'theme-toggler'} >
           {this.props.themeDark ? <Day /> : <Night />}
-        </div>
-        <div onClick={this.toggleColumns} id={'layout-toggler'} >
-          {this.state.columns ? <LayoutH /> : <LayoutV />}
         </div>
         <div id="pdfLink">
           <NavLink to={`/pdf/${this.props.song.author_}/${this.props.song.title_}`}><PDF /></NavLink>
@@ -195,7 +184,7 @@ export default class Viewer extends React.Component<RouteComponentProps & IViewe
         </div>
 
         <div
-          className={'content' + (this.showMultiColumns() ? ' multicolumns':'')}
+          className={'content'}
           id="chordsheet" ref={this.refChordsheet}
           onContextMenu={this.handleContextMenu}
         >
@@ -208,36 +197,7 @@ export default class Viewer extends React.Component<RouteComponentProps & IViewe
     );
   }
 
-  private showMultiColumns() {
-    return this.state.columns;
-  }
 }
 
-function splitSongVdom(vdom: React.ReactElement[]): React.ReactElement[] {
-  const sheetHeader = vdom.filter(el => el.props?.className == 'sd-header')
-    .map(el => React.cloneElement(el))
 
-  const sheetContent = vdom.filter(el => el.props?.className != 'sd-header')
-    .filter(el => typeof el == 'object')
-    .map(el => React.cloneElement(el))
-
-  // @ts-ignore
-  return [sheetHeader, sheetContent];
-
-}
-
-const ChordSheet = (props: React.PropsWithChildren<{showMultiColumns: boolean, song: Song}> ) => {
-
-  const vdom = props.children;
-  if (props.showMultiColumns) {
-    const [sheetHeader, sheetContent]: React.ReactNode[] = splitSongVdom(vdom);
-
-    return <ColumnExpander song_id={props.song?._id} header={sheetHeader}>
-      {sheetContent}
-    </ColumnExpander>
-  } else {
-    return vdom;
-  }
-
-}
 

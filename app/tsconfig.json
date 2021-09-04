@@ -11,6 +11,9 @@
 		"sourceMap": true,
 		"downlevelIteration": true,
 		"moduleResolution": "node",
+		"paths": {
+			"@/*": ["imports/*"]
+		},
 							    
 		"plugins": [
 			{

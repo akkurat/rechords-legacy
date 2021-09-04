@@ -1,15 +1,16 @@
 import { Mongo } from "meteor/mongo";
 import { _ } from "meteor/underscore";
 
-var DATACHORD = 'data-chord';
-var showdown = require("showdown");
-var rmd = require("showdown-rechords");
-var DOMParser = require("xmldom").DOMParser;
-var Parser = require("html-react-parser");
-var slug = require("slug");
-var xss = require("xss");
+import * as showdown from 'showdown'
 
-var options = {
+const DATACHORD = 'data-chord'
+import {showdownRechords as rmd} from 'showdown-rechords'
+import { DOMParser } from 'xmldom'
+import Parser from 'html-react-parser'
+import  slug from 'slug'
+import  * as xss from 'xss'
+
+const options: XSS.IFilterXSSOptions = {
   whiteList: {
     a: ["href", "title"],
     span: ["class"],
@@ -38,7 +39,7 @@ var options = {
 };
 
 const converter = new showdown.Converter({ 
-  extensions: [rmd],
+  extensions: rmd,
   striketrough: true,
   ghCodeBlocks: true,
   smoothLivePreview: true

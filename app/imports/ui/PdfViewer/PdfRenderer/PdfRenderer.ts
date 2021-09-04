@@ -1,5 +1,6 @@
-import { ChordPdfJs } from '../../api/comfyPdfJs'
-import { IPdfViewerSettings } from './PdfSettings'
+import { ChordPdfJs } from '@/api/comfyPdfJs'
+import { createElement } from 'react'
+import { IPdfViewerSettings } from '../PdfSettings'
 
 export async function jsPdfGenerator(vdom, settings: IPdfViewerSettings, debug = false) {
 
@@ -13,7 +14,24 @@ export async function jsPdfGenerator(vdom, settings: IPdfViewerSettings, debug =
   const mdHtml = new DOMParser().parseFromString(vdom, 'text/html')
 
 
-  const sections = mdHtml.querySelectorAll('section')
+  const sections_ = mdHtml.querySelectorAll('section,.ref')
+
+  const sections = []
+  const lookupMap = new Map()
+  for( const el of sections_ ) {
+    if (el.tagName == 'SECTION') {
+      lookupMap.set( el.id, el )
+      sections.push(el); continue
+    }
+    if( lookupMap.get(el.textContent) ) sections.push(lookupMap.get(el.textContent))
+    else {
+      const section = document.createElement('section')
+      const h3 = document.createElement('h3')
+      h3.textContent = '|:'+el.textContent
+      section.appendChild(h3)
+      sections.push( section )
+    }
+  }
 
   const cdoc = new ChordPdfJs({}, [settings.orientation, 'mm', 'a4'])
 
@@ -92,7 +110,7 @@ export async function jsPdfGenerator(vdom, settings: IPdfViewerSettings, debug =
 
   // to think about: instead of simulation flag simulation cursor. that 
   // would simplify everthingj
-  function placeSection(section: HTMLElement, simulate = false): number {
+  function placeSection(section: Element, simulate = false): number {
 
     let advance_y = 0
 

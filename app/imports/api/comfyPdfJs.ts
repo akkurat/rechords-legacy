@@ -44,6 +44,7 @@ export class ComfyPdfJs {
      * @param content 
      */
     textLine(content: string, simulate=false ) : {w: number, h: number}{
+        if(!content) {return {w:0, h:0}}
         const dims = this.doc.getTextDimensions(content)
         if(!simulate) {
             this.doc.text(content, this.cursor.x, this.cursor.y, {baseline: 'top'})

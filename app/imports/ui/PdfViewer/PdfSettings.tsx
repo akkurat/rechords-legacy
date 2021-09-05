@@ -15,6 +15,7 @@ import * as I from '../Icons.jsx'
 export class PdfViewerStates implements IPdfViewerSettings {
     numCols = 3
     orientation: 'l' | 'p' = 'l'
+    inlineReferences: false
     sizes = {
       header: 50,
       section: 20,
@@ -28,6 +29,7 @@ export class PdfViewerStates implements IPdfViewerSettings {
 export interface IPdfViewerSettings {
     numCols: number;
     orientation: 'l' | 'p'
+    inlineReferences: boolean
     sizes: ITextSizes
 }
 export interface ITextSizes extends Record<string,number> {
@@ -71,6 +73,10 @@ export const PdfSettings: FunctionComponent<{ songId: string, consumer: (s: IPdf
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     //@ts-ignore
     set({ ...state, orientation: event.currentTarget.value })
+  }
+
+  const handleInlineChanged = (val: boolean) => {
+    set({...state, inlineReferences: val})
   }
 
   const handleFontSize = (name, value) => {
@@ -167,6 +173,11 @@ export const PdfSettings: FunctionComponent<{ songId: string, consumer: (s: IPdf
         <div className="buttons">
           <button onClick={loadStaticDefaults} className="icon"><I.Cancel /></button>
         </div>
+      </div>
+      <div className="title">References</div>
+      <div className="setting">
+        <input id="inlineShit" type="checkbox" onClick={e=> handleInlineChanged(e.target.checked)} />
+        <label htmlFor="inlineShit" title="Repeat text of each Reference?" >Inline</label>
       </div>
     </div>
   </div>

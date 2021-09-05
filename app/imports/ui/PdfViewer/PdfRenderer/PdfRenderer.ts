@@ -1,5 +1,5 @@
 import { ChordPdfJs } from '@/api/comfyPdfJs'
-import { createElement } from 'react'
+import { refPrefix } from 'showdown-rechords'
 import { IPdfViewerSettings } from '../PdfSettings'
 
 export async function jsPdfGenerator(vdom, settings: IPdfViewerSettings, debug = false) {
@@ -16,15 +16,26 @@ export async function jsPdfGenerator(vdom, settings: IPdfViewerSettings, debug =
 
   const sections_ = mdHtml.querySelectorAll('section,.ref')
 
-  const sections = []
-  const lookupMap = new Map()
+  const sections: Element[] = []
+  const lookupMap = new Map<string, Element>()
   for( const el of sections_ ) {
     if (el.tagName == 'SECTION') {
       lookupMap.set( el.id, el )
       sections.push(el); continue
     }
-    if( lookupMap.get(el.textContent) ) sections.push(lookupMap.get(el.textContent))
-    else {
+
+    const uuid = refPrefix + el.querySelector('strong').textContent.trim()
+    const otherContent = el.childNodes[1]
+    const content = lookupMap.get(uuid)
+    if ( settings.inlineReferences && content ) { 
+      const cloneContent = content.cloneNode(true)
+      if(otherContent) { 
+        const addText = document.createElement('h4')
+        addText.textContent = otherContent.textContent
+        cloneContent.appendChild(addText)
+      }
+      sections.push(cloneContent) 
+    } else {
       const section = document.createElement('section')
       const h3 = document.createElement('h3')
       h3.textContent = '|:'+el.textContent
@@ -124,7 +135,9 @@ export async function jsPdfGenerator(vdom, settings: IPdfViewerSettings, debug =
     }
 
     cdoc.setFont('RoCo', 'bold', fos.section)
-    advance_y += cdoc.textLine(section.querySelector('h3').innerText, simulate).h
+    advance_y += cdoc.textLine(section.querySelector('h3')?.innerText, simulate).h
+    cdoc.setFont('RoCo', 'bold', fos.text)
+    advance_y += cdoc.textLine(section.querySelector('h4')?.innerText, simulate).h
 
     for (const line of lines) {
       resetX()

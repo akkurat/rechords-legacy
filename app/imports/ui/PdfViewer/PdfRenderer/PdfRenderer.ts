@@ -14,7 +14,7 @@ export async function jsPdfGenerator(vdom, settings: IPdfViewerSettings, debug =
   const mdHtml = new DOMParser().parseFromString(vdom, 'text/html')
 
 
-  const sections_ = mdHtml.querySelectorAll('section,.ref')
+  const sections_ = mdHtml.body.children
 
   const sections: Element[] = []
   const lookupMap = new Map<string, Element>()
@@ -22,25 +22,29 @@ export async function jsPdfGenerator(vdom, settings: IPdfViewerSettings, debug =
     if (el.tagName == 'SECTION') {
       lookupMap.set( el.id, el )
       sections.push(el); continue
-    }
+    } if( el.classList.contains('ref') ) {
 
-    const uuid = refPrefix + el.querySelector('strong').textContent.trim()
-    const otherContent = el.childNodes[1]
-    const content = lookupMap.get(uuid)
-    if ( settings.inlineReferences && content ) { 
-      const cloneContent = content.cloneNode(true)
-      if(otherContent) { 
-        const addText = document.createElement('h4')
-        addText.textContent = otherContent.textContent
-        cloneContent.appendChild(addText)
+      const uuid = refPrefix + el.querySelector('strong').textContent.trim()
+      const otherContent = el.childNodes[1]
+      const content = lookupMap.get(uuid)
+      if ( settings.inlineReferences && content ) { 
+        const cloneContent = content.cloneNode(true) as Element
+        if(otherContent) { 
+          const addText = document.createElement('h4')
+          addText.textContent = otherContent.textContent
+          cloneContent.appendChild(addText)
+        }
+        sections.push(cloneContent) 
+      } else {
+        const section = document.createElement('section')
+        const h3 = document.createElement('h3')
+        h3.textContent = '|:'+el.textContent
+        section.appendChild(h3)
+        sections.push( section )
       }
-      sections.push(cloneContent) 
-    } else {
-      const section = document.createElement('section')
-      const h3 = document.createElement('h3')
-      h3.textContent = '|:'+el.textContent
-      section.appendChild(h3)
-      sections.push( section )
+
+    } else if (el.tagName == 'P') {
+      sections.push(el)
     }
   }
 
@@ -55,6 +59,7 @@ export async function jsPdfGenerator(vdom, settings: IPdfViewerSettings, debug =
   await Promise.all([
     cdoc.addFontXhr('/fonts/Alegreya-Regular.ttf', 'Al', 'normal'),
     cdoc.addFontXhr('/fonts/Alegreya-Bold.ttf', 'Al', 'bold'),
+    cdoc.addFontXhr('/fonts/Alegreya-Italic.ttf', 'Al', 'italic'),
     cdoc.addFontXhr('/fonts/Roboto_Condensed/RobotoCondensed-Light.ttf', 'RoCo', 'light'),
     cdoc.addFontXhr('/fonts/Roboto_Condensed/RobotoCondensed-Bold.ttf', 'RoCo', 'bold'),
     cdoc.addFontXhr('/fonts/Roboto_Condensed/RobotoCondensed-Regular.ttf', 'RoCo', 'normal')
@@ -145,7 +150,21 @@ export async function jsPdfGenerator(vdom, settings: IPdfViewerSettings, debug =
       const fragments = Array.from(chords).map(c => ({ text: c.innerText, chord: c.dataset.chord }))
       advance_y += cdoc.placeChords(fragments, colWidth, simulate).advance_y
     }
+
+    if( settings.includeComments && section.tagName == 'P')
+    {
+      cdoc.setFont('Al', 'italic', fos.text)
+      const texts: string[] = cdoc.doc.splitTextToSize(section.textContent, colWidth)
+      advance_y += texts.map( l => cdoc.textLine(l, simulate).h )
+        .reduce( (sum, current) => sum+current, 0 ) 
+    }
+
+
     return advance_y
+
+
+
+
   }
 
   function placePageNumbers() {

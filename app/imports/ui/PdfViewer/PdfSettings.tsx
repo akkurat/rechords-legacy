@@ -16,6 +16,7 @@ export class PdfViewerStates implements IPdfViewerSettings {
     numCols = 3
     orientation: 'l' | 'p' = 'l'
     inlineReferences: false
+    includeComments: false
     sizes = {
       header: 50,
       section: 20,
@@ -30,6 +31,7 @@ export interface IPdfViewerSettings {
     numCols: number;
     orientation: 'l' | 'p'
     inlineReferences: boolean
+    includeComments: boolean
     sizes: ITextSizes
 }
 export interface ITextSizes extends Record<string,number> {
@@ -75,8 +77,12 @@ export const PdfSettings: FunctionComponent<{ songId: string, consumer: (s: IPdf
     set({ ...state, orientation: event.currentTarget.value })
   }
 
-  const handleInlineChanged = (val: boolean) => {
+  const setInlineRefs = (val: boolean) => {
     set({...state, inlineReferences: val})
+  }
+
+  const setComments = (val: boolean) => {
+    set({...state, includeComments: val})
   }
 
   const handleFontSize = (name, value) => {
@@ -123,9 +129,13 @@ export const PdfSettings: FunctionComponent<{ songId: string, consumer: (s: IPdf
       )
     }
   }
-
-
   const [listener, Outlet] = useClickIndicator()
+  const cross = <svg width="20px" height="20px">
+    <rect className="box" x="0" y="0" width="20px" height="20px" rx="5px" ry="5px" />
+    <line className="cross" x1="4" y1="4" x2="16px" y2="16px" /> 
+    <line className="cross" x1="4" y2="4" x2="16px" y1="16px" /> 
+  </svg>
+
   return <div className="pdfSettings">
     <div className="grid">
       <div className="title">Orientation</div>
@@ -154,6 +164,19 @@ export const PdfSettings: FunctionComponent<{ songId: string, consumer: (s: IPdf
         {fontSizeHandles}
       </div>
 
+      <div className="title">Text</div>
+      <div className="setting">
+        <div className="fullwidth">
+          <input id="inlineShit" checked={state.inlineReferences} type="checkbox" onClick={e=> setInlineRefs(e.target.checked)} />
+          <label htmlFor="inlineShit" title="Repeat text of each Reference?" className="fullwidth">{cross}Inline References</label>
+        </div>
+        <div className="fullwidth">
+          <input id="includeComments" checked={state.includeComments} type="checkbox" onClick={e=> setComments(e.target.checked)} />
+          <label htmlFor="includeComments" title="Repeat text of each Reference?" className="fullwidth" >{cross}Show Comments</label>
+        </div>
+
+      </div>
+
       <div className="save-row">
         <div className="icon"><I.Note /></div>
         <div className="buttons">
@@ -173,11 +196,6 @@ export const PdfSettings: FunctionComponent<{ songId: string, consumer: (s: IPdf
         <div className="buttons">
           <button onClick={loadStaticDefaults} className="icon"><I.Cancel /></button>
         </div>
-      </div>
-      <div className="title">References</div>
-      <div className="setting">
-        <input id="inlineShit" type="checkbox" onClick={e=> handleInlineChanged(e.target.checked)} />
-        <label htmlFor="inlineShit" title="Repeat text of each Reference?" >Inline</label>
       </div>
     </div>
   </div>

@@ -7,7 +7,7 @@ const DATACHORD = 'data-chord'
 import {showdownRechords as rmd} from 'showdown-rechords'
 import { DOMParser } from 'xmldom'
 import Parser from 'html-react-parser'
-import  slug from 'slug'
+import  * as slug from 'slug'
 import  * as xss from 'xss'
 
 const options: XSS.IFilterXSSOptions = {

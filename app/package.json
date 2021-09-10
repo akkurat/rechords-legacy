@@ -65,6 +65,7 @@
     "@types/react-table": "^7.0.6",
     "@types/requirejs": "^2.1.32",
     "@types/showdown": "^1.9.4",
+    "@types/slug": "^5.0.2",
     "@types/xmldom": "^0.1.31",
     "@typescript-eslint/eslint-plugin": "^4.29.2",
     "@typescript-eslint/parser": "^4.29.2",

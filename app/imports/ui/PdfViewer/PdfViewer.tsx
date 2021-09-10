@@ -11,9 +11,6 @@ import './PdfViewer.less'
 import classNames from 'classnames'
 import { PDF, Clef } from '../Icons'
 import { useState } from 'react'
-
-const debug = true
-
 export class PdfViewer extends React.Component<IViewerProps, { loading: boolean, urls:string[] }> {
   first: boolean
   constructor(props: IViewerProps) {
@@ -23,23 +20,23 @@ export class PdfViewer extends React.Component<IViewerProps, { loading: boolean,
 
 
     componentDidMount = () => {
-      this.first = true;
+      this.first = true
     }
 
-    generatePdf = async (settings: IPdfViewerSettings) => {
-      const vdom = this.props.song.getHtml()
-      const pdfBlobUrl = await jsPdfGenerator(vdom, settings)
+    generatePdf = async (settings: IPdfViewerSettings): Promise<void> => {
+
+      const pdfBlobUrl = await jsPdfGenerator(this.props.song, settings)
+
       this.setState( s => {s.urls.push(pdfBlobUrl); console.log(s.urls); return {urls:s.urls}})
-      console.log('pushed')
       
       setTimeout(() => {
         if( this.state.urls.length > 1 ) {
-        const url = this.state.urls.shift();
-         URL.revokeObjectURL(url)// freeing old url from memory
+          const url = this.state.urls.shift()
+          URL.revokeObjectURL(url)// freeing old url from memory
         }
-      this.setState( { loading:false } )
+        this.setState( { loading:false } )
       }
-         , 2e3) 
+      , 2e3) 
       
     }
 
@@ -52,7 +49,7 @@ export class PdfViewer extends React.Component<IViewerProps, { loading: boolean,
 
 
 
-    render() {
+    render(): JSX.Element {
       // let pdfBlob = 
 
 
@@ -84,8 +81,8 @@ export class PdfViewer extends React.Component<IViewerProps, { loading: boolean,
 
 
 
-const icons = [<PDF />, <Clef />]
-const PdfSpinner: React.FunctionComponent<{}> = () => {
+const icons = [<PDF key={1} />, <Clef key={2} />]
+const PdfSpinner: React.FunctionComponent<Record<string,never>> = () => {
 
   const [idx, setIdx] = useState(0)
 
@@ -96,6 +93,6 @@ const PdfSpinner: React.FunctionComponent<{}> = () => {
   }
 
   return <div className="spinner" 
-  onAnimationIteration={handleAnimationEnd}> {icon} </div>
+    onAnimationIteration={handleAnimationEnd}> {icon} </div>
 }
 

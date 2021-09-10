@@ -1,18 +1,36 @@
+import { ParsedSong } from '@/api/collections'
 import { ChordPdfJs } from '@/api/comfyPdfJs'
+import { extractOrGuessKey } from '@/api/helpers'
+import ChrodLib from '@/api/libchrod'
 import { refPrefix } from 'showdown-rechords'
 import { IPdfViewerSettings } from '../PdfSettings'
 
-export async function jsPdfGenerator(vdom, settings: IPdfViewerSettings, debug = false) {
+/**
+ * 
+ * @param vdom Dom Tree in format of showdown-rechord output
+ * @param settings How to render
+ * @param debug Print Debuglines for Columns?
+ * @returns URL of the generated Blob
+ */
+export async function jsPdfGenerator(song: ParsedSong, settings: IPdfViewerSettings, debug = false): Promise<string> {
 
-  if (!vdom)
+  if (!song)
     return
+
 
 
   /** font sizes  */
   const fos = settings.sizes
 
-  const mdHtml = new DOMParser().parseFromString(vdom, 'text/html')
+  // Hm. Reusing reactParser would make alot more sense...
+  // But hey... here we are...
+  // There is even a plugin to convert svg (notes + fret diagrams)
+  // to PDF. However, if printing via CSS finally succeeds (2030 maybe ;-) )
+  // this PDF rendering  will obliviate
+  const mdHtml = new DOMParser().parseFromString(song.getHtml(), 'text/html')
 
+  const libChrod = new ChrodLib()
+  const key = extractOrGuessKey(song)
 
   const sections_ = mdHtml.body.children
 
@@ -47,6 +65,7 @@ export async function jsPdfGenerator(vdom, settings: IPdfViewerSettings, debug =
       sections.push(el)
     }
   }
+
 
   const cdoc = new ChordPdfJs({}, [settings.orientation, 'mm', 'a4'])
 
@@ -147,7 +166,11 @@ export async function jsPdfGenerator(vdom, settings: IPdfViewerSettings, debug =
     for (const line of lines) {
       resetX()
       const chords = line.querySelectorAll('i')
-      const fragments = Array.from(chords).map(c => ({ text: c.innerText, chord: c.dataset.chord }))
+      const fragments = Array.from(chords)
+        .map(c => ({ 
+          text: c.innerText, 
+          chord: libChrod.transpose( c.dataset?.chord, key, settings.transpose )
+        }))
       advance_y += cdoc.placeChords(fragments, colWidth, simulate).advance_y
     }
 

@@ -56,7 +56,13 @@ function isDefined<T>(a: T | null | undefined): a is T {
 }
 
 export const rmd_version = 6;
-export class Song {
+export interface ParsedSong {
+  getHtml(): string 
+  getChords(): string[]
+  getTags(): string[]
+  getTag(tag_name : string): string 
+}
+export class Song implements ParsedSong {
   _id?: string;
 
   text: string;
@@ -111,8 +117,8 @@ export class Song {
 
   }
 
-  checkTag(needle : string) {
-      for (let tag of this.getTags()) {
+  checkTag(needle : string): string | true {
+      for (const tag of this.getTags()) {
           if (!(tag.toLowerCase().startsWith(needle.toLowerCase()))) continue;
 
           let chunks = tag.split(':', 2);
@@ -127,7 +133,7 @@ export class Song {
       return null; // Tag not present
   }
 
-  getTag(tag_name : string) {
+  getTag(tag_name : string): string {
     for (let tag of this.getTags()) {
         if (!(tag.toLowerCase().startsWith(tag_name.toLowerCase()))) continue;
 

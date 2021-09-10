@@ -1,38 +1,37 @@
 import { useTracker } from 'meteor/react-meteor-data'
-import Slider from 'rc-slider'
 import * as React from 'react'
 import { useEffect } from 'react'
 import { FunctionComponent, ReactElement, useState } from 'react'
 import { useClickIndicator } from './ClickIndicator'
-import { QuickInput } from './QuickInput'
 import { Columns, Landscape, Portrait } from './SettingIcons'
 import * as I from '../Icons.jsx'
+import { SliderWithInput } from './SliderWithInput'
 
-// TODO: save settings like liked songs in user db
-
-
-
-export class PdfViewerStates implements IPdfViewerSettings {
-    numCols = 3
-    orientation: 'l' | 'p' = 'l'
-    inlineReferences: false
-    includeComments: false
-    sizes = {
-      header: 50,
-      section: 20,
-      text: 16,
-      chord: 11,
-      gap: 3
-    }
-}
+// Using provider in order to guarantee
+// new properties each time
+const PdfViewerStates:() => IPdfViewerSettings = () => ({
+  numCols: 3,
+  orientation: 'l',
+  inlineReferences: false,
+  includeComments: false,
+  transpose: 0,
+  sizes: {
+    header: 50,
+    section: 20,
+    text: 16,
+    chord: 11,
+    gap: 3
+  }
+})
 
 
 export interface IPdfViewerSettings {
     numCols: number;
-    orientation: 'l' | 'p'
+    orientation: ('l' | 'p')
     inlineReferences: boolean
     includeComments: boolean
     sizes: ITextSizes
+    transpose: number
 }
 export interface ITextSizes extends Record<string,number> {
     header: number
@@ -48,7 +47,7 @@ export const PdfSettings: FunctionComponent<{ songId: string, consumer: (s: IPdf
 
   type sug = 's' | 'u' | 'g'
 
-  const settings: Record<sug, IPdfViewerSettings> = {s: user?.profile?.pdfSettings?.[songId], u: user?.profile?.pdfSettings?.___, g: new PdfViewerStates() }
+  const settings: Record<sug, IPdfViewerSettings> = {s: user?.profile?.pdfSettings?.[songId], u: user?.profile?.pdfSettings?.___, g: PdfViewerStates() }
   const getInitialState: () => IPdfViewerSettings = () =>  settings.s || settings.u || settings.g
 
   const [state, setState] = useState(getInitialState())
@@ -62,12 +61,15 @@ export const PdfSettings: FunctionComponent<{ songId: string, consumer: (s: IPdf
 
   const loadSongDefaults = () => { set(getInitialState()) }
   const loadUserDefaults = () => { set(settings.u || settings.g) }
-  const loadStaticDefaults = () => { set(new PdfViewerStates()) }
+  const loadStaticDefaults = () => { set(PdfViewerStates()) }
 
   const set = ( a: IPdfViewerSettings ) => { setState(a); consumer(a) } 
 
   useEffect( () => set(state), [])
 
+  const handleTransposeChange = (ev: number) => {
+    set({ ...state, transpose: ev})
+  }
   const handleColChange = (ev: React.ChangeEvent<HTMLInputElement>) => {
     set({ ...state, numCols: parseInt(ev.currentTarget.value) })
   }
@@ -120,11 +122,12 @@ export const PdfSettings: FunctionComponent<{ songId: string, consumer: (s: IPdf
 
       fontSizeHandles.push(<div className="fontsize">
         <label htmlFor={'font'+fs}>{fs}</label>
-        <Slider 
+        <SliderWithInput
           min={1} max={settings.g.sizes[fs]*2-1} value={state.sizes[fs]} onChange={s => handleFontSize(fs, s)}
+          id={'font'+fs}
           // marks={marks}
         />
-        <QuickInput id={'font'+fs} value={state.sizes[fs]} onChange={size => handleFontSize(fs, size)} />
+        
       </div>
       )
     }
@@ -138,6 +141,17 @@ export const PdfSettings: FunctionComponent<{ songId: string, consumer: (s: IPdf
 
   return <div className="pdfSettings">
     <div className="grid">
+      <div className="table">
+        <div className="fontsize">
+          <label htmlFor="transposeInp">Pitch</label>
+          <SliderWithInput
+            id="transposeInp"
+            min={-12} max={12} value={state.transpose} 
+            onChange={handleTransposeChange}
+          />
+        </div>
+      </div>
+
       <div className="title">Orientation</div>
       <div className="setting orientations">{
         orientations.map(([value, icon, help], idx ) => (

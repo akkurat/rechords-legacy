@@ -1,8 +1,7 @@
 import * as React from 'react'
-import { Ref, useRef, useState } from 'react'
+import { useState } from 'react'
 import { useEffect } from 'react'
 import { FunctionComponent } from 'react'
-import { throttle } from 'underscore'
 
 export type keysEvent = React.MouseEvent<Element, MouseEvent> | React.KeyboardEvent<HTMLInputElement> | KeyboardEvent
 
@@ -68,11 +67,11 @@ export const QuickInput: FunctionComponent<{id: string, value: number, onChange:
   }
 
 
-  const intensity = 1.2;
+  const intensity = 1.2
   return <input type="number" min="1" max="200" 
-        onKeyDown={handleKey} id={id} onFocus={ev => ev.target.select()}
-        value={value} 
-        onChange={ev => onChange( parseFloat(ev.currentTarget.value))} />
+    onKeyDown={handleKey} id={id} onFocus={ev => ev.target.select()}
+    value={value} 
+    onChange={ev => onChange( parseFloat(ev.currentTarget.value))} />
 }
 
 function inc0(keyEvent: keysEvent) {

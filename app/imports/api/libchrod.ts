@@ -284,7 +284,7 @@ export default class ChrodLib {
     return ChrodLib.selectBest(keyss)
   }
 
-  static parseTag(tag: string) : {key: string, scale: string} {
+  static parseTag(tag: string) : KeyAndScale {
     const res = tag.match(/([A-H]b?#?)-?(\w*)/i)
 
     const fuzzy_scales = new Map([
@@ -301,7 +301,7 @@ export default class ChrodLib {
     const scale_str = res[2]
     const scale = fuzzy_scales.get(scale_str.toLowerCase())
     const key = Key.parseName(res[1])
-    return {key: key.name, scale: scale.name}
+    return {key: key.name, scaleName: scale.name}
   }
 
   static selectBest(keyss: { [x: string]: Penalties; }): KeyAndScale{
@@ -369,13 +369,14 @@ export default class ChrodLib {
      * @param {number} shift
      */
 
-  transpose(chord: string, meta: KeyAndScale, shift: number): { base: string; suff: string; className: string; } {
+  transpose(chord: string, meta: KeyAndScale, shift: number) {
+    if( !chord) return undefined
     const currentPitch = forwardMap.get(meta.key)
     const currentScale: Scale = Scales[meta.scaleName]
 
     const transposedPitch = (currentPitch + 48 + shift) % 12
     const ch = Chord.parseChordString(chord)
-    if (ch === undefined) return null
+    if (ch === undefined) return undefined
 
     let bornot = ch.key.beOrNot
     if( bornot == ToBorSharp.None || currentScale.pitches.indexOf(ch.idx) > -1 ) {

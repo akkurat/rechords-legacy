@@ -2,7 +2,7 @@ import * as React from 'react'
 import { useState } from 'react'
 import {PDF} from '../Icons.jsx'
 
-import './ClickIndicator.css'
+import './clickIndicatorStyle.css'
 
 
 const width=100, height=100

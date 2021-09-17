@@ -1,5 +1,5 @@
 
-import * as jsPDF from 'jspdf'
+import jsPDF from 'jspdf'
 import * as fpath from 'path'
 
 export class Margins {

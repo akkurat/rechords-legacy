@@ -7,8 +7,8 @@ const DATACHORD = 'data-chord'
 import {showdownRechords as rmd} from 'showdown-rechords'
 import { DOMParser } from 'xmldom'
 import Parser from 'html-react-parser'
-import  * as slug from 'slug'
-import  * as xss from 'xss'
+import  slug from 'slug'
+import { FilterXSS } from 'xss';
 
 const options: XSS.IFilterXSSOptions = {
   whiteList: {
@@ -161,7 +161,8 @@ export class Song implements ParsedSong {
     // Create HTML
     // only member that exist in the mongo db are published
     // to the outside.
-    this.html = xss(converter.makeHtml(this.text), options);
+    const filter = new FilterXSS(options)
+    this.html = filter.process(converter.makeHtml(this.text));
     this.title = "";
     this.author = "";
 

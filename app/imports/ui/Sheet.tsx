@@ -1,9 +1,9 @@
 import * as React from 'react'
 import parse, { DOMNode, domToReact } from 'html-react-parser'
-import ChrodLib from '@/api/libchrod'
-import { Song } from '@/api/collections'
+import ChrodLib from '../api/libchrod'
+import { Song } from '../api/collections'
 import { Abcjs } from './Abcjs'
-import Kord from './Kord.js'
+import Kord from './Kord'
 import { extractOrGuessKey, isRefId, userMayWrite } from '../api/helpers'
 import { Element } from 'domhandler/lib/node'
 import { FunctionComponent, ReactNode } from 'react'
@@ -90,7 +90,6 @@ const Sheet: FunctionComponent<SheetProps> = ({ song, transpose, hideChords, pro
   // Postprocessing on each node from the dom-to-react parser
   const populate_react_nodes = (node: DOMNode):DomOut => {  
       
-    console.log(Object.getPrototypeOf(node))
     if (!(node instanceof Element && node.attribs)) return node
 
     // <i>

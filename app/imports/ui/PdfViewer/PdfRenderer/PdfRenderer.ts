@@ -1,7 +1,7 @@
-import { ParsedSong } from '@/api/collections'
-import { ChordPdfJs } from '@/api/comfyPdfJs'
-import { extractOrGuessKey } from '@/api/helpers'
-import ChrodLib from '@/api/libchrod'
+import { ParsedSong } from '../../../api/collections'
+import { ChordPdfJs } from '../../../api/comfyPdfJs'
+import { extractOrGuessKey } from '../../../api/helpers'
+import ChrodLib from '../../../api/libchrod'
 import { refPrefix } from 'showdown-rechords'
 import { IPdfViewerSettings } from '../PdfSettings'
 

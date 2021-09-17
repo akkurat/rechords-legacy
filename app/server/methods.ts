@@ -1,5 +1,6 @@
-import Songs, {Song, Revisions, rmd_version} from '../imports/api/collections';
+import Songs, {Song, Revisions, rmd_version, Rooms, Room} from '../imports/api/collections';
 import { check } from 'meteor/check'
+import { Meteor } from 'meteor/meteor';
 
 Meteor.methods({
 
@@ -93,6 +94,16 @@ Meteor.methods({
 
         Revisions.insert(rev);
         return true;
+    },
+
+    createRoom(room: Room) {
+        const r = new Room(room)
+        r.ownerId = Meteor.userId()
+        Rooms.insert(r, (error, id) => console.log(error, id))
+    },
+    updateRoom({_id, caption}) {
+        console.log(_id, caption)
+        Rooms.update({_id}, {$set:{caption}}, {}, (error, id) => console.log(error, id))
     }
 
   });

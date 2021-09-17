@@ -1,5 +1,6 @@
-import { Mongo } from "meteor/mongo";
-import { _ } from "meteor/underscore";
+import { Mongo } from 'meteor/mongo';
+import { Meteor } from 'meteor/meteor'
+import { _ } from 'meteor/underscore';
 
 import * as showdown from 'showdown'
 
@@ -270,6 +271,36 @@ export class RmdHelpers {
   }
 }
 
+
+class Room {
+  constructor (doc: Room | Pick<Room, 'ownerId'> ) {
+    _.extend(this, doc)
+    if(!this.creationDate) {this.creationDate = new Date()}
+  }
+  // TODO: RoomCaption class with toString implemented
+  getCaption(): string {
+    const r = this.caption ? this.caption : this.creationDate
+    console.log(Meteor.users.findOne)
+    const userName = Meteor.users.findOne(this.ownerId)?.profile?.name
+    return `${r} by ${userName}`
+  }
+
+  _id: string
+  ownerId: string
+  caption?: string
+  echos: string[] = []
+  currentSongId?: string 
+  list: string[] = []
+  scrollPosition = 0
+  creationDate: Date
+}
+
+const Rooms = new Mongo.Collection<Room>('rooms', {transform: (r) => new Room(r)})
+ 
+export {Rooms, Room }
+
 export { Revisions };
+
+
 
 export default Songs;

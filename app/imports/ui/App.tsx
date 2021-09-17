@@ -20,12 +20,12 @@ import Hallo from './Hallo'
 import { BrowserRouter, Route, Switch, RouteComponentProps, Redirect} from 'react-router-dom'
 import TrackingDocumentTitle from './TrackingDocumentTitle'
 import { MobileMenu } from './MobileMenu'
-import { EditorAdvanced, getEditorModule } from './AdvancedEditor/EditorAdvanced';
-import { DynamicModuleLoader } from 'redux-dynamic-modules';
-import { PdfViewer } from './PdfViewer/PdfViewer';
-import Printer from './Printer';
-import { Meteor } from 'meteor/meteor';
-import { FunctionComponent } from 'react'
+import { EditorAdvanced, getEditorModule } from './AdvancedEditor/EditorAdvanced'
+import { DynamicModuleLoader } from 'redux-dynamic-modules'
+import { PdfViewer } from './PdfViewer/PdfViewer'
+import Printer from './Printer'
+import { SingTogether } from './SingTogether/SingTogether'
+import { Meteor } from 'meteor/meteor'
 
 const empty_song = {
   title: 'Neues Lied',
@@ -43,17 +43,17 @@ const nA404 = (
   </div>
 )
 
-const WriterRoute = ({ render: render, ...rest }) => (
-    <Route {...rest} render={(props) => {
-        const role = Meteor.user().profile.role;
-        return (role == 'admin' || role == 'writer') ? render(props) : nA404
-    }} />
+export const WriterRoute = ({ render: render, ...rest }) => (
+  <Route {...rest} render={(props) => {
+    const role = Meteor.user().profile.role
+    return (role == 'admin' || role == 'writer') ? render(props) : nA404
+  }} />
 )
 
-const AdminRoute = ({ render: render, ...rest }) => (
-    <Route {...rest} render={(props) => (
-        Meteor.user().profile.role == 'admin' ? render(props) : nA404
-    )} />
+export const AdminRoute = ({ render: render, ...rest }) => (
+  <Route {...rest} render={(props) => (
+    Meteor.user().profile.role == 'admin' ? render(props) : nA404
+  )} />
 )
 
 interface AppStates {
@@ -171,7 +171,7 @@ class App extends React.Component<AppProps, AppStates> {
         <BrowserRouter>
           <Provider store={this.store} >
             <div className={theme}>
-            <MobileMenu toggleSongList={this.toggleSongList} songListHidden={this.state.songListHidden} />
+              <MobileMenu toggleSongList={this.toggleSongList} songListHidden={this.state.songListHidden} />
 
               <div id="body">
                 <List 
@@ -186,7 +186,7 @@ class App extends React.Component<AppProps, AppStates> {
                   <Route exact={true} path='/'>
                     <TrackingDocumentTitle title="Hölibu 3000" />
                     <Hallo songs={this.props.songs} revisionsLoading={this.props.revisionsLoading}/>
-                </Route>
+                  </Route>
                  
 
 
@@ -223,113 +223,119 @@ class App extends React.Component<AppProps, AppStates> {
                         <TrackingDocumentTitle title={'Hölibu | ' + song.author + ': ' + song.title}/>
                         <Viewer 
                           song={song}  
-                                    song={song}  
+                          song={song}  
                           song={song}  
                           toggleTheme={this.toggleTheme} 
-                                    toggleTheme={this.toggleTheme} 
+                          toggleTheme={this.toggleTheme} 
                           toggleTheme={this.toggleTheme} 
                           themeDark={theme.includes('dark')}
                           {...routerProps} 
-                                    {...routerProps} 
-                                />
-                            </>
-                        )
-                    }} />
+                          {...routerProps} 
+                        />
+                      </>
+                    )
+                  }} />
 
-                    <WriterRoute path='/edit/:author/:title' render={(match) => {
-                        let song = getSong(match.match.params);
+                  <WriterRoute path='/edit/:author/:title' render={(match) => {
+                    const song = getSong(match.match.params)
 
-                        if (song === undefined) {
-                            return nA404;
-                        }
+                    if (song === undefined) {
+                      return nA404
+                    }
 
-                        // In any case, the editor is rendered. However, a re-render is triggered after the song's
-                        // revisions have been loaded.
-                        let editor;
-                        if( Meteor.settings.public.isAdvancedEditor ) {
-                            editor= this.props.revisionsLoading ?
-        <DynamicModuleLoader modules={[getEditorModule()]}> <EditorAdvanced song={song} /></DynamicModuleLoader> :
-         <DynamicModuleLoader modules={[getEditorModule()]}> <EditorAdvanced song={song} /></DynamicModuleLoader>; } else {
-                            editor= this.props.revisionsLoading ? <Editor song={song} /> : <Editor song={song} />;
-                        }
+                    // In any case, the editor is rendered. However, a re-render is triggered after the song's
+                    // revisions have been loaded.
+                    let editor
+                    if( Meteor.settings.public.isAdvancedEditor ) {
+                      editor= this.props.revisionsLoading ?
+                        <DynamicModuleLoader modules={[getEditorModule()]}> <EditorAdvanced song={song} /></DynamicModuleLoader> :
+                        <DynamicModuleLoader modules={[getEditorModule()]}> <EditorAdvanced song={song} /></DynamicModuleLoader> } else {
+                      editor= this.props.revisionsLoading ? <Editor song={song} /> : <Editor song={song} />
+                    }
 
-                        return (
-                            <>
-                                <TrackingDocumentTitle title={"Hölibu | " + song.author + ": " + song.title + " (bearbeiten)"}/>
-                                <HideSongList handle={this.hideSongList}/>
-                                {editor}
-                            </>
-                        )
-                    }} />
+                    return (
+                      <>
+                        <TrackingDocumentTitle title={'Hölibu | ' + song.author + ': ' + song.title + ' (bearbeiten)'}/>
+                        <HideSongList handle={this.hideSongList}/>
+                        {editor}
+                      </>
+                    )
+                  }} />
 
-                    <WriterRoute path="/new" render={() => {
-                        var song = new Song(empty_song);
+                  <WriterRoute path="/new" render={() => {
+                    const song = new Song(empty_song)
 
-                        return (
-                            <>
-                                <TrackingDocumentTitle title="Hölibu | Neues Lied" />
-                                <HideSongList handle={this.hideSongList}/>
-                                <Editor song={song} />
-                            </>
-                        )
-                    }} />
+                    return (
+                      <>
+                        <TrackingDocumentTitle title="Hölibu | Neues Lied" />
+                        <HideSongList handle={this.hideSongList}/>
+                        <Editor song={song} />
+                      </>
+                    )
+                  }} />
 
-                    <Route path="/progress" render={() => {
-                        const content = this.props.revisionsLoading ? (
-                            <div className="content chordsheet-colors">Lade Lieder-Fortschritt…</div>
-                            ) : <Progress songs={this.props.songs} />;
+                  <Route path="/progress" render={() => {
+                    const content = this.props.revisionsLoading ? (
+                      <div className="content chordsheet-colors">Lade Lieder-Fortschritt…</div>
+                    ) : <Progress songs={this.props.songs} />
 
-                        return (
-                            <>
-                                <TrackingDocumentTitle title="Hölibu | Lieder-Fortschritt" />
-                                {content}
-                            </>
-                        )
-                    }} />
+                    return (
+                      <>
+                        <TrackingDocumentTitle title="Hölibu | Lieder-Fortschritt" />
+                        {content}
+                      </>
+                    )
+                  }} />
 
-                    <AdminRoute path="/users" render={() => {
-                        const users = Meteor.users.find().fetch();
-                        return (
-                            <>
-                                <TrackingDocumentTitle title="Hölibu | Alle Benutzer" />
-                                <Users users={users}/>
-                            </>
-                        )
-                    }} />
+                  <AdminRoute path="/users" render={() => {
+                    const users = Meteor.users.find().fetch()
+                    return (
+                      <>
+                        <TrackingDocumentTitle title="Hölibu | Alle Benutzer" />
+                        <Users users={users}/>
+                      </>
+                    )
+                  }} />
 
-                    <Route path="/user" render={() => {
-                        const user = Meteor.user();
-                        return (
-                            <>
-                                <TrackingDocumentTitle title={"Hölibu | " + user.profile.name} />
-                                <User user={user} key={user._id} revisionsLoading={this.props.revisionsLoading}/>
-                            </>
-                        )
-                    }} />
-                                        <Route path='/pdf/:author/:title' render={(routerProps) => {
-                        let song = getSong(routerProps.match.params);
+                  <Route path="/user" render={() => {
+                    const user = Meteor.user()
+                    return (
+                      <>
+                        <TrackingDocumentTitle title={'Hölibu | ' + user.profile.name} />
+                        <User user={user} key={user._id} revisionsLoading={this.props.revisionsLoading}/>
+                      </>
+                    )
+                  }} />
+                  <Route path='/pdf/:author/:title' render={(routerProps) => {
+                    const song = getSong(routerProps.match.params)
 
-                        if (song === undefined) {
-                            return nA404; 
-                        }
+                    if (song === undefined) {
+                      return nA404 
+                    }
 
-                        return (
-                            <>
-                                <TrackingDocumentTitle title={"Hölibu | " + song.author + ": " + song.title}/>
-                                {/* Lift state of transpose after all? Make it fully controlled */}
-                                <HideSongList handle={this.hideSongList}/>
-                                <PdfViewer song={song} songs={this.props.songs} ref={this.viewerRef} 
-                                {...routerProps} />
-                            </>
-                        )
-                    }} />
+                    return (
+                      <>
+                        <TrackingDocumentTitle title={'Hölibu | ' + song.author + ': ' + song.title}/>
+                        {/* Lift state of transpose after all? Make it fully controlled */}
+                        <HideSongList handle={this.hideSongList}/>
+                        <PdfViewer song={song} songs={this.props.songs} ref={this.viewerRef} 
+                          {...routerProps} />
+                      </>
+                    )
+                  }} />
+
+                  <Route path="/rooms" render= {()=> {
+                    return <>
+                      <HideSongList handle={this.hideSongList}/>
+                      <SingTogether />
+                    </>
+
+                  } } />
 
 
 
+                  <Route>{nA404}</Route>
 
-                    <Route >
-                      {nA404}
-                    </Route>
                 </Switch>
               </div>
             </div>

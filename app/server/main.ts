@@ -1,4 +1,5 @@
-import Songs, {Revisions} from '../imports/api/collections';
+import { Meteor } from 'meteor/meteor';
+import Songs, {Revisions, Rooms} from '../imports/api/collections';
 
 Meteor.publish('songs', function () {
     return Songs.find({});
@@ -7,6 +8,9 @@ Meteor.publish('songs', function () {
 Meteor.publish('revisions', function () {
     return Revisions.find({});
 });
+
+Meteor.publish('rooms', (_id) => {console.log(_id); return _id ? Rooms.find({_id}) : Rooms.find() } )
+
 
 Meteor.startup(()=>{
   if (Meteor.users.find().count() === 0) {

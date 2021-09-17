@@ -1,0 +1,38 @@
+#singtogether {
+    display              : grid;
+    grid-template-columns: 200px auto auto;
+    grid-template-rows   : auto 1fr auto;
+    gap                  : 10px;
+    align-content: center;
+    justify-content: center;
+}
+
+#st_sheet {
+    grid-row   : ~"2 / 2";
+    grid-column: ~"2 / 4";
+    overflow-y: scroll;
+}
+
+#st_available {
+    grid-row   : ~"1 / 4";
+    grid-column: 1;
+    overflow-y : scroll;
+}
+
+#st_selected {
+    grid-column-start: 2;
+    grid-column-end  : 4;
+    grid-row         : 1;
+
+    ul {
+        display      : flex;
+        flex-flow    : row wrap;
+        align-items  : center;
+        justify-items: start;
+    }
+}
+
+#st_caption {
+    grid-row   : 3;
+    grid-column: ~"2 / 4";
+}

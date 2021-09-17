@@ -123,3 +123,5 @@ export const useScrollHideEffectRef = (ref: RefObject<HTMLElement>,maxheight: nu
     return () => document.removeEventListener('scroll',handler)
   },[])
 }
+
+export type EmptyProps = Record<string,never>

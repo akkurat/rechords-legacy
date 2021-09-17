@@ -1,4 +1,5 @@
 import Songs, { Revisions } from '../api/collections';
+import { Meteor }  from 'meteor/meteor'
 import React, { Component } from 'react';
 import Source from './Source';
 import PropTypes from 'prop-types';
@@ -112,6 +113,7 @@ class RevLink extends Component {
 
   render() {
     const r = this.props.rev;
+    console.log(Meteor.users)
     const who = (Meteor.users.findOne(r.editor)?.profile.name || '???') + ' ';
 
     return (

@@ -25,7 +25,7 @@ class Hallo extends React.Component<HalloProps> {
 
   render() {
 
-    if (!this.props.revisionsLoading) {
+    if (this.props.revisionsLoading) {
       return <> </>
     }
 

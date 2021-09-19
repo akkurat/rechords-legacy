@@ -1,4 +1,5 @@
 import { Meteor } from 'meteor/meteor'
+import moment from 'moment'
 import * as React from 'react'
 import { useEffect } from 'react'
 import { useState } from 'react'
@@ -27,6 +28,8 @@ export const SingTogetherCreate: FunctionComponent<{room?: Room}> = ({room, id="
       <><button onClick={handleUpdate}
       >Update Room</button>
       <span>{room.scrollPosition}</span>
+      <span>{moment(room.creationDate).fromNow()}</span>
+      <span>{room.getUsername()}</span>
       </>
       :
       <button onClick={handleCreate}

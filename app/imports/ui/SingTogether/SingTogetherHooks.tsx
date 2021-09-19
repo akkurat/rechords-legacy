@@ -2,8 +2,11 @@ import { Meteor } from 'meteor/meteor'
 import { useTracker } from 'meteor/react-meteor-data'
 import { useRouteMatch } from 'react-router'
 import { NavLink } from 'react-router-dom'
-import Songs, { Rooms } from '../../api/collections'
+import Songs, { Rooms, Song } from '../../api/collections'
 import * as React from 'react'
+import { FunctionComponent } from 'react'
+import { FC } from 'react-dom/node_modules/@types/react'
+import { Mongo } from 'meteor/mongo'
 
 export const useRooms = () => useTracker(() => { 
   const handle = Meteor.subscribe('rooms')
@@ -23,15 +26,14 @@ export const useSong = (songId: string) => useTracker(() => {
   return {song, songReady}
 }, [songId])
 
-export const useSongTitles = () => useTracker(() => {
+export const useSongTitles = (filter?: string | Mongo.ObjectID | Mongo.Selector<Song>) => useTracker(() => {
   const songsReady = Meteor.subscribe('songs').ready()
-  const songs = Songs.find({}, {fields:{ title: 1, author: 1} }).fetch() as {title: string, author:string, _id: string}[]
+  const songs = Songs.find(filter||{}, {fields:{ title: 1, author: 1} }).fetch() as {title: string, author:string, _id: string}[]
 
   return {songs, songsReady}
-
 })
 
-export const useRelativeLink = () => {
+export const RelativeLink: FC<React.PropsWithChildren<{l:string}>> = ({l, children}) => {
   const match = useRouteMatch()
-  return (relativePath: string) => <NavLink to={match.path+relativePath} />
+  return <NavLink to={match.url+'/'+l}>{children}</NavLink>
 }

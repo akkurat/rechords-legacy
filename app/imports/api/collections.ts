@@ -281,8 +281,11 @@ class Room {
   getCaption(): string {
     const r = this.caption ? this.caption : this.creationDate
     console.log(Meteor.users.findOne)
-    const userName = Meteor.users.findOne(this.ownerId)?.profile?.name
-    return `${r} by ${userName}`
+    return `${r} by ${this.getUsername()}`
+  }
+
+  getUsername(): string {
+    return Meteor.users.findOne(this.ownerId)?.profile?.name
   }
 
   _id: string
@@ -290,7 +293,7 @@ class Room {
   caption?: string
   echos: string[] = []
   currentSongId?: string 
-  list: string[] = []
+  songList: string[] = []
   scrollPosition = 0
   creationDate: Date
 }

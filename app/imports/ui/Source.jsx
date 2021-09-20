@@ -28,7 +28,7 @@ export default class Source extends Component {
     }
 
     return (
-      <div className={"content " + this.props.className}>
+      <div className={"content " + this.props.className} id="sourceeditor">
           {this.props.children}
         <textarea 
           ref="source" 

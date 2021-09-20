@@ -14,5 +14,7 @@ import Clef from '../../private/clef.svg'
 import Note from '../../private/note.svg'
 import Globe from '../../private/globe.svg'
 import User from '../../private/user.svg'
+import Eye from '../../private/eye.svg'
+import Md from '../../private/markdown.svg'
 
-export { LayoutH, LayoutV, Header, Day, Night, Menu, Sharp, Flat, Ok, Cancel, Conveyor, PDF, Clef, Note, Globe, User};
+export { LayoutH, LayoutV, Header, Day, Night, Menu, Sharp, Flat, Ok, Cancel, Conveyor, PDF, Clef, Note, Globe, User, Eye, Md};

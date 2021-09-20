@@ -1,103 +1,124 @@
 import * as React from 'react'
-import  { Component } from 'react';
-import { withRouter, Prompt } from 'react-router-dom';
-import Source from './Source.jsx';
-import RevBrowser from './RevBrowser.jsx';
-import Preview from './Preview';
-import Drawer from './Drawer';
-import { Ok, Cancel } from './Icons.jsx';
-import { Song } from '../api/collections';
-import { Requireable } from 'react';
-import { Meteor } from 'meteor/meteor';
+import  { Component } from 'react'
+import { withRouter, Prompt } from 'react-router-dom'
+import Source from './Source.jsx'
+import RevBrowser from './RevBrowser.jsx'
+import Preview from './Preview'
+import Drawer from './Drawer'
+import { Ok, Cancel, Eye, Md } from './Icons.jsx'
+import { Song } from '../api/collections'
+import { Requireable } from 'react'
+import { Meteor } from 'meteor/meteor'
+import { MobileMenuShallow } from './MobileMenu'
+import classNames from 'classnames'
 
 
-class Editor extends Component<{song: Song}, {md: string, versionTab: boolean, dirty: boolean}> {
+interface EditorState extends EditorToggles{
+  md: string;
+}
+interface EditorToggles {
+  versionTab: boolean;
+  dirty: boolean;
+  preview: boolean;
+  mdview: boolean;
+}
+
+class Editor extends Component<{song: Song}, EditorState> {
   mdServer: string;
 static propTypes:  {
   song: Requireable<Song>
 };
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      md: props.song.text,
-      versionTab: false,
-      dirty: false
-    };
-
-    this.mdServer = props.song.text;
+constructor(props) {
+  super(props)
+  this.state = {
+    md: props.song.text,
+    versionTab: false,
+    dirty: false,
+    preview: false,
+    mdview: true
   }
+
+  this.mdServer = props.song.text
+}
 
   handleContextMenu = (event) => {
     if (this.state.versionTab) {
-      this.toggleRevTab();
-      event.preventDefault();
-      return;
+      this.toggleRevTab()
+      event.preventDefault()
+      return
     }
 
     this.props.song.parse(this.state.md)
 
     Meteor.call('saveSong', this.props.song, (error, isValid) => {
       if (error !== undefined) {
-        console.log(error);
+        console.log(error)
       } else {
         this.setState({
           dirty: false,
-        });
+        })
       }
 
       if (isValid) {
-        this.props.history.push('/view/' + this.props.song.author_ + '/' + this.props.song.title_);
+        this.props.history.push('/view/' + this.props.song.author_ + '/' + this.props.song.title_)
       } else {
-        this.props.history.push('/');
+        this.props.history.push('/')
       }
-    });
+    })
 
-    event.preventDefault();
+    event.preventDefault()
   }
 
   update = (md_) => {
     this.setState({
       md: md_,
       dirty: md_ != this.mdServer
-    });
+    })
   }
 
-  toggleRevTab = () => {
-    this.setState((prevState, props) => {
-      return {
-        versionTab: !prevState.versionTab
-      }
-    });
+  toggleState(p: keyof EditorToggles) {
+    return () => this.setState( prevState => ({[p]: !prevState[p]}) )
   }
+
+  toggleRevTab() { this.toggleState('versionTab')}
 
   render() {
 
-    let revs = this.props.song.getRevisions();
+    const revs = this.props.song.getRevisions()
 
-    let prompt = <Prompt
-            when={this.state.dirty && revs > 0}
-            message={"Du hast noch ungespeicherte Änderungen. Verwerfen?"}
-          />
+    const prompt = <Prompt
+      when={this.state.dirty && revs > 0}
+      message={'Du hast noch ungespeicherte Änderungen. Verwerfen?'}
+    />
 
     if (this.state.versionTab == false) {
 
-      let versions = revs ? (
+      const versions = revs ? (
         <Drawer id="revs" className="revision-colors" onClick={this.toggleRevTab}>
           <h1>Verlauf</h1>
           <p>Es existieren {revs.length} Versionen. Klicke, um diese zu durchstöbern!</p>
         </Drawer>
-      ) : undefined;
+      ) : undefined
 
-      let dirtyLabel = this.state.dirty ? <span id="dirty" title="Ungesicherte Änderungen"></span> : undefined;
+      const dirtyLabel = this.state.dirty ? <span id="dirty" title="Ungesicherte Änderungen"></span> : undefined
+
+
+      const toggleProp = (prop: keyof Ed) => this.setState( p => ({[prop]: ![prop].preview}))
 
       // Bearbeiten mit Echtzeit-Vorschau
       return (
         <div id="editor" onContextMenu={this.handleContextMenu}>
-          <div className="extend mobilemenu" >
-              <span onClick={this.handleContextMenu} id="plus"><Ok /></span>
-              <span onClick={this.props.history.goBack} id="minus"><Cancel /></span>
-          </div>
+          <MobileMenuShallow>
+            <span onClick={this.handleContextMenu} ><Ok /></span>
+            <span onClick={this.props.history.goBack} ><Cancel /></span>
+            <span 
+              className={classNames({active: this.state.preview})} 
+              onClick={this.toggleState('preview')} ><Eye /></span>
+            <span 
+              className={classNames({active: this.state.mdview})}
+              onClick={this.toggleState('mdview')}><Md /></span>
+          </MobileMenuShallow>
 
           <Drawer onClick={this.handleContextMenu} className="list-colors">
             <h1>sichern<br />&amp; zurück</h1>
@@ -105,13 +126,15 @@ static propTypes:  {
           </Drawer>
 
           {dirtyLabel}
-          <Preview md={this.state.md} song={this.props.song} updateHandler={this.update}/>
-          <Source md={this.state.md} updateHandler={this.update} className="source-colors" />
+          {/* Using CSS to hide views obvliates the need for media query in React */}
+          <Preview classNames={classNames({hideInMobile: !this.state.preview, miniPreview: this.state.mdview})} md={this.state.md} song={this.props.song} updateHandler={this.update}/>
+          <Source md={this.state.md} updateHandler={this.update} 
+            className={classNames('source-colors', {hideInMobile: !this.state.mdview})} />
 
           {versions}
           {prompt}
         </div>
-      );
+      )
 
     } else {
       // Versionen vergleichen
@@ -129,11 +152,11 @@ static propTypes:  {
           <RevBrowser song={this.props.song} />
           {prompt}
         </div>
-      );
+      )
 
     }
   }
 }
 
 
-export default withRouter(Editor);  // injects history, location, match
+export default withRouter(Editor)  // injects history, location, match

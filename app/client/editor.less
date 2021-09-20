@@ -6,6 +6,9 @@
   display: flex;
   width  : 100%;
 
+  .phone-tablet({
+      flex-flow: row wrap;
+  });
   textarea {
     white-space: pre;
   }
@@ -15,11 +18,29 @@
     .content {
       padding: unset;
     }
+    .phone-tablet({
+      flex: 1 0 1;
+    })
+  }
+
+  #sourceeditor {
+    padding-bottom: 15vh;
   }
 
   #chordsheet {
     padding-left: 6em;
+
+    &.miniPreview {
+      .phone-tablet({
+        position: fixed;
+        bottom: 0;
+        height: 15vh;
+        min-height: unset;
+      })
+    }
   }
+
+
 }
 
 aside.drawer#revs {

@@ -20,6 +20,7 @@ interface P {
   md: string;
   song: Song;
   updateHandler?: Function;
+  classNames?: string
 }
 
 export default class Preview extends React.Component<P, {}> {
@@ -397,7 +398,7 @@ export default class Preview extends React.Component<P, {}> {
     }});
 
     return (
-      <div className="content" id="chordsheet">
+      <div className={'content ' + this.props.classNames||''} id="chordsheet">
         <section
           className="interactive"
           id="chordsheetContent"

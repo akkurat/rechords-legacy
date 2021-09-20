@@ -12,6 +12,7 @@ import { LayoutH, LayoutV, Day, Night, Sharp, Flat, Conveyor, PDF } from './Icon
 
 import parse, { domToReact }  from 'html-react-parser';
 import { MobileMenuShallow } from "./MobileMenu";
+import classNames from "classnames";
 
 export type IViewerProps = RouteComponentProps & {
   song: Song,
@@ -172,8 +173,9 @@ export default class Viewer extends React.Component<RouteComponentProps & IViewe
 
     return (<>
       <MobileMenuShallow>
-            <span onClick={ _ => this.increaseTranspose()} id="plus"><Sharp /></span>
-            <span onClick={ _ => this.decreaseTranspose()} id="minus"><Flat /></span>
+            {/* Indicator  */}
+            <span className={classNames({active: this.state.relTranspose>0})} onClick={ () => this.increaseTranspose()} id="plus"><Sharp /></span>
+            <span className={classNames({active: this.state.relTranspose<0})} onClick={ () => this.decreaseTranspose()} id="minus"><Flat /></span>
             <span onClick={this.toggleAutoScroll} id={'scroll-toggler'} className={this.state.autoscroll ? 'active' : ''}>
               <Conveyor />
             </span>

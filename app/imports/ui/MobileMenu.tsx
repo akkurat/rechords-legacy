@@ -1,12 +1,13 @@
 import classNames from 'classnames'
 import { Meteor } from 'meteor/meteor'
+import { ReactElementLike } from 'prop-types'
 import * as React from 'react'
-import { Ref } from 'react'
+import { useRef } from 'react'
 import { PropsWithChildren } from 'react'
-import { MouseEventHandler, useEffect } from 'react'
+import { MouseEventHandler } from 'react'
 import { FC } from 'react-dom/node_modules/@types/react'
 import { Link } from 'react-router-dom'
-import { useScrollHideEffect } from '../api/helpers'
+import { useScrollHideEffect, useScrollHideEffectRef } from '../api/helpers'
 import { Menu } from './Icons.jsx'
 
 
@@ -20,17 +21,17 @@ interface MobileMenuProps extends React.HTMLProps<HTMLElement> {
 
 export const MobileMenu: FC<MobileMenuProps> = (p) => {
 
-  const showMenu = useScrollHideEffect()
-
   const toggle = ev => p.toggleSongList(ev)
 
   const classes = classNames(
     'mobilemenu', 
-    {'hide-extensions': !p.songListHidden},
-    {'noheight': !showMenu}
+    {'hide-extensions': !p.songListHidden}
   )
 
-  return <div className={classes} >
+  const ref = useRef()
+  useScrollHideEffectRef(ref, 64)
+
+  return <div className={classes} ref={ref}>
     <span onClick={toggle} id="menu"><Menu /></span>
     <span className="username"> 
       <Link onClick={toggle} to="/user">{Meteor.user().profile.name}</Link>
@@ -39,19 +40,20 @@ export const MobileMenu: FC<MobileMenuProps> = (p) => {
 }
 
 
-export const MobileMenuShallow: FC<PropsWithChildren<Record<string,never>>> = ({children}) => {
+export const MobileMenuShallow: FC<{children: ReactElementLike[]}> = ({children}) => {
 
-  const showMenu = useScrollHideEffect()
+  const ref = useRef()
+  
+  useScrollHideEffectRef(ref, 64)
 
-  console.log(showMenu)
 
   const classes = classNames(
     'mobilemenu', 
-    'extend', 
-    {'noheight': !showMenu}
+    'extend' 
   )
 
-  return <div className={classes}>
+
+  return <div className={classes} ref={ref}>
     {children}
   </div>
 }

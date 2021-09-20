@@ -8,13 +8,16 @@
   .phone( {
       padding-top: @mobileMenuHeight;
     }
+
   );
 }
 
 .mobilemenu {
 
-  transition: height ease-in-out 1s;
+  // transition: height ease-in-out 1s;
 
+  
+  backdrop-filter: opacity(0.2) blur(10px);
   display : none;
   overflow: hidden;
 
@@ -27,14 +30,14 @@
       width   : 100%;
       height  : @mobileMenuHeight;
       position: fixed;
-
-      &.noheight {
-        height: 0;
-      }
     }
 
   );
 
+  border-width: 0 0 0 50px;
+  border-style: solid;
+  margin: 0 0 0 -50px ;
+  border-color: var(--bg-sheet);
   background-color: var(--bg-list);
   color           : var(--gray-light);
 
@@ -51,6 +54,12 @@
     width : 4rem;
     fill  : var(--gray-light);
     margin: 1rem 0.7rem 0;
+  }
+
+  .active {
+    svg {
+      fill: var(--accent);
+    }
   }
 
   span#menu {

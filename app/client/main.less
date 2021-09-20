@@ -66,6 +66,10 @@ body {
   background-color: var(--bg-sheet);
   display: flex;
   flex-flow: column nowrap;
+  .phone-tablet({
+    height: unset;
+    overflow-y: scroll;
+  })
 }
 
 #app {
@@ -80,9 +84,6 @@ body {
   width: 100%;
   height: 100%;
   background-color: var(--bg-sheet);
-  .phone({
-    overflow-y: scroll;
-  })
 }
 
 // Generic content pages

@@ -42,15 +42,6 @@ const nA404 = (
     </span>
   </div>
 )
-const NA400: FunctionComponent<Record<string,never>> = () => (
-  <div className="content chordsheet-colors">
-    <TrackingDocumentTitle title="Hölibu | 404" track_as="error-404"/>
-    <span id="logo">
-      <h1>404</h1>
-      <h2>n/A</h2>
-    </span>
-  </div>
-)
 
 const WriterRoute = ({ render: render, ...rest }) => (
     <Route {...rest} render={(props) => {
@@ -334,7 +325,7 @@ class App extends React.Component<AppProps, AppStates> {
 
 
                     <Route >
-                      < NA400 />
+                      {nA404}
                     </Route>
                 </Switch>
               </div>

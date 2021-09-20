@@ -11,6 +11,7 @@ import Sheet from './Sheet';
 import { LayoutH, LayoutV, Day, Night, Sharp, Flat, Conveyor, PDF } from './Icons.jsx';
 
 import parse, { domToReact }  from 'html-react-parser';
+import { MobileMenuShallow } from "./MobileMenu";
 
 export type IViewerProps = RouteComponentProps & {
   song: Song,
@@ -169,10 +170,8 @@ export default class Viewer extends React.Component<RouteComponentProps & IViewe
         <div className="mobile-footer"><NavLink to={`/edit/${s.author_}/${s.title_}`} id="edit">Bearbeiten…</NavLink></div>
     ) : undefined;
 
-    return (
-
-      <>
-        <div className="extend mobilemenu" >
+    return (<>
+      <MobileMenuShallow>
             <span onClick={ _ => this.increaseTranspose()} id="plus"><Sharp /></span>
             <span onClick={ _ => this.decreaseTranspose()} id="minus"><Flat /></span>
             <span onClick={this.toggleAutoScroll} id={'scroll-toggler'} className={this.state.autoscroll ? 'active' : ''}>
@@ -181,7 +180,7 @@ export default class Viewer extends React.Component<RouteComponentProps & IViewe
             <span onClick={ _ => this.props.toggleTheme()} id="theme-toggler">
               {this.props.themeDark ? <Day /> : <Night />}
             </span>
-        </div>
+        </MobileMenuShallow>
 
         <div
           className={'content'}

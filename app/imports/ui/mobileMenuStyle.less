@@ -12,10 +12,13 @@
 }
 
 .mobilemenu {
+
+  transition: height ease-in-out 1s;
+
   display : none;
   overflow: hidden;
 
-  .phone( {
+  .phone-tablet( {
       display       : flex;
       flex-direction: row-reverse;
       align-items   : center;
@@ -24,6 +27,10 @@
       width   : 100%;
       height  : @mobileMenuHeight;
       position: fixed;
+
+      &.noheight {
+        height: 0;
+      }
     }
 
   );

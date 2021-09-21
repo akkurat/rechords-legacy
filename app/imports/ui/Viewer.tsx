@@ -4,13 +4,11 @@ import TranposeSetter from "./TransposeSetter.jsx";
 import ChrodLib from "../api/libchrod";
 import { Song } from '../api/collections';
 import Drawer from './Drawer';
-import { ColumnExpander } from "./ColumnGrid.js";
 import {userMayWrite} from '../api/helpers';
 import Sheet from './Sheet';
 
-import { LayoutH, LayoutV, Day, Night, Sharp, Flat, Conveyor, PDF } from './Icons.jsx';
+import { Day, Night, Sharp, Flat, Conveyor, PDF } from './Icons.jsx';
 
-import parse, { domToReact }  from 'html-react-parser';
 import { MobileMenuShallow } from "./MobileMenu";
 import classNames from "classnames";
 
@@ -21,10 +19,16 @@ export type IViewerProps = RouteComponentProps & {
 }
 
 interface ViewerStates {
-  relTranspose: number,
-  inlineReferences: boolean,
-  showChords: boolean,
-  autoscroll: any
+  /**
+   * transpose halftones
+   */
+  relTranspose: number
+  inlineReferences: boolean
+  showChords: boolean
+  /**
+   * Number of timer Handle
+   */
+  autoscrollTimerId: number
 }
 export default class Viewer extends React.Component<RouteComponentProps & IViewerProps, ViewerStates> implements ITransposeHandler {
   constructor(props) {
@@ -34,7 +38,7 @@ export default class Viewer extends React.Component<RouteComponentProps & IViewe
       relTranspose: this.getInitialTranspose(),
       inlineReferences: false,
       showChords: true,
-      autoscroll: undefined
+      autoscrollTimerId: undefined
     };
 
   }
@@ -98,22 +102,23 @@ export default class Viewer extends React.Component<RouteComponentProps & IViewe
   };
 
   toggleAutoScroll = () => {
-    this.setAutoScroll( this.state.autoscroll == undefined );
+    this.setAutoScroll( this.state.autoscrollTimerId == undefined );
   }
 
   setAutoScroll = (target_state) => {
     const callback = () => {
       this.refChordsheet.current?.scrollBy(0, 1);
+      window.scrollBy(0,1);
     }
 
     this.setState( state => {
-        if (state.autoscroll == undefined && target_state == true) {
-          return { autoscroll: Meteor.setInterval(callback, 133) };
+        if (state.autoscrollTimerId == undefined && target_state == true) {
+          return { autoscrollTimerId: Meteor.setInterval(callback, 133) };
         }
 
-        if (state.autoscroll != undefined && target_state == false) {
-          Meteor.clearInterval(state.autoscroll);
-          return { autoscroll: undefined };
+        if (state.autoscrollTimerId != undefined && target_state == false) {
+          Meteor.clearInterval(state.autoscrollTimerId);
+          return { autoscrollTimerId: undefined };
         }
     });
 
@@ -147,7 +152,7 @@ export default class Viewer extends React.Component<RouteComponentProps & IViewe
         :
           <div onClick={this.toggleChords} className="rightSettingsButton"><span>Chords</span></div>
         }
-        <div onClick={this.toggleAutoScroll} id={'scroll-toggler'} className={this.state.autoscroll ? 'active' : ''}>
+        <div onClick={this.toggleAutoScroll} id={'scroll-toggler'} className={this.state.autoscrollTimerId ? 'active' : ''}>
           <Conveyor />
         </div>
         <div onClick={this.props.toggleTheme} id={'theme-toggler'} >
@@ -176,7 +181,7 @@ export default class Viewer extends React.Component<RouteComponentProps & IViewe
             {/* Indicator  */}
             <span className={classNames({active: this.state.relTranspose>0})} onClick={ () => this.increaseTranspose()} id="plus"><Sharp /></span>
             <span className={classNames({active: this.state.relTranspose<0})} onClick={ () => this.decreaseTranspose()} id="minus"><Flat /></span>
-            <span onClick={this.toggleAutoScroll} id={'scroll-toggler'} className={this.state.autoscroll ? 'active' : ''}>
+            <span onClick={this.toggleAutoScroll} id={'scroll-toggler'} className={this.state.autoscrollTimerId ? 'active' : ''}>
               <Conveyor />
             </span>
             <span onClick={ _ => this.props.toggleTheme()} id="theme-toggler">

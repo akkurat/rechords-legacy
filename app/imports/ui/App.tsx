@@ -103,7 +103,10 @@ class App extends React.Component<AppProps, AppStates> {
     }
 
     toggleSongList = () => {
-      this.setState((state) => ({songListHidden: !state.songListHidden }))
+      this.setState((state) => { 
+        document.documentElement.classList.toggle('noscroll', state.songListHidden)
+        return {songListHidden: !state.songListHidden }}
+      )
     }
 
     toggleTheme = () => {

@@ -48,6 +48,9 @@ textarea {
 
 html {
   height: 100%;
+  &.noscroll {
+    overflow: hidden;
+  }
 }
 
 body {
@@ -66,10 +69,10 @@ body {
   background-color: var(--bg-sheet);
   display: flex;
   flex-flow: column nowrap;
-  .phone-tablet({
-    height: unset;
-    overflow-y: scroll;
-  })
+  .phone-tablet( {
+        height    : unset;
+        overflow-y: scroll;
+    });
 }
 
 #app {

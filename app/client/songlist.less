@@ -1,10 +1,18 @@
 @import (reference) "./responsive.import.less";
 @import (reference) "./variables.import.less";
 
+
 aside.drawer#list {
   padding-left: 0; // undo left padding, since this box contains no immediate content
 
   .list-colors;
+
+  .phone-tablet({
+    position: fixed;
+    transition: height ease-in-out 1s;
+    height: 100vh;
+    width: 100vw;
+  });
 
   &.hidden {
     display: none;

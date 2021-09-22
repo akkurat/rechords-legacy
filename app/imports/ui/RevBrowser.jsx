@@ -1,6 +1,6 @@
 import Songs, { Revisions } from '../api/collections';
 import React, { Component } from 'react';
-import Source from './Source.jsx';
+import Source from './Source';
 import PropTypes from 'prop-types';
 import Drawer from '../ui/Drawer';
 import moment from 'moment';

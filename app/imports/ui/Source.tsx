@@ -1,7 +1,21 @@
-import React, { Component } from 'react';
+import React, { Component, createRef } from 'react';
 import PropTypes from 'prop-types';
 
-export default class Source extends Component {
+interface SourcePropTypes {
+  updateHandler: (t: string) => void
+  readOnly: boolean
+  md: string
+  className: string
+}
+
+export default class Source extends Component<SourcePropTypes> {
+
+static propTypes = {
+  md: PropTypes.string.isRequired,
+  updateHandler: PropTypes.func,
+  readOnly: PropTypes.bool
+};
+  source = createRef<HTMLTextAreaElement>()
 
   constructor(props) {
     super(props);
@@ -9,7 +23,7 @@ export default class Source extends Component {
 
   callUpdateHandler = () => {
     if ('updateHandler' in this.props) {
-      this.props.updateHandler(this.refs.source.value);
+      this.props.updateHandler(this.source.current.value);
     }
   }
 
@@ -31,8 +45,9 @@ export default class Source extends Component {
       <div className={"content " + this.props.className} id="sourceeditor">
           {this.props.children}
         <textarea 
-          ref="source" 
+          ref={this.source} 
           onChange={this.callUpdateHandler} 
+          onSelect={ev => console.log(ev)}
           value={this.props.md} 
           style={style} 
           readOnly={this.props.readOnly}
@@ -42,9 +57,3 @@ export default class Source extends Component {
   }
 }
 
-
-Source.propTypes = {
-  md: PropTypes.string.isRequired,
-  updateHandler: PropTypes.func,
-  readOnly: PropTypes.bool
-};

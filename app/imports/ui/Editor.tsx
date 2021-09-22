@@ -1,7 +1,7 @@
 import * as React from 'react'
 import  { Component } from 'react'
 import { withRouter, Prompt } from 'react-router-dom'
-import Source from './Source.jsx'
+import Source from './Source'
 import RevBrowser from './RevBrowser.jsx'
 import Preview from './Preview'
 import Drawer from './Drawer'
@@ -11,6 +11,7 @@ import { Requireable } from 'react'
 import { Meteor } from 'meteor/meteor'
 import { MobileMenuShallow } from './MobileMenu'
 import classNames from 'classnames'
+import { IsOptional, OptionalKeys } from 'prop-types'
 
 
 interface EditorState extends EditorToggles{
@@ -26,7 +27,7 @@ interface EditorToggles {
 class Editor extends Component<{song: Song}, EditorState> {
   mdServer: string;
 static propTypes:  {
-  song: Requireable<Song>
+  song: Requireable<Song>,
 };
 
 constructor(props) {

@@ -43,7 +43,7 @@
     "react-responsive": "^8.2.0",
     "react-router-dom": "^5.1.1",
     "react-table": "^7.6.3",
-    "react-transition-group": "^2.9.0",
+    "react-transition-group": "~4.4",
     "redux-dynamic-modules": "^5.2.3",
     "showdown": "^1.9.1",
     "showdown-rechords": "file:../showdown-rechords",

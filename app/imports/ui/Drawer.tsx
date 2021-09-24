@@ -7,11 +7,13 @@ interface DrawerProps extends RouteComponentProps {
     onClick: React.MouseEventHandler<HTMLElement>
     className: string,
     open: boolean,
+    fref: React.RefObject<HTMLDivElement>
 }
 
 class Drawer extends React.Component<DrawerProps, {}> {
     public static defaultProps = {
-        open: false
+        open: false,
+        ref: React.createRef<HTMLDivElement>()
     };
 
     constructor(props: Readonly<DrawerProps>) {
@@ -23,6 +25,7 @@ class Drawer extends React.Component<DrawerProps, {}> {
             className={"drawer " + this.props.className + (this.props.open ? " open" : " closed")}
             id={this.props.id}
             onClick={this.props.onClick}
+            ref={this.props.fref}
         >
             <div>
                 {this.props.children}&nbsp;

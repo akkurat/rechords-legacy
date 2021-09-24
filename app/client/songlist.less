@@ -1,6 +1,91 @@
 @import (reference) "./responsive.import.less";
 @import (reference) "./variables.import.less";
 
+@menH: 90vh;
+
+@keyframes scaleYEaseOutBounce {
+	0% {
+		height: @menH *1;
+	}
+
+	12% {
+		height:@menH *0.89;
+	}
+
+	24% {
+		height: @menH *0.56;
+	}
+
+	36% {
+		height:@menH *0.02;
+	}
+
+	54% {
+		height:@menH *0.25;
+	}
+
+	74% {
+		height:@menH *0.02;
+	}
+
+	82% {
+		height:@menH *0.06;
+	}
+
+	92% {
+		height:@menH *0.01;
+	}
+
+	96% {
+		height:@menH *0.02;
+	}
+
+	100% {
+		height: @menH *0;
+	}
+}
+
+@keyframes scaleYEaseInBounce {
+	0% {
+		height: @menH *(1-1);
+	}
+
+	12% {
+		height:@menH *(1-0.89);
+	}
+
+	24% {
+		height: @menH *(1-0.56);
+	}
+
+	36% {
+		height:@menH *(1-0.02);
+	}
+
+	54% {
+		height:@menH *(1-0.25);
+	}
+
+	74% {
+		height:@menH *(1-0.02);
+	}
+
+	82% {
+		height:@menH *(1-0.06);
+	}
+
+	92% {
+		height:@menH *(1-0.01);
+	}
+
+	96% {
+		height:@menH *(1-0.02);
+	}
+
+	100% {
+		height: @menH *(1-0);
+	}
+}
 
 aside.drawer#list {
   padding-left: 0; // undo left padding, since this box contains no immediate content
@@ -9,18 +94,38 @@ aside.drawer#list {
 
   .phone-tablet({
     position: fixed;
-    transition: height ease-in-out 1s;
-    height: 100vh;
+    animation: scaleYEaseInBounce 1s ease;
+    // animation: name duration timing-function delay iteration-count direction fill-mode;
+    min-height: unset;
+    height: @menH;
     width: 100vw;
+    padding: 0;
+    >div {
+      height: 100%;
+      padding-bottom: 2em;
+      transition: margin-top .5s ease .3s ;
+      overflow:scroll;
+    }
+
+    &.hidden {
+      animation: scaleYEaseOutBounce 1s ease 0.3s  ;
+      animation-fill-mode: forwards;
+      // height: 0;
+      // min-height: unset;
+
+      >div {
+        margin-top: -100vh;
+        transition: margin-top .5s ease  ;
+      }
+    }
   });
 
-  &.hidden {
-    display: none;
+  div {
+  width: auto;
   }
 
-  > div {
+  > div >div {
     padding-top: 1em;
-    width: auto;
 
     > ul {
       padding-left: 0.5em;

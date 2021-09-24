@@ -125,6 +125,7 @@ interface ListState {
 }
 
 class List extends React.Component<ListProps & RouteComponentProps, ListState> {
+    listRef: React.RefObject<HTMLDivElement>;
     constructor(props) {
         super(props);
         this.state = {
@@ -133,7 +134,10 @@ class List extends React.Component<ListProps & RouteComponentProps, ListState> {
             fuzzy_matches: [],
             exact_matches: []
         }
+        this.listRef = React.createRef()
     }
+
+    
 
     keyHandler = (e : KeyboardEvent) => {
         if (this.props.hidden) return;
@@ -154,6 +158,17 @@ class List extends React.Component<ListProps & RouteComponentProps, ListState> {
         // Check if the pressed key has a printable representation
         if (e.key && e.key.length === 1) {
             this.refs.filter.focus();
+        }
+    }
+
+    componentDidUpdate(prevProps: ListProps) {
+        if(this.props.hidden != prevProps.hidden) {
+            const el = this.listRef?.current;
+            if(el) {
+                el.style.animation = 'none'
+                this.listRef?.current.offsetHeight
+                el.style.animation = null
+            }
         }
     }
 
@@ -310,7 +325,8 @@ class List extends React.Component<ListProps & RouteComponentProps, ListState> {
 
 
         return (
-            <Drawer id="list" open={true} className={"songlist " + (this.props.hidden ? 'hidden' : '')}>
+            <Drawer fref={this.listRef} id="list" open={true} className={"songlist " + (this.props.hidden ? 'hidden' : '')}>
+                <div>
                 <div className="filter">
                     <input type="text" 
                         placeholder="Filtern…" 
@@ -340,6 +356,8 @@ class List extends React.Component<ListProps & RouteComponentProps, ListState> {
                     </li>
                 </ul>
                 <Link to="/user" className="username">{Meteor.user().profile.name}</Link>
+                
+                </div>
             </Drawer>
         )
     }

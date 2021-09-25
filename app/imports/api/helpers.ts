@@ -1,18 +1,20 @@
 
+export type xy = [time: number, y: number]
+
 export const userMayWrite = () => {
   const role = Meteor.user().profile.role
   return role == 'admin' || role == 'writer'
 }
 
-import { Ref, RefObject, useEffect, useRef, useState } from 'react'
+import { Meteor } from 'meteor/meteor'
+import { RefObject, useEffect, useRef, useState } from 'react'
 /**
  * 
  * @param id 
  * @returns false, if id is undefined or not starting with ref-prefix
  */
 import { refPrefix } from 'showdown-rechords'
-import { throttle } from 'underscore'
-import { ParsedSong, Song } from './collections'
+import { ParsedSong } from './collections'
 import ChrodLib, { KeyAndScale } from './libchrod'
 export const isRefId = (id: string): boolean => id && id.startsWith(refPrefix)
 
@@ -28,38 +30,40 @@ export function extractOrGuessKey(song: ParsedSong): KeyAndScale {
 }
 
 
+class ScrollHysteresis {
+    private last: xy
+    constructor(public scrollTo: number, public scrollUp: number) {}
+    hideIf(current:xy, callBack: (v: boolean) => void) {
+      if(!this.last) {
+        this.last= current
+        return
+      }
+      const [[t0,y0],[t1,y1]] = [this.last,current]
+      const dY = y1-y0, dT = t1-t0
+      if( dY > this.scrollTo) {
+        this.last= undefined
+        callBack(false)
+        return
+      } 
+      if( dY < -this.scrollUp) {
+        this.last = undefined
+        callBack(true)
+        return
+      }
+    }
+}
+
 /**
  * Setting boolean flag after scroll
  * @returns 
  */
-export const useScrollHideEffect = (): boolean => {
+export const useScrollHideEffect = (scrollDown=48, scrollUp=10): boolean => {
   const [showMenu, setShowMenu] = useState(true)
 
-  type xy = [time: number, y: number]
-  const last: React.MutableRefObject<[x:number,y:number]> = useRef()
-
-  const hideIf = (current:xy) => {
-    if(!last.current) {
-      last.current = current
-      return
-    }
-    const [[t0,y0],[t1,y1]] = [last.current,current]
-    const dY = y1-y0, dT = t1-t0
-    if( dY > 100 && dT > 1000 ) {
-      last.current = undefined
-      setShowMenu(false)
-      return
-    } 
-    if( dY < -100) {
-      last.current = undefined
-      setShowMenu(true)
-      return
-    }
-  }
-
   useEffect(() => {
+    const hyst = new ScrollHysteresis(scrollDown, scrollUp)
     const handler = (ev: Event) => {
-      hideIf([ev.timeStamp,window.scrollY])
+      hyst.hideIf([ev.timeStamp,window.scrollY], setShowMenu)
     }
     document.addEventListener('scroll', handler)
     return () => document.removeEventListener('scroll',handler)
@@ -73,15 +77,19 @@ export const useScrollHideEffect = (): boolean => {
  * Setting height direcly 
  * @returns 
  */
-export const useScrollHideEffectRef = (ref: RefObject<HTMLElement>,maxheight: number): void => {
+export const useScrollHideEffectRef = (ref: RefObject<HTMLElement>,maxheight: string|number,
+  scrollContainer = window): void => {
 
   type xy = [time: number, y: number]
+
+  const [,maxheight__, unit] = typeof maxheight === 'string' ? maxheight.match(/(\d+)([a-z]+)/) : [undefined,maxheight, 'px']
+  const maxheight_ = typeof maxheight__ === 'string' ? parseFloat(maxheight__) : maxheight__
 
   useEffect(() => {
     // This only works if effect is called only once
     // -> giving [] as deps ensures this
     let last: xy
-    let height = maxheight
+    let height = maxheight_
     let ticking = false
 
     const hideIf = (current:xy) => {
@@ -97,15 +105,15 @@ export const useScrollHideEffectRef = (ref: RefObject<HTMLElement>,maxheight: nu
           const [[t0,y0],[t1,y1]] = [last, current]
           const dY = -(y1-y0), dT = t1-t0
 
-          const newHeight = Math.min(maxheight, Math.max(height+ dY, 0) ) 
+          const newHeight = Math.min(maxheight_, Math.max(height+ dY, 0) ) 
           console.log(y0,y1,newHeight, dY, height)
           if(height !== newHeight ) {
             height = newHeight
 
-            const crap = maxheight - newHeight
-            ref.current.style.transformOrigin = `left ${maxheight}px`
-            const factor = (newHeight/maxheight)
-            ref.current.style.transform = ` translateY(${-crap}px) scaleY(${factor}) skewX(${-(1-factor)*35}deg) `
+            const crap = maxheight_ - newHeight
+            ref.current.style.transformOrigin = `left ${maxheight_}${unit}`
+            const factor = (newHeight/maxheight_)
+            ref.current.style.transform = ` translateY(${-crap}${unit}) scaleY(${factor}) skewX(${-(1-factor)*35}deg) `
 
             last = undefined
           }
@@ -117,10 +125,10 @@ export const useScrollHideEffectRef = (ref: RefObject<HTMLElement>,maxheight: nu
       ticking = true
     }
     const handler = (ev: Event) => {
-      hideIf([ev.timeStamp,window.scrollY])
+      hideIf([ev.timeStamp,scrollContainer.scrollY])
     }
-    document.addEventListener('scroll', handler)
-    return () => document.removeEventListener('scroll',handler)
+    scrollContainer.addEventListener('scroll', handler)
+    return () => scrollContainer.removeEventListener('scroll',handler)
   },[])
 }
 

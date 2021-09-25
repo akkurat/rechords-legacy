@@ -7,11 +7,13 @@ import { FunctionComponent } from 'react'
 import { Room } from '../../api/collections'
 
 
-export const SingTogetherCreate: FunctionComponent<{room?: Room}> = ({room, id="st_create"}) => 
+export const SingTogetherCreate: FunctionComponent<{room?: Room, id?: string}> = ({room, id='st_create'}) => 
 {
+
   const handleCreate = () => {
     Meteor.call('createRoom', {caption})
   }    
+
   const handleUpdate = () => {
     Meteor.call('updateRoom', {_id: room._id, caption} )
   }    

@@ -1,10 +1,10 @@
 import * as React from "react";
-import {  NavLink, RouteComponentProps } from "react-router-dom";
+import { NavLink, RouteComponentProps } from "react-router-dom";
 import TranposeSetter from "./TransposeSetter.jsx";
 import ChrodLib from "../api/libchrod";
 import { Song } from '../api/collections';
 import Drawer from './Drawer';
-import { ColumnExpander } from "./ColumnGrid";
+import { MobileMenuShallow } from "./MobileMenu";
 import {userMayWrite} from '../api/helpers';
 import Sheet from './Sheet';
 
@@ -182,7 +182,7 @@ export default class Viewer extends React.Component<RouteComponentProps & Viewer
     return (
 
       <>
-        <div className="extend mobilemenu" >
+        <MobileMenuShallow>
             <span onClick={ _ => this.increaseTranspose()} id="plus"><Sharp /></span>
             <span onClick={ _ => this.decreaseTranspose()} id="minus"><Flat /></span>
             <span onClick={this.toggleAutoScroll} id={'scroll-toggler'} className={this.state.autoscroll ? 'active' : ''}>
@@ -191,7 +191,7 @@ export default class Viewer extends React.Component<RouteComponentProps & Viewer
             <span onClick={this.props.toggleTheme} id="theme-toggler">
               {this.props.themeDark ? <Day /> : <Night />}
             </span>
-        </div>
+        </MobileMenuShallow>
 
         <div
           className={'content' + (this.showMultiColumns() ? ' multicolumns':'')}

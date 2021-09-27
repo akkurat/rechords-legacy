@@ -4,11 +4,21 @@
 aside.drawer#list {
   padding-left: 0; // undo left padding, since this box contains no immediate content
 
+  overflow-y: scroll; 
   .list-colors;
 
+  .phone({
+    font-size: 1.2em;
+    min-height: unset;
+    top: 0;
+    height: 100vh;
+    transition: all 0.5s ease-in-out;
+    position: fixed;
   &.hidden {
-    display: none;
+    padding: 0;
+    height: 0px;
   }
+  });
 
   > div {
     padding-top: 1em;
@@ -19,9 +29,6 @@ aside.drawer#list {
     }
   }
 
-  .phone({
-    font-size: 1.2em;
-  });
 
   .filter {
     position: absolute;

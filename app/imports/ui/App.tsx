@@ -171,10 +171,11 @@ class App extends React.Component<AppProps, AppStates> {
       // This is a hack to easily update all internal "caching states" (matches etc.)
       const list_key = this.props.songs.map( s => s.title).join('-')
 
+      document.documentElement.classList.value = theme
+
       return (
         <BrowserRouter>
           <Provider store={this.store} >
-            <div className={theme}>
             <MobileMenu toggleSongList={this.toggleSongList} songListHidden={this.state.songListHidden} />
 
               <div id="body">
@@ -315,7 +316,6 @@ class App extends React.Component<AppProps, AppStates> {
                       </Route>
                 </Switch>
               </div>
-            </div>
           </Provider>
         </BrowserRouter>
       )

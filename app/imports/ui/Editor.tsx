@@ -9,6 +9,7 @@ import { Ok, Cancel } from './Icons.jsx';
 import { Song } from '../api/collections';
 import { Requireable } from 'react';
 import { Meteor } from 'meteor/meteor';
+import { MobileMenuShallow } from './MobileMenu';
 
 
 class Editor extends Component<{song: Song} & RouteComponentProps, {md: string, versionTab: boolean, dirty: boolean}> {
@@ -94,10 +95,10 @@ static propTypes:  {
       // Bearbeiten mit Echtzeit-Vorschau
       return (
         <div id="editor" onContextMenu={this.handleContextMenu}>
-          <div className="extend mobilemenu" >
+          <MobileMenuShallow>
               <span onClick={this.handleContextMenu} id="plus"><Ok /></span>
               <span onClick={this.props.history.goBack} id="minus"><Cancel /></span>
-          </div>
+          </MobileMenuShallow>
 
           <Drawer onClick={this.handleContextMenu} className="list-colors">
             <h1>sichern<br />&amp; zurück</h1>

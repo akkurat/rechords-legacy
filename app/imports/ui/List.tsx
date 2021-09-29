@@ -54,7 +54,7 @@ class ListItem extends React.Component<ListItemProps> {
         const darling_or_not = <span onClick={this.toggleDarling} className={"darling " + is_darling}>{darling_icon}</span>
         
         return (
-            <li><NavLink onClick={this.props.onClickHandler} to={`/view/${this.props.song.author_}/${this.props.song.title_}`}
+            <li className="listitem"><NavLink onClick={this.props.onClickHandler} to={`/view/${this.props.song.author_}/${this.props.song.title_}`}
                 activeClassName="selected">
                     <span className="title">{this.props.song.title}</span>
                     <span className="author">{this.props.song.author}</span>
@@ -104,7 +104,6 @@ interface ListProps {
   user: Meteor.User;
   filter?: string;
   hidden: boolean;
-  hideOnMobile: MouseEventHandler<HTMLElement>
 }
 interface ListState {
     filter: string;
@@ -302,6 +301,7 @@ class List extends React.Component<ListProps & RouteComponentProps, ListState> {
 
         return (
             <Drawer id="list" open={true} className={"songlist " + (this.props.hidden ? 'hidden' : '')}>
+                <div className="filterWrapper">
                 <div className="filter">
                     <input type="text" 
                         placeholder="Filtern…" 
@@ -321,6 +321,7 @@ class List extends React.Component<ListProps & RouteComponentProps, ListState> {
                     title="Schlagwortverzeichnis" 
                     songs={this.props.songs}
                     />
+                    </div>
                 <ul>
                     {Array.from(groups, ([group, songs]) => {
                             return <ListGroup user={this.props.user} label={group} songs={songs} key={group} onClickHandler={this.props.hideOnMobile}/>

@@ -14,6 +14,7 @@ aside.drawer#list {
     height: 100vh;
     transition: all 0.5s ease-in-out;
     position: fixed;
+    
   &.hidden {
     padding: 0;
     height: 0px;
@@ -29,8 +30,15 @@ aside.drawer#list {
     }
   }
 
+    .filterWrapper {
+
+  .phone({
+    display: none;
+  });
+}
 
   .filter {
+      z-index: 10;
     position: absolute;
     left: 0;
     top: 0;
@@ -192,10 +200,12 @@ aside.drawer#list {
 
   // Make list items fill the entire width
 
-  li {
+  li{
     // Stick to one row per li
     white-space: nowrap;
+    &.listitem {
     overflow: hidden;
+    }
 
     margin-left: -0.5em;
     padding-left: 0.5em;

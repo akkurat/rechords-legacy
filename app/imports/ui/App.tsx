@@ -96,12 +96,6 @@ class App extends React.Component<AppProps, AppStates> {
       this.store = createStore({ })
     }
 
-    hideSongListOnMobile = () => {
-      if (window.innerWidth > 700) return
-      this.setState({
-        songListHidden: true
-      })
-    }
 
     hideSongList = (hide) => {
       this.setState({
@@ -183,7 +177,7 @@ class App extends React.Component<AppProps, AppStates> {
                   songs={this.props.songs}
                   key={list_key}
                   hidden={this.state.songListHidden}
-                  hideOnMobile={this.hideSongListOnMobile}
+                  hideOnMobile={() => this.hideSongList(true)}
                   user={this.props.user}
                 />
                 <Switch>

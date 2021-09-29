@@ -254,13 +254,21 @@ aside.drawer {
     color: var(--accent);
   }
 
+  // move to list.less?
   h2.huge {
     .cooperate();
 
     margin-top: 0;
     font-size: 3em;
     margin-left: -0.05em;
-    position: sticky;
+      position: sticky;
+      top:34px; // aside list margin=18px // filter input height =52px
+      background-color: var(--bg-list);
+      padding-top: 5px;
+      border-radius: 5px;
+      backdrop-filter: blur(1.5px);
+background: linear-gradient(0deg, rgba(0,0,0,0) 0%, var(--bg-list) 25%);
+
   }
 }
 

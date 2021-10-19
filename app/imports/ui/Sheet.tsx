@@ -1,13 +1,13 @@
 import * as React from 'react'
 import parse, { DOMNode, domToReact } from 'html-react-parser'
-import ChrodLib from '@/api/libchrod'
+import ChrodLib from '../api/libchrod'
 import { Song } from '@/api/collections'
 import { Abcjs } from './Abcjs'
 import * as DH from 'domhandler'
 import { SheetSplit } from './SheetSplit'
 
-import Kord from './Kord.js'
-import { extractOrGuessKey, isRefId, userMayWrite } from '@/api/helpers'
+import Kord from './Kord'
+import { extractOrGuessKey, isRefId, userMayWrite } from '../api/helpers'
 import { FC } from 'react'
 
 type DomOut = JSX.Element | object | void | undefined | null | false

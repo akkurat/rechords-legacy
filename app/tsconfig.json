@@ -23,7 +23,6 @@
 				"name": "typescript-plugin-add-type"
 			}
 		],
-		"paths": {"@/*":["./imports/*"]},
 
 		"typeRoots": [
 			"./node_modules/@types",

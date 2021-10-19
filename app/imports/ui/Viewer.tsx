@@ -1,10 +1,10 @@
 import * as React from "react";
 import {NavLink, RouteComponentProps} from "react-router-dom";
 import TranposeSetter from "./TransposeSetter";
-import ChrodLib from "@/api/libchrod";
+import ChrodLib from "../api/libchrod";
 import {Song} from '@/api/collections';
 import Drawer from './Drawer';
-import {routePath, userMayWrite, View} from '@/api/helpers';
+import {routePath, userMayWrite, View} from '../api/helpers';
 import Sheet from './Sheet';
 
 import {Conveyor, ConveyorActive, Day, Flat, LayoutH, LayoutV, Night, Printer, Sharp, PDF} from './Icons.jsx';

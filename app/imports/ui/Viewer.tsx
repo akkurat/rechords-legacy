@@ -2,14 +2,14 @@ import * as React from "react";
 import {NavLink, RouteComponentProps} from "react-router-dom";
 import TranposeSetter from "./TransposeSetter";
 import ChrodLib from "../api/libchrod";
-import {Song} from '@/api/collections';
+import {Song} from '../api/collections';
 import Drawer from './Drawer';
-import {routePath, userMayWrite, View} from '../api/helpers';
+import {navigateCallback, routePath, userMayWrite, View} from '../api/helpers';
+import { MobileMenuShallow } from "./MobileMenu";
 import Sheet from './Sheet';
 
-import {Conveyor, ConveyorActive, Day, Flat, LayoutH, LayoutV, Night, Printer, Sharp, PDF} from './Icons.jsx';
+import {Conveyor, ConveyorActive, Day, Flat, LayoutH, LayoutV, Night, Printer, PDF, Sharp} from './Icons.jsx';
 import {Button} from "./Button";
-import { MobileMenuShallow } from "./MobileMenu";
 
 
 interface SongRouteParams {
@@ -26,6 +26,7 @@ interface ViewerStates {
   relTranspose: number,
   inlineReferences: boolean,
   showChords: boolean,
+  columns: boolean,
   autoscroll: any
 }
 
@@ -37,6 +38,7 @@ export default class Viewer extends React.Component<ViewerProps, ViewerStates> {
       relTranspose: this.getInitialTranspose(),
       inlineReferences: false,
       showChords: true,
+      columns: false,
       autoscroll: undefined
     };
 
@@ -157,6 +159,10 @@ export default class Viewer extends React.Component<ViewerProps, ViewerStates> {
     this.setState( state => ({ showChords: !state.showChords }));
   };
 
+  toggleColumns = () => {
+    this.setState( state => ({ columns: !state.columns }));
+  };
+
   toggleInlineReferences = () => {
     this.setState(state => ({ inlineReferences: !state.inlineReferences }))
   };
@@ -188,9 +194,10 @@ export default class Viewer extends React.Component<ViewerProps, ViewerStates> {
         <Button onClick={this.toggleColumns}>
           {this.state.columns ? <LayoutH /> : <LayoutV />}
         </Button>
+        { Meteor.settings.public.printRenderer === 'pdf' && 
         <div id="pdfLink">
           <NavLink to={`/pdf/${this.props.song.author_}/${this.props.song.title_}`}><PDF /></NavLink>
-        </div>
+        </div> }
       </aside>
 
 
@@ -221,7 +228,7 @@ export default class Viewer extends React.Component<ViewerProps, ViewerStates> {
         </MobileMenuShallow>
 
         <div
-          className={'content'}
+          className={'content' + (this.showMultiColumns() ? ' multicolumns':'')}
           id="chordsheet" ref={this.refChordsheet}
           onContextMenu={this.handleContextMenu}
         >
@@ -239,4 +246,8 @@ export default class Viewer extends React.Component<ViewerProps, ViewerStates> {
     );
   }
 
+  private showMultiColumns() {
+    return this.state.columns;
+  }
 }
+

@@ -63,7 +63,7 @@ const ListItem:  React.FunctionComponent<ListItemProps> = ({song,user,onClickHan
                     <span className="author">{song.author}</span>
                     {darling_or_not}
                 </NavLink>
-                { route &&
+                { route && Meteor.settings.public.printRenderer === 'pdf ' &&  
                     <NavLink className="selected pdf" to={`/pdf/${song.author_}/${song.title_}`}>
                         <span className="title">Configure PDF</span>
                         {darling_or_not}

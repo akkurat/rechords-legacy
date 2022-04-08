@@ -24,7 +24,7 @@
     "hypher": "^0.2.5",
     "indexof": "0.0.1",
     "meteor-node-stubs": "^0.3.2",
-    "moment": "^2.29.1",
+    "moment": "^2.29.2",
     "prop-types": "^15.7.2",
     "rc-slider": "^9.7.1",
     "rc-tooltip": "^5.1.1",

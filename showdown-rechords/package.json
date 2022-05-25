@@ -20,7 +20,7 @@
     "@typescript-eslint/parser": "^4.30.0",
     "chai": "^4.3.4",
     "eslint": "^7.32.0",
-    "grunt": "^1.4.1",
+    "grunt": "^1.5.3",
     "grunt-changelog": "^0.3.2",
     "grunt-contrib-concat": "^1.0.1",
     "grunt-contrib-jshint": "^3.0.0",
